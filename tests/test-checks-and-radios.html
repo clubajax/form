@@ -1,0 +1,419 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<title>Test CheckBox</title>
+	<script src="src/test-files.js"></script>
+	<style>
+		body {
+			padding: 20px 20px 100px 20px;
+			font-family: sans-serif;
+		}
+
+		check-box {
+			display: block;
+			margin-bottom: 5px;
+		}
+		check-box.small .radio-button{
+			width: 20px;
+			height: 20px;
+		}
+		check-box.small span{
+			font-size: 13px;
+		}
+		section {
+			border: 1px solid #ccc;
+			width: 400px;
+			padding: 5px;
+		}
+	</style>
+</head>
+<body>
+<h1>Test CheckBox</h1>
+<div id="mocha"></div>
+<div id="tests">
+</div>
+<script>
+
+	mocha.setup('tdd');
+
+
+	suite('CheckBox', function () {
+		this.timeout(3000);
+		const
+			suite = window.suite,
+			test = window.test,
+			dom = window.dom,
+			on = window.on,
+			expect = chai.expect,
+			body = dom.byId('tests'),
+			UNCHK_CLR = 'rgba(0, 0, 0, 0)',
+			CHK_CLR = 'rgb(5, 140, 212)';
+
+		function copy (item) {
+			return JSON.parse(JSON.stringify(item));
+		}
+
+		function getColor (node) {
+			return dom.style(dom.query(node, 'icon-check'), 'background-color');
+		}
+
+		function testTransparent (node) {
+			const color = getColor(node);
+			if (color === 'transparent') {
+				// IE
+				expect(color).to.equal('transparent');
+				return;
+			}
+			expect(color).to.equal(UNCHK_CLR);
+		}
+		function click (node) {
+			on.emit(node, 'click');
+		}
+
+		suite('check-box', function () {
+
+			test('it should display long labels correctly [VISUAL]', function () {
+				const node = dom('check-box', { label: 'How long ago did you first become aware of the honda-awareness-152-year honda-awareness-152-brand honda-awareness-152-model?' }, dom('section', {}, body));
+			});
+
+			test('it should get and set via `checked`', function (done) {
+				const check = dom('check-box', { label: 'Set Check', name: 'check-1', value: 'chk' }, body);
+				const radio = dom('check-box', { label: 'Set Radio', 'is-radio': true, name: 'radio-1', value: 'rad' }, body);
+				onDomReady([check, radio], function () {
+					expect(check.value).to.equal(false);
+					expect(radio.value).to.equal('rad');
+
+					expect(check.checked).to.equal(false);
+					expect(radio.checked).to.equal(false);
+
+					check.checked = true;
+					radio.checked = true;
+
+					expect(check.checked).to.equal(true);
+					expect(radio.checked).to.equal(true);
+					expect(check.value).to.equal(true);
+					expect(radio.value).to.equal('rad');
+
+					done();
+				});
+			});
+
+			test('it should get and set via `value`', function (done) {
+				const node = dom('check-box', { label: 'Set by value' }, body);
+				onDomReady(node, function () {
+					expect(node.value).to.equal(false);
+					testTransparent(node);
+					node.value = true;
+					expect(node.value).to.equal(true);
+					expect(getColor(node)).to.equal(CHK_CLR);
+					done();
+				});
+			});
+
+			test.only('it should get and set via `click`', function (done) {
+				const node = dom('check-box', { label: 'Set by click' }, body);
+				onDomReady(node, function () {
+					expect(node.value).to.equal(false);
+					testTransparent(node);
+					click(node);
+					expect(node.value).to.equal(true);
+					expect(getColor(node)).to.equal(CHK_CLR);
+					click(node);
+					expect(node.value).to.equal(false);
+					testTransparent(node);
+					done();
+				});
+			});
+
+			test('it should emit events', function (done) {
+				const node = dom('check-box', { label: 'Emit events' }, body);
+				onDomReady(node, function () {
+					const events = [];
+					node.on('change', function (e) {
+						events.push(e.value ? 1 : 0);
+					});
+					click(node);
+					click(node);
+					click(node);
+					click(node);
+					expect(events.join(',')).to.equal('1,0,1,0');
+					done();
+				});
+			});
+
+			test('it should emit custom events', function (done) {
+				const node = dom('check-box', { label: 'Emit custom events', 'event-name': 'boffo' }, body);
+				onDomReady(node, function () {
+					const events = [];
+					node.on('boffo', function (e) {
+						events.push(e.detail.value ? 1 : 0);
+					});
+					click(node);
+					click(node);
+					click(node);
+					click(node);
+					click(node);
+					expect(events.join(',')).to.equal('1,0,1,0,1');
+					done();
+				});
+			});
+
+			test('it should disable', function (done) {
+				const node = dom('check-box', { label: 'Disable' }, body);
+				onDomReady(node, function () {
+					const events = [];
+					node.on('change', function (e) {
+						events.push(e.value ? 1 : 0);
+					});
+					node.disabled = true;
+					click(node);
+					click(node);
+					expect(events.join(',')).to.equal('');
+					node.disabled = false;
+					click(node);
+					click(node);
+					expect(events.join(',')).to.equal('1,0');
+					done();
+				});
+			});
+
+			test('it should be readonly', function (done) {
+				const node = dom('check-box', { label: 'Readonly' }, body);
+				onDomReady(node, function () {
+					const events = [];
+					node.on('change', function (e) {
+						events.push(e.value ? 1 : 0);
+					});
+					node.readonly = true;
+					click(node);
+					click(node);
+					expect(node.getAttribute('checked')).to.equal(null);
+					expect(events.join(',')).to.equal('');
+					node.value = true;
+					expect(node.getAttribute('checked')).to.equal('');
+					node.readonly = false;
+					click(node);
+					click(node);
+					expect(events.join(',')).to.equal('0,1');
+					done();
+				});
+			});
+
+			test('it should appear as a radio button', function (done) {
+				const node = dom('check-box', { label: 'Radio Button', 'is-radio': true }, body);
+				onDomReady(node, function () {
+					const events = [];
+					node.on('change', function (e) {
+						events.push(e.target.checked ? 1 : 0);
+					});
+					click(node);
+					click(node);
+					click(node);
+					click(node);
+					expect(events.join(',')).to.equal('1,0,1,0');
+					done();
+				});
+			});
+
+			test('it should appear as a smaller radio button (VISUAL)', function () {
+				const node = dom('check-box', { label: 'Radio Button', 'is-radio': true, class: 'small' }, body);
+			});
+		});
+
+		suite('groups', function () {
+			test('it should appear as a radio group', function (done) {
+				const data = [
+					{
+						value: 'a',
+						label: 'Mother Russia'
+					}, {
+						value: 'b',
+						label: 'Ancient Greece'
+					}, {
+						value: 'c',
+						label: 'Modern Persia'
+					}
+				];
+				const node = dom('radio-buttons', { label: 'Radio Buttons', name: 'my-butts', data: data, value: 'c' }, body);
+				onDomReady(node, function () {
+					const events = [];
+					node.on('change', function (e) {
+						events.push(e.value);
+					});
+
+					const radios = dom.queryAll(node, 'check-box');
+					function selected () {
+						return radios.map(rad => rad.checked ? 1 : 0).join(',');
+					}
+					expect(selected()).to.equal('0,0,1');
+					expect(node.value).to.equal('c');
+					click(radios[0]);
+					expect(selected()).to.equal('1,0,0');
+					expect(node.value).to.equal('a');
+
+					click(radios[0]);
+					// return done();
+					expect(selected()).to.equal('1,0,0');
+					expect(node.value).to.equal('a');
+
+					node['allow-unchecked'] = true;
+					click(radios[0]);
+					expect(selected()).to.equal('0,0,0');
+					expect(node.value).to.equal(null);
+
+					click(radios[1]);
+					click(radios[2]);
+					expect(events.join(',')).to.equal('a,,b,c');
+
+					done();
+				});
+			});
+
+			test('it should appear as a check group', function (done) {
+				const data = [
+					{
+						value: 'a',
+						label: 'Mother Russia'
+					}, {
+						value: 'b',
+						label: 'Ancient Greece'
+					}, {
+						value: 'c',
+						label: 'Modern Persia'
+					}
+				];
+				const node = dom('radio-buttons', { label: 'Check Buttons', name: 'my-butts', data: data, type: 'checks', value: 'a,c' }, body);
+				onDomReady(node, function () {
+					const events = [];
+					node.on('change', function (e) {
+						console.log('check.change', e.value);
+						events.push(e.value.join(','));
+					});
+
+					const radios = dom.queryAll(node, 'check-box');
+					function selected () {
+						return radios.map(rad => rad.checked ? 1 : 0).join(',');
+					}
+					expect(selected()).to.equal('1,0,1');
+
+					expect(node.value.join(',')).to.equal('a,c');
+					click(radios[0]);
+					expect(selected()).to.equal('0,0,1');
+					expect(node.value.join(',')).to.equal('c');
+
+					click(radios[0]);
+					expect(selected()).to.equal('1,0,1');
+					expect(node.value.join(',')).to.equal('a,c');
+
+					click(radios[0]);
+					click(radios[2]);
+					expect(selected()).to.equal('0,0,0');
+					expect(node.value.join(',')).to.equal('');
+					//
+					click(radios[1]);
+					click(radios[2]);
+					expect(events.join(' ')).to.equal('c a,c c  b b,c');
+
+					done();
+				});
+			});
+
+			test('it should appear as a buttons group; and set by index', function (done) {
+				const data = [
+					{
+						value: 'a',
+						label: 'Mother Russia'
+					}, {
+						value: 'b',
+						label: 'Ancient Greece'
+					}, {
+						value: 'c',
+						label: 'Modern Persia'
+					}
+				];
+				const node = dom('radio-buttons', {
+					label: 'Button Radios',
+					name: 'my-butts',
+					data: data,
+					index: 2,
+					type: 'buttons'
+				}, body);
+				onDomReady(node, function () {
+					const events = [];
+					node.on('change', function (e) {
+						console.log('change', e.value);
+						events.push(e.value);
+					});
+
+					const radios = dom.queryAll(node, 'button');
+					function selected () {
+						return radios.map(rad => rad.checked ? 1 : 0).join(',');
+					}
+					expect(selected()).to.equal('0,0,1');
+					expect(node.value).to.equal('c');
+
+					node.index = 0;
+					expect(selected()).to.equal('1,0,0');
+					expect(node.value).to.equal('a');
+
+					// should not duplicate events
+					node.value = 'c';
+					expect(events.join(',')).to.equal('a,c');
+					node.value = 'c';
+					expect(events.join(',')).to.equal('a,c');
+
+					done();
+				});
+			});
+
+			test('it should add and remove buttons', function (done) {
+				const data = [
+					{
+						value: 'a',
+						label: 'Mother Russia'
+					}, {
+						value: 'b',
+						label: 'Ancient Greece'
+					}
+				];
+				const item = {
+					selected: true,
+					value: 'c',
+					label: 'Modern Persia'
+				};
+
+				const node = dom('radio-buttons', {
+					label: 'Button Radios',
+					name: 'my-butts',
+					data: data,
+					value: 'a',
+					type: 'buttons'
+				}, body);
+				onDomReady(node, function () {
+
+					function selected () {
+						const radios = dom.queryAll(node, 'button');
+						console.log('radios', radios);
+						return radios.map(rad => rad.hasAttribute('checked') ? 1 : 0).join(',');
+					}
+					expect(selected()).to.equal('1,0');
+					expect(node.value).to.equal('a');
+
+					node.add(item);
+					expect(selected()).to.equal('0,0,1');
+					expect(node.value).to.equal('c');
+
+					done();
+				});
+			});
+		});
+	});
+
+	if (!/puppeteer/.test(location.hash)) {
+		mocha.run();
+	}
+
+</script>
+
+</body>
+</html>

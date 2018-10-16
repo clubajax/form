@@ -1,0 +1,31 @@
+{
+  "name": "form",
+  "version": "0.5.0",
+  "description": "Web Components for Forms",
+  "main": "index.js",
+  "repository": "https://github.com/clubajax/form.git",
+  "author": "clubajax <anm9tr@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "devDependencies": {
+    "@babel/core": "^7.1.2",
+    "@babel/preset-env": "^7.1.0",
+    "@clubajax/custom-elements-polyfill": "^0.9.3",
+    "babelify": "^10.0.0",
+    "chai": "^4.2.0",
+    "grunt": "^1.0.3",
+    "grunt-browserify": "^5.3.0",
+    "grunt-concurrent": "^2.3.1",
+    "grunt-contrib-less": "^2.0.0",
+    "grunt-contrib-watch": "^1.1.0",
+    "grunt-http-server": "^2.1.0",
+    "mocha": "^5.2.0"
+  },
+  "dependencies": {
+    "@clubajax/base-component": "^2.2.2",
+    "@clubajax/dom": "^2.8.5",
+    "@clubajax/key-nav": "^1.1.2",
+    "@clubajax/no-dash": "^0.6.1",
+    "@clubajax/on": "^2.1.8"
+  }
+}
