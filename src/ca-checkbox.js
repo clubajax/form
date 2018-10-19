@@ -2,7 +2,7 @@ const BaseComponent = require('@clubajax/base-component');
 const dom = require('@clubajax/dom');
 const on = require('@clubajax/on');
 const emitEvent = require('./lib/emitEvent');
-// require('../icons/check');
+require('./ca-icon');
 
 const EVENT_NAME = 'change';
 
@@ -100,7 +100,7 @@ class CheckBox extends BaseComponent {
 		this.labelNode = dom('span', {});
 		dom('label', {
 			html: [
-				this['is-radio'] ? dom('div', { class: 'radio-button'}) : dom('icon-check'),
+				this['is-radio'] ? dom('div', { class: 'radio-button' }) : dom('ca-icon', { type: 'check'}),
 				this.labelNode
 			]
 		}, this);
@@ -111,7 +111,7 @@ class CheckBox extends BaseComponent {
 	}
 }
 
-module.exports = BaseComponent.define('check-box', CheckBox, {
+module.exports = BaseComponent.define('ca-checkbox', CheckBox, {
 	props: ['label', 'name', 'event-name'],
 	bools: ['is-radio', 'no-event', 'disabled', 'readonly', 'checked'],
 	attrs: []

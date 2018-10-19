@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 	<title>Test CheckBox</title>
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
 	<script src="src/test-files.js"></script>
 	<style>
 		body {
@@ -9,15 +10,15 @@
 			font-family: sans-serif;
 		}
 
-		check-box {
+		ca-checkbox {
 			display: block;
 			margin-bottom: 5px;
 		}
-		check-box.small .radio-button{
+		ca-checkbox.small .radio-button{
 			width: 20px;
 			height: 20px;
 		}
-		check-box.small span{
+		ca-checkbox.small span{
 			font-size: 13px;
 		}
 		section {
@@ -29,6 +30,7 @@
 </head>
 <body>
 <h1>Test CheckBox</h1>
+
 <div id="mocha"></div>
 <div id="tests">
 </div>
@@ -47,14 +49,14 @@
 			expect = chai.expect,
 			body = dom.byId('tests'),
 			UNCHK_CLR = 'rgba(0, 0, 0, 0)',
-			CHK_CLR = 'rgb(5, 140, 212)';
+			CHK_CLR = 'rgb(0, 0, 0)';
 
 		function copy (item) {
 			return JSON.parse(JSON.stringify(item));
 		}
 
 		function getColor (node) {
-			return dom.style(dom.query(node, 'icon-check'), 'background-color');
+			return dom.style(dom.query(node, 'ca-icon'), 'color');
 		}
 
 		function testTransparent (node) {
@@ -70,15 +72,15 @@
 			on.emit(node, 'click');
 		}
 
-		suite('check-box', function () {
+		suite('ca-checkbox', function () {
 
-			test('it should display long labels correctly [VISUAL]', function () {
-				const node = dom('check-box', { label: 'How long ago did you first become aware of the honda-awareness-152-year honda-awareness-152-brand honda-awareness-152-model?' }, dom('section', {}, body));
+			test.only('it should display long labels correctly [VISUAL]', function () {
+				const node = dom('ca-checkbox', { label: 'How long ago did you first become aware of the honda-awareness-152-year honda-awareness-152-brand honda-awareness-152-model?', checked: true }, dom('section', {}, body));
 			});
 
 			test('it should get and set via `checked`', function (done) {
-				const check = dom('check-box', { label: 'Set Check', name: 'check-1', value: 'chk' }, body);
-				const radio = dom('check-box', { label: 'Set Radio', 'is-radio': true, name: 'radio-1', value: 'rad' }, body);
+				const check = dom('ca-checkbox', { label: 'Set Check', name: 'check-1', value: 'chk' }, body);
+				const radio = dom('ca-checkbox', { label: 'Set Radio', 'is-radio': true, name: 'radio-1', value: 'rad' }, body);
 				onDomReady([check, radio], function () {
 					expect(check.value).to.equal(false);
 					expect(radio.value).to.equal('rad');
@@ -99,7 +101,7 @@
 			});
 
 			test('it should get and set via `value`', function (done) {
-				const node = dom('check-box', { label: 'Set by value' }, body);
+				const node = dom('ca-checkbox', { label: 'Set by value' }, body);
 				onDomReady(node, function () {
 					expect(node.value).to.equal(false);
 					testTransparent(node);
@@ -110,8 +112,8 @@
 				});
 			});
 
-			test.only('it should get and set via `click`', function (done) {
-				const node = dom('check-box', { label: 'Set by click' }, body);
+			test('it should get and set via `click`', function (done) {
+				const node = dom('ca-checkbox', { label: 'Set by click' }, body);
 				onDomReady(node, function () {
 					expect(node.value).to.equal(false);
 					testTransparent(node);
@@ -126,7 +128,7 @@
 			});
 
 			test('it should emit events', function (done) {
-				const node = dom('check-box', { label: 'Emit events' }, body);
+				const node = dom('ca-checkbox', { label: 'Emit events' }, body);
 				onDomReady(node, function () {
 					const events = [];
 					node.on('change', function (e) {
@@ -142,7 +144,7 @@
 			});
 
 			test('it should emit custom events', function (done) {
-				const node = dom('check-box', { label: 'Emit custom events', 'event-name': 'boffo' }, body);
+				const node = dom('ca-checkbox', { label: 'Emit custom events', 'event-name': 'boffo' }, body);
 				onDomReady(node, function () {
 					const events = [];
 					node.on('boffo', function (e) {
@@ -159,7 +161,7 @@
 			});
 
 			test('it should disable', function (done) {
-				const node = dom('check-box', { label: 'Disable' }, body);
+				const node = dom('ca-checkbox', { label: 'Disable' }, body);
 				onDomReady(node, function () {
 					const events = [];
 					node.on('change', function (e) {
@@ -178,7 +180,7 @@
 			});
 
 			test('it should be readonly', function (done) {
-				const node = dom('check-box', { label: 'Readonly' }, body);
+				const node = dom('ca-checkbox', { label: 'Readonly' }, body);
 				onDomReady(node, function () {
 					const events = [];
 					node.on('change', function (e) {
@@ -200,7 +202,7 @@
 			});
 
 			test('it should appear as a radio button', function (done) {
-				const node = dom('check-box', { label: 'Radio Button', 'is-radio': true }, body);
+				const node = dom('ca-checkbox', { label: 'Radio Button', 'is-radio': true }, body);
 				onDomReady(node, function () {
 					const events = [];
 					node.on('change', function (e) {
@@ -216,7 +218,7 @@
 			});
 
 			test('it should appear as a smaller radio button (VISUAL)', function () {
-				const node = dom('check-box', { label: 'Radio Button', 'is-radio': true, class: 'small' }, body);
+				const node = dom('ca-checkbox', { label: 'Radio Button', 'is-radio': true, class: 'small' }, body);
 			});
 		});
 
@@ -234,14 +236,14 @@
 						label: 'Modern Persia'
 					}
 				];
-				const node = dom('radio-buttons', { label: 'Radio Buttons', name: 'my-butts', data: data, value: 'c' }, body);
+				const node = dom('ca-radio-buttons', { label: 'Radio Buttons', name: 'my-butts', data: data, value: 'c' }, body);
 				onDomReady(node, function () {
 					const events = [];
 					node.on('change', function (e) {
 						events.push(e.value);
 					});
 
-					const radios = dom.queryAll(node, 'check-box');
+					const radios = dom.queryAll(node, 'ca-checkbox');
 					function selected () {
 						return radios.map(rad => rad.checked ? 1 : 0).join(',');
 					}
@@ -282,15 +284,14 @@
 						label: 'Modern Persia'
 					}
 				];
-				const node = dom('radio-buttons', { label: 'Check Buttons', name: 'my-butts', data: data, type: 'checks', value: 'a,c' }, body);
+				const node = dom('ca-radio-buttons', { label: 'Check Buttons', name: 'my-butts', data: data, type: 'checks', value: 'a,c' }, body);
 				onDomReady(node, function () {
 					const events = [];
 					node.on('change', function (e) {
-						console.log('check.change', e.value);
 						events.push(e.value.join(','));
 					});
 
-					const radios = dom.queryAll(node, 'check-box');
+					const radios = dom.queryAll(node, 'ca-checkbox');
 					function selected () {
 						return radios.map(rad => rad.checked ? 1 : 0).join(',');
 					}
@@ -331,7 +332,7 @@
 						label: 'Modern Persia'
 					}
 				];
-				const node = dom('radio-buttons', {
+				const node = dom('ca-radio-buttons', {
 					label: 'Button Radios',
 					name: 'my-butts',
 					data: data,
@@ -341,7 +342,6 @@
 				onDomReady(node, function () {
 					const events = [];
 					node.on('change', function (e) {
-						console.log('change', e.value);
 						events.push(e.value);
 					});
 
@@ -382,7 +382,7 @@
 					label: 'Modern Persia'
 				};
 
-				const node = dom('radio-buttons', {
+				const node = dom('ca-radio-buttons', {
 					label: 'Button Radios',
 					name: 'my-butts',
 					data: data,
@@ -393,14 +393,13 @@
 
 					function selected () {
 						const radios = dom.queryAll(node, 'button');
-						console.log('radios', radios);
 						return radios.map(rad => rad.hasAttribute('checked') ? 1 : 0).join(',');
 					}
 					expect(selected()).to.equal('1,0');
 					expect(node.value).to.equal('a');
 
 					node.add(item);
-					expect(selected()).to.equal('0,0,1');
+					expect(selected()).to.equal('1,0,1');
 					expect(node.value).to.equal('c');
 
 					done();

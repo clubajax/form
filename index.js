@@ -1,1 +1,2 @@
-require('./src/check-box');
+require('./src/ca-checkbox');
+require('./src/ca-radio-buttons');
