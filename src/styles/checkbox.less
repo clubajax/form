@@ -6,52 +6,23 @@
 @brd: #ccc;
 @tool-dk: #333;
 
-ca-checkbox{
-	display: inline-block;
+ui-checkbox{
+    display: inline-flex;
+    flex-direction: row;
+    
     label{
+        flex: 1 1 auto;
+        display: block;
         cursor: pointer;
-        margin: 0;
     }
-    label {
-        display: flex !important;
-        span {
-            align-self: center;
-            margin-bottom: 0;
-        }
-    }
-    .radio-button{
-        position: relative;
-        display: inline-block;
-        vertical-align: middle;
-        border: 1px solid @brd;
-        border-radius: 50%;
-        width: @size;
-        height: @size;
-        &:after{
-            content: '';
-            position: absolute;
-            border-radius: 50%;
-            display: inline-block;
-            background-color: @on;
-            width: 0;
-            height: 0;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            transition: width 100ms ease-in, height 100ms ease-in;
-        }
-    }
-    span{
-        vertical-align: middle;
-        margin-left: 5px;
-    }
-    ca-icon{
+    ui-icon{
+        flex: 0 0 @size;
+        margin-right: 5px;
         position: relative;
         display: block;
         border: 1px solid @brd;
         width: @size;
         height: @size;
-        flex: 0 0 @size;
         color: transparent;
         text-align: center;
         &:before{
@@ -63,119 +34,37 @@ ca-checkbox{
         }
     }
     &[checked]{
-        ca-icon{
+        ui-icon{
             color: black;
-        }
-        .radio-button:after{
-            width: calc(100% - 4px);
-            height: calc(100% - 4px);
         }
         &:not([readonly]):hover{
             icon-check{
                 background-color: @hvr;
             }
-            radio-button:after{
-                background-color: @hvr;
-            }
         }
     }
-    // &.small{
-    //     icon-check {
-    //         width: @sm;
-    //         height: @sm;
-    //         border-radius: 2px;
-    //         border: 1px solid #ccc;
-    //         svg {
-    //             width: @sm - 2px;
-    //             height: @sm - 2px;
-    //             padding: 2px;
-    //             fill: white;
-    //         }
-    //     }
-    //     &[checked]{
-    //         svg{
-    //             background-color: white;
-    //             fill: @on;
-    //         }
-    //     }
-    //     .radio-button{
-    //         width: @sm;
-    //         height: @sm;
-    //     }
-    // }
+
     &[disabled]{
         label{
             cursor: default;
-        }
-        icon-check {
-            background-color: @btn-dsbl;
-            fill: @btn-dsbl-clr;
-        }
-        span{
             color: @btn-dsbl-clr;
             font-style: italic;
+        }
+        ui-icon{
+            background-color: @btn-dsbl;
         }
     }
     &[readonly]{
         label{
             cursor: default;
         }
-        icon-check{
-            fill: @dsbl-lt;
-            background-color: white;
-
-        }
-        &[checked]{
-            icon-check {
-                fill: @on;
-            }
-        }
     }
+
     &:focus{
         outline: 0;
-        icon-check{
+        ui-icon{
             border: 1px solid @focus-dk;
             box-shadow: 0 0 5px @focus;
         }
     }	
-}
-
-ca-radio-buttons{
-    display: inline-block;
-    & > label{
-        display: block;
-    }
-    ca-checkbox{
-        display: inline-block;
-        margin-right: 10px;
-        .radio-button {
-            width: 20px;
-            height: 20px;
-        }
-    }
-    button.btn{
-        outline: 0;
-        border: 1px solid @tool-dk;
-        background-color: white;
-        &[checked="true"] {
-            background-color: @tool-dk;
-            color: white;
-            &:focus{
-                box-shadow: inset 0 0 10px rgb(180, 216, 250);
-            }
-        }
-        border-right-width: 0;
-        border-radius: 0;
-        &:first-of-type{
-            border-radius: 4px 0 0 4px;
-        }
-        &:last-of-type{
-            border-right-width: 1px;
-            border-radius: 0 4px 4px 0;
-        }
-        &:focus{
-            box-shadow: inset 0 0 10px rgba(130,190,250,1) ;
-        }
-    }
-
 }

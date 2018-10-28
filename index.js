@@ -1,2 +1,3 @@
-require('./src/ca-checkbox');
-require('./src/ca-radio-buttons');
+require('./src/ui-checkbox');
+require('./src/ui-radio');
+require('./src/ui-radio-buttons');

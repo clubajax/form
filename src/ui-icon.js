@@ -12,6 +12,6 @@ class Icon extends BaseComponent {
     }
 }
 
-module.exports = BaseComponent.define('ca-icon', Icon, {
+module.exports = BaseComponent.define('ui-icon', Icon, {
     props: ['type']
 });

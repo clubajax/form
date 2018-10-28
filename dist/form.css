@@ -1,137 +1,52 @@
-ca-checkbox {
-  display: inline-block;
+ui-checkbox {
+  display: inline-flex;
+  flex-direction: row;
 }
-ca-checkbox label {
+ui-checkbox label {
+  flex: 1 1 auto;
+  display: block;
   cursor: pointer;
-  margin: 0;
 }
-ca-checkbox label {
-  display: flex !important;
-}
-ca-checkbox label span {
-  align-self: center;
-  margin-bottom: 0;
-}
-ca-checkbox .radio-button {
-  position: relative;
-  display: inline-block;
-  vertical-align: middle;
-  border: 1px solid #ccc;
-  border-radius: 50%;
-  width: 16px;
-  height: 16px;
-}
-ca-checkbox .radio-button:after {
-  content: '';
-  position: absolute;
-  border-radius: 50%;
-  display: inline-block;
-  background-color: #058CD4;
-  width: 0;
-  height: 0;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  transition: width 100ms ease-in, height 100ms ease-in;
-}
-ca-checkbox span {
-  vertical-align: middle;
-  margin-left: 5px;
-}
-ca-checkbox ca-icon {
+ui-checkbox ui-icon {
+  flex: 0 0 16px;
+  margin-right: 5px;
   position: relative;
   display: block;
   border: 1px solid #ccc;
   width: 16px;
   height: 16px;
-  flex: 0 0 16px;
   color: transparent;
   text-align: center;
 }
-ca-checkbox ca-icon:before {
+ui-checkbox ui-icon:before {
   display: inline-block;
   color: inherit;
   font-size: 11px;
   vertical-align: middle;
   padding-bottom: 2px;
 }
-ca-checkbox[checked] ca-icon {
+ui-checkbox[checked] ui-icon {
   color: black;
 }
-ca-checkbox[checked] .radio-button:after {
-  width: calc(100% - 4px);
-  height: calc(100% - 4px);
-}
-ca-checkbox[checked]:not([readonly]):hover icon-check {
+ui-checkbox[checked]:not([readonly]):hover icon-check {
   background-color: #0597e4;
 }
-ca-checkbox[checked]:not([readonly]):hover radio-button:after {
-  background-color: #0597e4;
-}
-ca-checkbox[disabled] label {
+ui-checkbox[disabled] label {
   cursor: default;
-}
-ca-checkbox[disabled] icon-check {
-  background-color: #ccc;
-  fill: #999;
-}
-ca-checkbox[disabled] span {
   color: #999;
   font-style: italic;
 }
-ca-checkbox[readonly] label {
+ui-checkbox[disabled] ui-icon {
+  background-color: #ccc;
+}
+ui-checkbox[readonly] label {
   cursor: default;
 }
-ca-checkbox[readonly] icon-check {
-  fill: #ddd;
-  background-color: white;
-}
-ca-checkbox[readonly][checked] icon-check {
-  fill: #058CD4;
-}
-ca-checkbox:focus {
+ui-checkbox:focus {
   outline: 0;
 }
-ca-checkbox:focus icon-check {
+ui-checkbox:focus ui-icon {
   border: 1px solid #6c9fd8;
   box-shadow: 0 0 5px #83bffc;
-}
-ca-radio-buttons {
-  display: inline-block;
-}
-ca-radio-buttons > label {
-  display: block;
-}
-ca-radio-buttons ca-checkbox {
-  display: inline-block;
-  margin-right: 10px;
-}
-ca-radio-buttons ca-checkbox .radio-button {
-  width: 20px;
-  height: 20px;
-}
-ca-radio-buttons button.btn {
-  outline: 0;
-  border: 1px solid #333;
-  background-color: white;
-  border-right-width: 0;
-  border-radius: 0;
-}
-ca-radio-buttons button.btn[checked="true"] {
-  background-color: #333;
-  color: white;
-}
-ca-radio-buttons button.btn[checked="true"]:focus {
-  box-shadow: inset 0 0 10px #b4d8fa;
-}
-ca-radio-buttons button.btn:first-of-type {
-  border-radius: 4px 0 0 4px;
-}
-ca-radio-buttons button.btn:last-of-type {
-  border-right-width: 1px;
-  border-radius: 0 4px 4px 0;
-}
-ca-radio-buttons button.btn:focus {
-  box-shadow: inset 0 0 10px #82befa;
 }
 /*# sourceMappingURL=dist/form.css.map */

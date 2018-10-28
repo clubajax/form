@@ -1,21 +1,37 @@
 const BaseComponent = require('@clubajax/base-component');
 const dom = require('@clubajax/dom');
 const on = require('@clubajax/on');
-const emitEvent = require('./lib/emitEvent');
-require('./ca-icon');
+const uid = require('./lib/uid');
+require('./ui-icon');
+const FormElement = require('./FormElement');
 
 const EVENT_NAME = 'change';
 
 // CHECKED NOTE:!
 //	widget.checked *is* a getter/setter
 // the visual keys off of the attribute
+//
+// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/checkbox
 
-class CheckBox extends BaseComponent {
+// TODO:
+// ADA - for:label
+//
+// inputInstance.indeterminate = true;
+//
+// if standards=true
+// checked is on or off
+// value should corespond to name:
+// set value=foo
+// set name=bar
+// get value={bar:foo}
+// set checked
+//
+// if standards=false
+// value is boolean
+// checked is boolean
+// value===checked
 
-	constructor () {
-		super();
-		this.connectedProps = true;
-	}
+class CheckBox extends FormElement {
 
 	get value () {
 		if (this['is-radio']) {
@@ -26,23 +42,19 @@ class CheckBox extends BaseComponent {
 
 	set value (value) {
 		if (this['is-radio']) {
-			this.setAttribute('value', value);
+			// this.setAttribute('value', value);
 			// this.__value = value;
 		} else {
 			this.checked = value;
 		}
 	}
 
-	onReadonly (value) {
-		this.attr('tabindex', '0', !value && !this.disabled);
-	}
-
-	onDisabled (value) {
-		this.attr('tabindex', '0', !value && !this.readonly);
-	}
-
-	onLabel (value) {
-		this.labelNode.innerHTML = value;
+	get event() { 
+		return {
+			value: this.value,
+			checked: this.checked, 
+			name: this.name
+		}
 	}
 
 	setValue (value, silent) {
@@ -61,22 +73,9 @@ class CheckBox extends BaseComponent {
 		}
 	}
 
-	canEmit () {
-		return !this['no-event'] && !this.readonly && !this.disabled;
-	}
-
-	emitEvent () {
-		const value = this.value;
-		emitEvent(this, {
-			value,
-			checked: value
-		});
-	}
-
 	connected () {
-
 		this.render();
-
+		
 		this.on('keyup', (e) => {
 			if (!this.canEmit()) {
 				return;
@@ -95,15 +94,16 @@ class CheckBox extends BaseComponent {
 		this.connected = () => {};
 	}
 
-	render () {
-
-		this.labelNode = dom('span', {});
-		dom('label', {
-			html: [
-				this['is-radio'] ? dom('div', { class: 'radio-button' }) : dom('ca-icon', { type: 'check'}),
-				this.labelNode
-			]
-		}, this);
+	render() {
+		const type = this.indeterminate ? 'minus' : 'check';
+		const html = this.label || '';
+		if (this['check-after']) {
+			this.labelNode = dom('label', { html }, this);
+			this.icon = dom('ui-icon', { type }, this);
+		} else {
+			this.icon = dom('ui-icon', { type }, this);
+			this.labelNode = dom('label', { html }, this);
+		}
 
 		if (!this.readonly && !this.disabled) {
 			this.setAttribute('tabindex', '0');
@@ -111,8 +111,6 @@ class CheckBox extends BaseComponent {
 	}
 }
 
-module.exports = BaseComponent.define('ca-checkbox', CheckBox, {
-	props: ['label', 'name', 'event-name'],
-	bools: ['is-radio', 'no-event', 'disabled', 'readonly', 'checked'],
-	attrs: []
+module.exports = BaseComponent.define('ui-checkbox', CheckBox, {
+	bools: ['checked', 'standards', 'check-after', 'indeterminate']
 });

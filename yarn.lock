@@ -583,10 +583,10 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
-"@clubajax/base-component@^2.3.0":
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/@clubajax/base-component/-/base-component-2.3.0.tgz#f99134017ccecad0ec5d6e0375a39e1c475c0e5d"
-  integrity sha512-npj4n6KmbR2GPqQrxF3DBPKzk6NaNap0bUhflodM90V54lPAYpb2CysGbC4c9OySyGRSVkncdxqGuLXSuH8oqw==
+"@clubajax/base-component@^2.3.1":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@clubajax/base-component/-/base-component-2.3.1.tgz#1142650e58e751e75d2f19ac324a7929f80548bf"
+  integrity sha512-HF/P1iTE62oz41BOd8bPSHe2Ju7WUqBwwbjft5esr4vsdCnQM1Q9YvjD4DYQr06WbEA5Jvx+OBOpRwIKPibIjA==
   dependencies:
     "@clubajax/on" "^2.1.8"
 

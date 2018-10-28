@@ -25,7 +25,7 @@
     "mocha": "^5.2.0"
   },
   "dependencies": {
-    "@clubajax/base-component": "^2.3.0",
+    "@clubajax/base-component": "^2.3.1",
     "@clubajax/dom": "^2.8.5",
     "@clubajax/key-nav": "^1.1.2",
     "@clubajax/no-dash": "^0.6.1",

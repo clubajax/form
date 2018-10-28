@@ -2,7 +2,7 @@ const BaseComponent = require('@clubajax/base-component');
 const dom = require('@clubajax/dom');
 const nodash = require('@clubajax/no-dash');
 const emitEvent = require('./lib/emitEvent');
-require('./ca-checkbox');
+require('./ui-checkbox');
 
 class RadioButtons extends BaseComponent {
 
@@ -220,7 +220,7 @@ function sort (value) {
 	return nodash.remove(value, '').join(',');
 }
 
-module.exports = BaseComponent.define('ca-radio-buttons', RadioButtons, {
+module.exports = BaseComponent.define('ui-radio-buttons', RadioButtons, {
 	props: ['name', 'label', 'type', 'event-name'],
 	bools: ['allow-unchecked'],
 	attrs: ['index']
