@@ -2,7 +2,7 @@ const BaseComponent = require('@clubajax/base-component');
 const dom = require('@clubajax/dom');
 const nodash = require('@clubajax/no-dash');
 const emitEvent = require('./lib/emitEvent');
-require('./ui-checkbox');
+require('./ui-radio');
 
 class RadioButtons extends BaseComponent {
 
@@ -94,7 +94,7 @@ class RadioButtons extends BaseComponent {
 	addElement (item) {
 		const isChk = this.type === 'checks';
 		const isBtn = this.type === 'buttons';
-		const localName = isBtn ? 'button' : 'ca-checkbox';
+		const localName = isBtn ? 'button' : 'ui-radio';
 		const cls = isBtn ? 'btn' : isChk ? 'small' : '';
 		const html = isBtn ? item.label : '';
 		const value = this.value;
@@ -104,7 +104,6 @@ class RadioButtons extends BaseComponent {
 			name,
 			html,
 			checked,
-			'is-radio': !isChk,
 			value: item.value,
 			label: item.label,
 			class: cls,

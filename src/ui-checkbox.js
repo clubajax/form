@@ -1,35 +1,13 @@
 const BaseComponent = require('@clubajax/base-component');
 const dom = require('@clubajax/dom');
-const on = require('@clubajax/on');
-const uid = require('./lib/uid');
 require('./ui-icon');
 const FormElement = require('./FormElement');
-
-const EVENT_NAME = 'change';
 
 // CHECKED NOTE:!
 //	widget.checked *is* a getter/setter
 // the visual keys off of the attribute
 //
 // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/checkbox
-
-// TODO:
-// ADA - for:label
-//
-// inputInstance.indeterminate = true;
-//
-// if standards=true
-// checked is on or off
-// value should corespond to name:
-// set value=foo
-// set name=bar
-// get value={bar:foo}
-// set checked
-//
-// if standards=false
-// value is boolean
-// checked is boolean
-// value===checked
 
 class CheckBox extends FormElement {
 

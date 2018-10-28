@@ -174,8 +174,11 @@ module.exports = function (grunt) {
 				options: {
 					// case sensitive!
 					sourceMap: sourceMaps,
+					// for some reason in this project the source maps is being looked for in /dist/dist
+					// giving a name fixes it
+					sourceMapFilename: 'form.css.map',
 					loadPath: [
-						path.join(__dirname, 'node_modules') // npm
+						path.join(__dirname, 'node_modules')
 					]
 				},
 				files: {

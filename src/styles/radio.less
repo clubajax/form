@@ -1,40 +1,75 @@
-ui-radio{
-    position: relative;
-    display: inline-block;
-    vertical-align: middle;
-    border: 1px solid @brd;
-    border-radius: 50%;
-    width: @size;
-    height: @size;
-    &:after{
-        content: '';
-        position: absolute;
-        border-radius: 50%;
-        display: inline-block;
-        background-color: @on;
-        width: 0;
-        height: 0;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        transition: width 100ms ease-in, height 100ms ease-in;
-    }
+@on: @blue;
+@hvr: @blue-hvr;
+@off: transparent;
+@size: 16px;
+@sm: 18px;
+@brd: #ccc;
+@tool-dk: #333;
 
-    &[checked]{
-        ca-icon{
-            color: black;
+ui-radio{
+    display: inline-flex;
+    flex-direction: row;
+    
+    label{
+        flex: 1 1 auto;
+        display: block;
+        cursor: pointer;
+    }
+    .radio-button{
+        flex: 0 0 @size;
+        position: relative;
+        display: inline-block;
+        vertical-align: middle;
+        border: 1px solid @brd;
+        border-radius: 50%;
+        width: @size;
+        height: @size;
+        &:after{
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            display: inline-block;
+            background-color: @on;
+            width: 0;
+            height: 0;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 100ms ease-in, height 100ms ease-in;
         }
-        .radio-button:after{
-            width: calc(100% - 4px);
-            height: calc(100% - 4px);
+    }
+    &[checked]{
+        .radio-button{
+            color: black;
         }
         &:not([readonly]):hover{
             icon-check{
                 background-color: @hvr;
             }
-            radio-button:after{
-                background-color: @hvr;
-            }
+        }
+    }
+
+    &[disabled]{
+        label{
+            cursor: default;
+            color: @btn-dsbl-clr;
+            font-style: italic;
+        }
+        .radio-button{
+            background-color: @btn-dsbl;
+        }
+    }
+    &[readonly]{
+        label{
+            cursor: default;
+        }
+    }
+
+    &:focus{
+        outline: 0;
+        .radio-button{
+            border: 1px solid @focus-dk;
+            box-shadow: 0 0 5px @focus;
         }
     }
 }
@@ -45,12 +80,8 @@ ui-radio-buttons{
         display: block;
     }
     ui-radio{
-        display: inline-block;
+        display: inline-flex;
         margin-right: 10px;
-        .radio-button {
-            width: 20px;
-            height: 20px;
-        }
     }
     button.btn{
         outline: 0;

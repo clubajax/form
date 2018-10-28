@@ -1,7 +1,7 @@
 const isIE = false;
 window['no-native-shim'] = !isIE;
 const files = '<link rel="stylesheet" href="../node_modules/mocha/mocha.css">' +
-	'<link rel="stylesheet" href="../dist/form.css" />' +
+	'<link rel="stylesheet" href="/dist/form.css" />' +
 	'<script src="../node_modules/mocha/mocha.js"></script>' +
 	'<script src="../node_modules/chai/chai.js"></script>' +
 	(isIE ? '<script src="./src/polyfills.js"></script>' : '') +

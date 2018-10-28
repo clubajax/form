@@ -1,40 +1,11 @@
 const BaseComponent = require('@clubajax/base-component');
 const dom = require('@clubajax/dom');
-const on = require('@clubajax/on');
-const emitEvent = require('./lib/emitEvent');
-require('./ui-icon');
 const FormElement = require('./FormElement');
 
-const EVENT_NAME = 'change';
-
-// CHECKED NOTE:!
-//	widget.checked *is* a getter/setter
-// the visual keys off of the attribute
-//
-// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/checkbox
-
-// TODO:
-// ADA - for:label
-//
-// if standards=true
-// checked is on or off
-// value should corespond to name:
-// set value=foo
-// set name=bar
-// get value={bar:foo}
-// set checked
-//
-// if standards=false
-// value is boolean
-// checked is boolean
-// value===checked
-
-class CheckBox extends FormElement {
+class Radio extends FormElement {
 
     get value() {
-        if (this['is-radio']) {
-            return dom.normalize(this.getAttribute('value'));
-        }
+        // return dom.normalize(this.getAttribute('value'));
         return !!this.checked;
     }
 
@@ -91,13 +62,14 @@ class CheckBox extends FormElement {
     }
 
     render() {
-        this.labelNode = dom('span', {});
-        dom('label', {
-            html: [
-                this['is-radio'] ? dom('div', { class: 'radio-button' }) : dom('ca-icon', { type: 'check' }),
-                this.labelNode
-            ]
-        }, this);
+        const html = this.label || '';
+        if (this['check-after']) {
+            this.labelNode = dom('label', { html }, this);
+            this.icon = dom('div', { class: 'radio-button' }, this);
+        } else {
+            this.icon = dom('div', { class: 'radio-button' }, this);
+            this.labelNode = dom('label', { html }, this);
+        }
 
         if (!this.readonly && !this.disabled) {
             this.setAttribute('tabindex', '0');
@@ -105,8 +77,8 @@ class CheckBox extends FormElement {
     }
 }
 
-module.exports = BaseComponent.define('ui-radio', CheckBox, {
+module.exports = BaseComponent.define('ui-radio', Radio, {
     props: [],
-    bools: ['checked', 'standards'],
+    bools: ['checked', 'check-after'],
     attrs: []
 });
