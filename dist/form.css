@@ -25,6 +25,12 @@ ui-checkbox ui-icon:before {
   vertical-align: middle;
   padding-bottom: 2px;
 }
+ui-checkbox[indeterminate] ui-icon {
+  color: black;
+}
+ui-checkbox[indeterminate]:not([readonly]):hover icon-check {
+  background-color: #0597e4;
+}
 ui-checkbox[checked] ui-icon {
   color: black;
 }

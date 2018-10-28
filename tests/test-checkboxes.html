@@ -78,12 +78,32 @@
 			expect(color).to.equal(CHK_CLR);
 		}
 
+		function iconIs (node) {
+			return node.icon.className.split('-')[1];
+		}
+
 		function click (node) {
 			node.focus();
 			on.emit(node, 'click');
 		}
 
 		suite('ui-checkbox', function () {
+
+			test('it should have an indeterminate setting', function (done) {
+				const node = dom('ui-checkbox', { label: 'Set Check', name: 'check-1', indeterminate: true }, body);
+				onDomReady(node, function () {
+					expect(iconIs(node)).to.equal('minus');
+					testOn(node);
+					expect(node.value).to.equal(null);
+					node.checked = false;
+					expect(node.value).to.equal(false);
+					expect(iconIs(node)).to.equal('check');
+					testOff(node);
+					node.indeterminate = true;
+					expect(iconIs(node)).to.equal('minus');
+					done();
+				});
+			});
 
 			test('it should display long labels correctly [VISUAL]', function () {
 				const node = dom('ui-checkbox', { label: 'elements of type checkbox are rendered by default as square boxes that are checked (ticked) when activated, like you might see in an official government paper form', checked: true }, dom('section', {}, body));

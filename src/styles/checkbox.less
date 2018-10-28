@@ -33,6 +33,16 @@ ui-checkbox{
             padding-bottom: 2px;
         }
     }
+    &[indeterminate]{
+        ui-icon{
+            color: black;
+        }
+        &:not([readonly]):hover{
+            icon-check{
+                background-color: @hvr;
+            }
+        }
+    }
     &[checked]{
         ui-icon{
             color: black;

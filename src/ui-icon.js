@@ -8,7 +8,7 @@ class Icon extends BaseComponent {
             console.warn('icon type missing:', type);
             return;
         }
-        dom.classList.add(this, iconMap[type]);
+        this.className = iconMap[type];
     }
 }
 

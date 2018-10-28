@@ -34,19 +34,11 @@ const EVENT_NAME = 'change';
 class CheckBox extends FormElement {
 
 	get value () {
-		if (this['is-radio']) {
-			return dom.normalize(this.getAttribute('value'));
-		}
-		return !!this.checked;
+		return this.indeterminate ? null : !!this.checked;
 	}
 
 	set value (value) {
-		if (this['is-radio']) {
-			// this.setAttribute('value', value);
-			// this.__value = value;
-		} else {
-			this.checked = value;
-		}
+		this.checked = value;
 	}
 
 	get event() { 
@@ -54,6 +46,19 @@ class CheckBox extends FormElement {
 			value: this.value,
 			checked: this.checked, 
 			name: this.name
+		}
+	}
+
+	onChecked(value) { 
+		if (this.indeterminate) {
+			this.indeterminate = false;
+			this.icon.type = 'check';
+		}
+	}
+
+	onIndeterminate(value) { 
+		if (value) {
+			this.icon.type = 'minus';
 		}
 	}
 
