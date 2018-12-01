@@ -1,5 +1,5 @@
 'use strict';
-
+const sass = require('node-sass');
 const path = require('path');
 const fs = require('fs');
 
@@ -169,11 +169,12 @@ module.exports = function (grunt) {
 		// grunt-exorcise promises to do this, but it seems overly complicated
 		browserify: null,
 
-		less: {
+		sass: {
 			main: {
 				options: {
 					// case sensitive!
 					sourceMap: sourceMaps,
+					implementation: sass,
 					// for some reason in this project the source maps is being looked for in /dist/dist
 					// giving a name fixes it
 					sourceMapFilename: 'form.css.map',
@@ -182,7 +183,7 @@ module.exports = function (grunt) {
 					]
 				},
 				files: {
-					'dist/form.css': 'src/styles/main.less',
+					'dist/form.css': 'src/styles/main.scss',
 				}
 			}
 		},
@@ -214,9 +215,9 @@ module.exports = function (grunt) {
 		},
 
 		watch: {
-			less: {
-				files: ['./src/styles/*.less'],
-				tasks: ['less'],
+			sass: {
+				files: ['./src/styles/*.scss'],
+				tasks: ['sass'],
 				options: {
 					// keep from refreshing the page
 					// the page does not care if a less file has changed
@@ -299,7 +300,7 @@ module.exports = function (grunt) {
 		setConfig();
 		setCustomElementNativeShim(false);
 		grunt.task.run('build');
-		grunt.task.run('less');
+		grunt.task.run('sass');
 		// grunt.task.run('http-server');
 		grunt.task.run('concurrent:target');
 	});
@@ -311,7 +312,7 @@ module.exports = function (grunt) {
 		setCustomElementNativeShim(true);
 		grunt.config('browserify', ie);
 		grunt.task.run('build');
-		grunt.task.run('less');
+		grunt.task.run('sass');
 		grunt.task.run('concurrent:target');
 	});
 
@@ -321,7 +322,8 @@ module.exports = function (grunt) {
 	});
 
 	grunt.loadNpmTasks('grunt-concurrent');
-	grunt.loadNpmTasks('grunt-contrib-less');
+	// grunt.loadNpmTasks('grunt-contrib-less');
+	grunt.loadNpmTasks('grunt-sass');
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-browserify');
 	grunt.loadNpmTasks('grunt-http-server');
