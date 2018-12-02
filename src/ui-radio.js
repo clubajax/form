@@ -1,6 +1,6 @@
 const BaseComponent = require('@clubajax/base-component');
 const dom = require('@clubajax/dom');
-const FormElement = require('./FormElement');
+const FormElement = require('./lib/BaseField');
 const uid = require('./lib/uid');
 
 class Radio extends FormElement {

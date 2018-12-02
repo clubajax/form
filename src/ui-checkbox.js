@@ -2,7 +2,7 @@ const BaseComponent = require('@clubajax/base-component');
 const dom = require('@clubajax/dom');
 const uid = require('./lib/uid');
 require('./ui-icon');
-const FormElement = require('./FormElement');
+const FormElement = require('./lib/BaseField');
 
 // CHECKED NOTE:!
 //	widget.checked *is* a getter/setter

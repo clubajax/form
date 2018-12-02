@@ -2,7 +2,7 @@ const BaseComponent = require('@clubajax/base-component');
 const dom = require('@clubajax/dom');
 const nodash = require('@clubajax/no-dash');
 const emitEvent = require('./lib/emitEvent');
-const FormElement = require('./FormElement');
+const FormElement = require('./lib/BaseField');
 require('./ui-radio');
 
 class RadioButtons extends FormElement {

@@ -1,5 +1,5 @@
 const BaseComponent = require('@clubajax/base-component');
-const emitEvent = require('./lib/emitEvent');
+const emitEvent = require('./emitEvent');
 
 class FormElement extends BaseComponent {
 
