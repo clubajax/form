@@ -76,7 +76,10 @@ class RadioButtons extends FormElement {
 				}
 				const checked = value.includes(radioValue);
 				if (this.type === 'buttons') {
-					dom.attr(radio, 'checked', checked);
+					dom.attr(radio, {
+						checked,
+						'aria-selected': checked ? 'true' : 'false'
+					});
 				} else {
 					radio.checked = checked;
 				}
@@ -116,6 +119,10 @@ class RadioButtons extends FormElement {
 			class: cls,
 			'event-name': 'check-change'
 		}, this));
+
+		if (isBtn) {
+			dom.attr(this.radios[this.radios.length - 1], 'aria-selected', checked ? 'true' : 'false');
+		}
 	}
 
 	render () {
@@ -178,6 +185,9 @@ class RadioButtons extends FormElement {
 					this.value = null;
 				} else {
 					this.setValue(value, true);
+				}
+				if (type === 'buttons') {
+
 				}
 				break;
 		}

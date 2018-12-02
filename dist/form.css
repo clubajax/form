@@ -1,12 +1,13 @@
 ui-checkbox {
   display: inline-flex;
   flex-direction: row;
-  margin-right: 20px;
+  margin-right: 10px;
   cursor: pointer; }
-  ui-checkbox label {
+  ui-checkbox .ui-label {
     flex: 1 1 auto;
     display: block;
-    cursor: pointer; }
+    cursor: pointer;
+    margin-right: 5px; }
   ui-checkbox ui-icon {
     flex: 0 0 16px;
     margin-right: 5px;
@@ -33,13 +34,13 @@ ui-checkbox {
     color: black; }
   ui-checkbox[checked]:not([readonly]):hover icon-check {
     background-color: #f2f2f2; }
-  ui-checkbox[disabled] label {
+  ui-checkbox[disabled] .ui-label {
     cursor: default;
     color: #999;
     font-style: italic; }
   ui-checkbox[disabled] ui-icon {
     background-color: #ccc; }
-  ui-checkbox[readonly] label {
+  ui-checkbox[readonly] .ui-label {
     cursor: default; }
   ui-checkbox:focus {
     outline: 0; }
@@ -50,7 +51,7 @@ ui-checkbox {
 ui-radio {
   display: inline-flex;
   flex-direction: row; }
-  ui-radio label {
+  ui-radio .ui-label {
     flex: 1 1 auto;
     margin-left: 5px;
     display: block;

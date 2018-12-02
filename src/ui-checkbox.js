@@ -31,13 +31,14 @@ class CheckBox extends FormElement {
 	onChecked(value) { 
 		if (this.indeterminate) {
 			this.indeterminate = false;
-			this.icon.type = 'check';
+			this.input.type = 'check';
 		}
+		dom.attr(this.input, 'aria-checked', `${value}`);
 	}
 
 	onIndeterminate(value) { 
 		if (value) {
-			this.icon.type = 'minus';
+			this.input.type = 'minus';
 		}
 	}
 
@@ -81,18 +82,21 @@ class CheckBox extends FormElement {
 	render() {
 		const type = this.indeterminate ? 'minus' : 'check';
 		const html = this.label || '';
-		const id = this.label ? (this.id || uid('checkbox')): null;
+		const chkId = this.label ? (this.id || uid('checkbox')) : null;
+		const lblId = this.label ? (this.id || uid('label')) : null;
+		
+		this.input = dom('ui-icon', { type, id: chkId, role: 'checkbox', 'aria-labelledby': lblId, 'aria-checked': false, tabindex:'0' });
+		this.labelNode = dom('span', { html, class: 'ui-label', 'for': chkId, id: lblId });
+
 		if (this['check-after']) {
-			this.labelNode = dom('label', { html, id }, this);
-			this.icon = dom('ui-icon', { type }, this);
+			this.appendChild(this.input);
+			this.appendChild(this.labelNode);
 		} else {
-			this.icon = dom('ui-icon', { type }, this);
-			this.labelNode = dom('label', { html, id }, this);
+			this.appendChild(this.labelNode);
+			this.appendChild(this.input);
 		}
 
-		if (!this.readonly && !this.disabled) {
-			this.setAttribute('tabindex', '0');
-		}
+		dom.attr(this, 'label', false);
 	}
 }
 

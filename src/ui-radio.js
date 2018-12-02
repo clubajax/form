@@ -1,29 +1,19 @@
 const BaseComponent = require('@clubajax/base-component');
 const dom = require('@clubajax/dom');
 const FormElement = require('./FormElement');
+const uid = require('./lib/uid');
 
 class Radio extends FormElement {
-
-    // get value() {
-    //     // return dom.normalize(this.getAttribute('value'));
-    //     return !!this.checked;
-    // }
-
-    // set value(value) {
-    //     if (this['is-radio']) {
-    //         // this.setAttribute('value', value);
-    //         // this.__value = value;
-    //     } else {
-    //         this.checked = value;
-    //     }
-    // }
-
     get event() {
         return {
             value: this.value,
             checked: this.checked,
             name: this.name
         }
+    }
+
+    onChecked(value) {
+        dom.attr(this.input, 'aria-checked', `${value}`);
     }
 
     setValue(value, silent) {
@@ -63,17 +53,21 @@ class Radio extends FormElement {
 
     render() {
         const html = this.label || '';
+        const chkId = this.label ? (this.id || uid('radio')) : null;
+        const lblId = this.label ? (this.id || uid('label')) : null;
+
+        this.labelNode = dom('span', { html, class: 'ui-label', 'for': chkId, id: lblId });
+        this.input = dom('div', { class: 'radio-button', id: chkId, role: 'radio', 'aria-labelledby': lblId, 'aria-checked': false, tabindex: '0' });
+        
         if (this['check-after']) {
-            this.labelNode = dom('label', { html }, this);
-            this.icon = dom('div', { class: 'radio-button' }, this);
+            this.appendChild(this.labelNode);
+            this.appendChild(this.input);
         } else {
-            this.icon = dom('div', { class: 'radio-button' }, this);
-            this.labelNode = dom('label', { html }, this);
+            this.appendChild(this.input);
+            this.appendChild(this.labelNode);
         }
 
-        if (!this.readonly && !this.disabled) {
-            this.setAttribute('tabindex', '0');
-        }
+        dom.attr(this, 'label', false);
     }
 }
 
