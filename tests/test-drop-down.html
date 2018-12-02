@@ -1,0 +1,528 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<title>Test DropDown</title>
+	<script src="src/test-files.js"></script>
+	<style>
+		html, body {
+			height: 100%;
+		}
+
+		body {
+			padding: 20px 20px 100px 20px;
+			margin-bottom: 100px;
+			font-family: sans-serif;
+		}
+
+		.abs-pos {
+			position: absolute;
+			top: 50px;
+			right: 50px;
+		}
+
+		.inp {
+			width: 50px;
+		}
+
+		#drop1, #drop2, #drop3, #drop4 {
+			display: block;
+			width: 300px;
+			margin-top: 10px;
+		}
+
+		.drop-btn span,
+		.diamonds span,
+		.clubs span,
+		.hearts span,
+		.spades span {
+			font-size: 18px;
+			display: inline-block;
+			margin-right: 5px;
+		}
+
+		.joker {
+			display: none;
+		}
+
+		.bottom {
+			position: absolute;
+			bottom: 50px;
+			right: 100px;
+		}
+
+		.middle {
+			position: absolute;
+			top: 40%;
+			right: 100px;
+		}
+
+		.wide-list {
+			/*position: absolute;*/
+			/*top: 50%;*/
+			/*right: 100px;*/
+		}
+
+	</style>
+</head>
+<body>
+<h1>Test DropDown</h1>
+<div id="mocha"></div>
+<div id="tests"></div>
+<script>
+
+	mocha.setup('tdd');
+
+	window.dom = require('@clubajax/dom');
+	window.on = require('@clubajax/on');
+
+	suite('DropDown', function () {
+		this.timeout(3000);
+		const
+			suite = window.suite,
+			test = window.test,
+			dom = window.dom,
+			on = window.on,
+			nodash = window.nodash,
+			expect = chai.expect,
+			body = dom.byId('tests'),
+			data = [
+				{ label: 'Orange', value: 'orange' },
+				{ label: 'Red', value: 'red', selected: true },
+				{ label: 'Blue', value: 'blue' },
+				{ label: 'Green', value: 'green' }
+			],
+			data2 = [
+				{ label: 'Puppy', value: 'puppy' },
+				{ label: 'Birdy', value: 'birdy', selected: true },
+				{ label: 'Kitty', value: 'kitty' },
+				{ label: 'Snakey', value: 'snakey' }
+			],
+			data3 = ['Kitchen', 'Living Room', 'Den', 'Family Room', 'Bed Room', 'Guest Bath', 'Master Bath', 'Garage'],
+			data4 = [
+				{ label: '<span>&spades;</span> Spades', value: 'spades', class: 'spades' },
+				{ label: '<span>&clubs;</span> Clubs', value: 'clubs', selected: true, class: 'clubs' },
+				{ label: '<span>&diams;</span> Diamonds', value: 'diamonds', class: 'diamonds' },
+				{ label: 'Joker', value: 'joker', class: 'joker' },
+				{ label: '<span>&hearts;</span> Hearts', value: 'hearts', class: 'hearts' }
+			],
+			dataQnA = [
+				{
+					value: 1,
+					label: 'What is a potential pitfall with using typeof bar === "object" to determine if bar is an object? How can this pitfall be avoided?'
+				}, {
+					value: 2,
+					label: 'What is the significance of, and reason for, wrapping the entire content of a JavaScript source file in a function block?'
+				}, {
+					value: 3,
+					label: 'What is the significance, and what are the benefits, of including \'use strict\' at the beginning of a JavaScript source file?'
+				}, {
+					value: 4,
+					label: 'Consider the two functions below. Will they both return the same thing? Why or why not?'
+				}, {
+					value: 5,
+					label: 'Write a simple function (less than 160 characters) that returns a boolean indicating whether or not a string is a palindrome.'
+				}
+			],
+			dataAlias = [
+				{
+					value: 1,
+					alias: 'Q1',
+					label: 'What is a potential pitfall with using typeof bar === "object" to determine if bar is an object? How can this pitfall be avoided?'
+				}, {
+					value: 2,
+					alias: 'Q2',
+					label: 'What is the significance of, and reason for, wrapping the entire content of a JavaScript source file in a function block?'
+				}, {
+					value: 3,
+					alias: 'Q3',
+					label: 'What is the significance, and what are the benefits, of including \'use strict\' at the beginning of a JavaScript source file?'
+				}, {
+					value: 4,
+					alias: 'Q4',
+					label: 'Consider the two functions below. Will they both return the same thing? Why or why not?'
+				}, {
+					value: 5,
+					alias: 'Q5',
+					label: 'Write a simple function (less than 160 characters) that returns a boolean indicating whether or not a string is a palindrome.'
+				}
+			];
+
+		const alpha = 'abcdefghijklmnopqrstuvwxyz'.toUpperCase().split('');
+
+		function makeLongList () {
+			const list = [];
+			alpha.forEach(function (a) {
+				alpha.forEach(function (b) {
+					list.push(a + b);
+				});
+			});
+			return list.splice(0, 100);
+		}
+
+		const data6 = makeLongList();
+
+		function randomList () {
+			const r = Math.ceil(Math.random() * 10);
+			return getSeqList(r);
+		}
+
+		function getSeqList (amount, selectedIndex) {
+			const items = 'Bud Light,Coors Light,Miller Lite,Budweiser,Corona,Busch,Michelob,Heineken,Pabst,Keystone'.split(',').slice(0, amount);
+			return items.map(function (name, i) {
+				return {
+					selected: selectedIndex === i,
+					label: name,
+					value: nodash.dashify(name)
+				};
+			});
+		}
+
+
+		function copy (item) {
+			return JSON.parse(JSON.stringify(item));
+		}
+
+		function box (node) {
+			const win = dom.box(window);
+			const pop = dom.box(node.popup);
+			const btn = dom.box(node.button);
+			const topSpace = btn.top;
+			const botSpace = win.h - btn.top + btn.h;
+			return {
+				pop: pop,
+				win: win,
+				btn: btn,
+				topSpace: topSpace,
+				botSpace: botSpace
+			}
+		}
+
+		function select (node, index) {
+			return new Promise(function (resolve) {
+				node.once('open', function () {
+					on.emit(node.popup.children[index], 'click');
+				});
+				node.once('close', function () {
+					setTimeout(function () {
+						resolve(node.value);
+					}, 30);
+				});
+				on.emit(node.button, 'click');
+			});
+		}
+
+		suite('drop-down', function () {
+
+			test.only('it should lazy render without a value', function (done) {
+				const node = dom('drop-down', { data: randomList }, body);
+				onDomReady(node, function () {
+					expect(node.button.innerHTML).to.equal('Select One...');
+					done();
+				});
+			});
+
+			test('it should lazy render with a selected item', function (done) {
+				const node = dom('drop-down', {
+					data: function () {
+						return getSeqList(10, 5);
+					}
+				}, body);
+				onDomReady(node, function () {
+					expect(node.button.innerHTML).to.equal('Busch');
+					done();
+				});
+			});
+
+			test('it should lazy render and handle the value', function (done) {
+				let index = 0;
+				const amounts = [10, 8, 3, 10];
+				const node = dom('drop-down', {
+					value: 'michelob',
+					data: function () {
+						return getSeqList(amounts[index]);
+					}
+				}, body);
+				node.on('open', function () {
+					index++;
+					if (index >= amounts.length) {
+						index = 0;
+					}
+				});
+				onDomReady(node, function () {
+					expect(node.popup).to.equal(undefined);
+					expect(node.button.innerHTML).to.equal('Michelob');
+					select(node, 2).then(function () {
+						expect(node.popup.children.length).to.equal(10);
+						expect(node.button.innerHTML).to.equal('Miller Lite');
+						select(node, 6).then(function () {
+							expect(node.button.innerHTML).to.equal('Select One...');
+							select(node, 1).then(function () {
+								expect(node.button.innerHTML).to.equal('Coors Light');
+								done();
+							});
+						});
+					});
+				});
+			});
+
+			test('it should not emit an event on same selection', function (done) {
+				setTimeout(function () {
+					const node = dom('drop-down', { data: data }, body);
+					onDomReady(node, function () {
+						const events = [];
+						node.on('change', function (e) {
+							events.push(1);
+						});
+
+						select(node, 1).then(function () {
+							expect(events.join(',')).to.equal('');
+							select(node, 2).then(function () {
+								expect(events.join(',')).to.equal('1');
+								select(node, 2).then(function () {
+									expect(events.join(',')).to.equal('1');
+									done();
+								});
+							});
+						});
+					});
+				}, 1)
+			});
+
+			test('it should be handle very long options', function (done) {
+				const node = dom('drop-down', { class: 'wide-list', data: dataQnA }, body);
+				onDomReady(node, function () {
+					on.emit(node.button, 'click');
+					done();
+				});
+			});
+
+			test('it should use aliases', function (done) {
+				const node = dom('drop-down', { class: 'wide-list', data: dataAlias }, body);
+				onDomReady(node, function () {
+					on.emit(node.button, 'click');
+					select(node, 1).then(function () {
+						expect(node.button.innerHTML).to.equal('Q2');
+						done();
+					});
+				});
+			});
+
+			test('it should be scrollable', function (done) {
+				const node = dom('drop-down', { class: 'middle', data: data6, placeholder: 'Pick a Letter...', value: 'CB', label: 'Scrollable' }, body);
+				onDomReady(node, function () {
+					on.emit(node.button, 'click');
+					let b = box(node);
+					expect(b.btn.top).to.be.below(b.pop.top);
+					expect(b.pop.h).to.be.below(b.botSpace);
+
+					// done(); return;
+					on.emit(window, 'mouseup');
+					dom.style(node, 'top', '80%');
+					setTimeout(function () {
+						on.emit(node.button, 'click');
+						b = box(node);
+						expect(b.btn.top).to.be.above(b.pop.top);
+						expect(b.pop.h).to.be.below(b.topSpace);
+						on.emit(window, 'mouseup');
+						done();
+					}, 50);
+
+				});
+			});
+
+			test('it should open "up" if at bottom of page', function (done) {
+				const node = dom('drop-down', { class: 'bottom', data: data3, placeholder: 'Get a room...', label: 'Room Chooser' }, body);
+				onDomReady(node, function () {
+					const dBox = dom.box(node);
+					on.emit(node.button, 'click');
+					const pBox = dom.box(node.popup);
+					expect(dBox.top).to.be.above(pBox.top);
+					on.emit(window, 'mouseup');
+					done();
+				});
+			});
+
+			test('it should allow for HTML options', function (done) {
+				const node = dom('drop-down', { data: data4, placeholder: 'Get a room...', label: 'Room Chooser' }, body);
+				onDomReady(node, function () {
+					select(node, 2).then(function () {
+						expect(node.value).to.equal('diamonds');
+						done();
+					});
+				});
+			});
+
+			test('it should have a label', function (done) {
+				const node = dom('drop-down', { data: data3, placeholder: 'Get a room...', label: 'Room Chooser' }, body);
+				onDomReady(node, function () {
+					expect(node.value).to.equal(null);
+					select(node, 2).then(function () {
+						expect(node.value).to.equal('Den');
+						done();
+					});
+				});
+			});
+
+			test('it should allow for simple array data', function (done) {
+				const node = dom('drop-down', { data: data3, placeholder: 'Get a room...' }, body);
+				onDomReady(node, function () {
+					expect(node.value).to.equal(null);
+					select(node, 2).then(function () {
+						expect(node.value).to.equal('Den');
+						done();
+					});
+				});
+			});
+
+			test('it should undo the last selection', function (done) {
+				const node = dom('drop-down', { attr: { data: copy(data) } }, body);
+				onDomReady(node, function () {
+					expect(node.value).to.equal('red');
+					select(node, 2).then(function () {
+						expect(node.value).to.equal('blue');
+						node.undo();
+						expect(node.value).to.equal('red');
+						done();
+					});
+				});
+			});
+
+			test('it should not emit an event on init', function (done) {
+				const node = dom('drop-down', { attr: { data: copy(data) } }, body);
+				let changed = false;
+				node.on('change', function () {
+					console.log('*should not emit*');
+					changed = true;
+				});
+				onDomReady(node, function () {
+					setTimeout(function () {
+						expect(changed).to.equal(false);
+						done();
+					}, 30);
+				});
+			});
+
+			test('it should render a drop-down from data', function (done) {
+				const node = dom('drop-down', { attr: { data: copy(data) } }, body);
+				onDomReady(node, function () {
+					expect(node.button.innerHTML).to.equal('Red');
+					expect(node.value).to.equal('red');
+					expect(node.popup.style.display).to.equal('');
+					expect(node.classList.contains('show')).to.equal(false);
+					expect(node.popup.children.length).to.equal(4);
+					on.emit(node.button, 'click');
+					node.on('open', function () {
+						expect(node.classList.contains('show')).to.equal(true);
+						on.emit(node.popup.children[0], 'click');
+						node.on('close', function () {
+							expect(node.button.innerHTML).to.equal('Orange');
+							expect(node.classList.contains('show')).to.equal(false);
+							expect(node.value).to.equal('orange');
+							node.value = 'blue';
+							expect(node.button.innerHTML).to.equal('Blue');
+							expect(node.value).to.equal('blue');
+							expect(node.popup.children[2].getAttribute('selected')).to.equal('true');
+							done();
+						});
+					});
+				});
+			});
+
+			test('it should use the default placeholder', function (done) {
+				const d = copy(data);
+				d[1].selected = false;
+				const node = dom('drop-down', { attr: { data: d } }, body);
+				onDomReady(node, function () {
+					expect(node.button.innerHTML).to.equal('Select One...');
+					done();
+				});
+			});
+
+			test('it should use a custom placeholder', function (done) {
+				const d = copy(data);
+				d[1].selected = false;
+				const node = dom('drop-down', { attr: { data: d, placeholder: 'Choose already!' } }, body);
+				onDomReady(node, function () {
+					expect(node.button.innerHTML).to.equal('Choose already!');
+					done();
+				});
+			});
+
+			test('it should reset to placeholder', function (done) {
+				const d = copy(data);
+				d[1].selected = false;
+				const node = dom('drop-down', { attr: { data: d } }, body);
+				onDomReady(node, function () {
+					expect(node.button.innerHTML).to.equal('Select One...');
+					node.value = 'orange';
+					expect(node.button.innerHTML).to.equal('Orange');
+					node.reset();
+					expect(node.button.innerHTML).to.equal('Select One...');
+					expect(node.value).to.equal(null);
+					done();
+				});
+			});
+
+			test('it should clear items', function (done) {
+				const d = copy(data);
+				d[1].selected = false;
+				const node = dom('drop-down', { attr: { data: d } }, body);
+				onDomReady(node, function () {
+					expect(node.button.innerHTML).to.equal('Select One...');
+					node.value = 'orange';
+					expect(node.button.innerHTML).to.equal('Orange');
+					node.data = [];
+					done();
+				});
+			});
+
+			test('it should clear selected when setting new data', function (done) {
+				const d = copy(data);
+				const d2 = copy(data2);
+				d2[1].selected = false;
+				d[1].selected = false;
+				const node = dom('drop-down', { attr: { data: d } }, body);
+				let value;
+				onDomReady(node, function () {
+					node.on('change', function (e) {
+						console.log('*should fire once*');
+						value = e.value;
+					});
+					on.emit(node.button, 'click');
+					node.on('open', function () {
+						on.emit(node.popup.children[1], 'click');
+						on.emit(window, 'click');
+						node.on('close', function () {
+							expect(node.button.innerHTML).to.equal('Red');
+							expect(value).to.equal('red');
+							node.data = d2;
+							// shouldn't fire
+							expect(value).to.equal('red');
+							expect(node.value).to.equal(null);
+							done();
+						});
+					});
+				});
+			});
+
+			test('it should disable items', function (done) {
+				const d = copy(data);
+				d[0].disabled = true;
+				d[3].disabled = true;
+				const node = dom('drop-down', { data: d }, body);
+				onDomReady(node, function () {
+					on.emit(node.button, 'click');
+					done();
+				});
+			});
+		});
+	});
+
+	if (!/puppeteer/.test(location.hash)) {
+		mocha.run();
+	}
+
+</script>
+
+</body>
+</html>

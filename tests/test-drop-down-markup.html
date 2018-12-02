@@ -1,0 +1,324 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<title>Test DropDown Markup</title>
+	<script src="src/test-files.js"></script>
+	<style>
+		html, body {
+			height: 100%;
+		}
+
+		body {
+			padding: 20px 20px 100px 20px;
+			margin-bottom: 100px;
+			font-family: sans-serif;
+		}
+
+		.abs-pos {
+			position: absolute;
+			top: 50px;
+			right: 50px;
+		}
+
+		.inp {
+			width: 50px;
+		}
+
+		#drop1, #drop2, #drop3, #drop4 {
+			display: block;
+			width: 300px;
+			margin-top: 10px;
+		}
+
+		.drop-btn span,
+		.diamonds span,
+		.clubs span,
+		.hearts span,
+		.spades span {
+			font-size: 18px;
+			display: inline-block;
+			margin-right: 5px;
+		}
+
+		.joker {
+			display: none;
+		}
+
+		.bottom {
+			position: absolute;
+			bottom: 50px;
+			right: 100px;
+		}
+
+		.middle {
+			position: absolute;
+			top: 40%;
+			right: 100px;
+		}
+
+		.wide-list {
+			/*position: absolute;*/
+			/*top: 50%;*/
+			/*right: 100px;*/
+		}
+
+	</style>
+</head>
+<body>
+<h1>Test DropDown Markup</h1>
+<div id="mocha"></div>
+<div id="tests">
+	<div>
+		<input class="inp" autofocus />
+		<drop-down id="drop0">
+			<li value="one">One</li>
+			<li value="two">Two</li>
+			<li value="three" selected>Three</li>
+			<li value="four">Four Thousand</li>
+		</drop-down>
+		<input class="inp" />
+		<select>
+			<option>1</option>
+			<option>2</option>
+			<option>3</option>
+			<option>3</option>
+			<option>3</option>
+			<option>3</option>
+			<option>3</option>
+			<option>3</option>
+			<option>3</option>
+			<option>3</option>
+			<option>3</option>
+			<option>3</option>
+			<option>3</option>
+			<option>3</option>
+			<option>3</option>
+			<option>3</option>
+			<option>3</option>
+			<option>3</option>
+			<option>3</option>
+			<option>3</option>
+			<option>3</option>
+		</select>
+		<select></select>
+
+		<drop-down id="drop1">
+			<li value="one">One</li>
+			<li value="two">Two</li>
+			<li value="three" selected>Three</li>
+			<li value="four">Four Thousand</li>
+		</drop-down>
+
+		<drop-down id="drop2" class="abs-pos">
+			<li value="one">Smartar</li>
+			<li value="two">ResearchNow</li>
+			<li value="three" selected>NResearch</li>
+			<li value="four">ResearchNow NResearch NResearch NResearch NResearch NResearch</li>
+		</drop-down>
+
+		<drop-down id="drop3" value="zap">
+			<li value="zip">Zip</li>
+			<li value="zap">Zap</li>
+			<li value="kapow">Kapow</li>
+			<li value="zowie">Zowie</li>
+		</drop-down>
+		<drop-down id="drop4" disabled="true"></drop-down>
+	</div>
+</div>
+<script>
+
+	mocha.setup('tdd');
+
+	window.dom = require('@clubajax/dom');
+	window.on = require('@clubajax/on');
+
+	suite('DropDown', function () {
+		this.timeout(3000);
+		const
+			suite = window.suite,
+			test = window.test,
+			dom = window.dom,
+			on = window.on,
+			expect = chai.expect,
+			body = dom.byId('tests'),
+			data = [
+				{ label: 'Orange', value: 'orange' },
+				{ label: 'Red', value: 'red', selected: true },
+				{ label: 'Blue', value: 'blue' },
+				{ label: 'Green', value: 'green' }
+			],
+			data2 = [
+				{ label: 'Puppy', value: 'puppy' },
+				{ label: 'Birdy', value: 'birdy', selected: true },
+				{ label: 'Kitty', value: 'kitty' },
+				{ label: 'Snakey', value: 'snakey' }
+			];
+
+		const alpha = 'abcdefghijklmnopqrstuvwxyz'.toUpperCase().split('');
+
+		function makeLongList () {
+			const list = [];
+			alpha.forEach(function (a) {
+				alpha.forEach(function (b) {
+					list.push(a + b);
+					//					alpha.forEach(function (c) {
+					//						list.push(a + b + c);
+					//					});
+				});
+			});
+			return list.splice(0, 100);
+		}
+
+		const data6 = makeLongList();
+
+		function copy (item) {
+			return JSON.parse(JSON.stringify(item));
+		}
+
+		function box (node) {
+			const win = dom.box(window);
+			const pop = dom.box(node.popup);
+			const btn = dom.box(node.button);
+			const topSpace = btn.top;
+			const botSpace = win.h - btn.top + btn.h;
+			return {
+				pop: pop,
+				win: win,
+				btn: btn,
+				topSpace: topSpace,
+				botSpace: botSpace
+			}
+		}
+
+		function select (node, index) {
+			return new Promise(function (resolve) {
+				node.once('open', function () {
+					on.emit(node.popup.children[index], 'click');
+				});
+				node.once('close', function () {
+					resolve(node.value);
+				});
+				on.emit(node.button, 'click');
+			});
+		}
+
+		suite('drop-down', function () {
+
+			test('it should use the value from the parent', function () {
+				const node = dom.byId('drop3');
+				expect(node.button.innerHTML).to.equal('Zap');
+				expect(node.value).to.equal('zap');
+			});
+
+			test('it should allow empty and add children after', function (done) {
+				const node = dom.byId('drop4');
+				const p1 = 'Select One...';
+				const p2 = 'Please do something else first.';
+				onDomReady(node, function () {
+					expect(node.button.innerHTML).to.equal(p1);
+					node.placeholder = p2;
+					expect(node.button.innerHTML).to.equal(p2);
+					node.data = data2;
+					node.placeholder = p1;
+					node.disabled = false;
+					expect(node.value).to.equal('birdy');
+					done();
+				});
+			});
+
+			test('it should be accessible', function () {
+				const node = dom.byId('drop0');
+				expect(node.button.innerHTML).to.equal('Three');
+				expect(node.value).to.equal('three');
+			});
+
+			test('it should not emit unwanted events', function (done) {
+				//
+				// NOTE: browser/window needs to be in focus for this test to be accurate
+				// but at least it won't fail
+				//
+				const node = dom.byId('drop0');
+				node.on('focus', function (e) {
+					console.log('FOCUS', e.target === node);
+					expect(e.target === node).to.equal(true);
+				});
+				node.on('blur', function (e) {
+					console.log('BLUR', e.target === node);
+					expect(e.target === node).to.equal(true);
+				});
+				node.on('change', function (e) {
+					console.log('CHANGE', e.target === node);
+					expect(e.target === node).to.equal(true);
+				});
+
+				node.button.focus();
+				setTimeout(function () {
+					on.emit(node.button, 'click');
+					on.emit(node.popup.children[1], 'click');
+					setTimeout(function () {
+						node.button.blur();
+						done();
+					}, 50);
+				}, 50);
+
+			});
+
+			test('it should render a drop-down from markup', function (done) {
+				const node = dom.byId('drop1');
+				expect(node.button.innerHTML).to.equal('Three');
+				expect(node.value).to.equal('three');
+				expect(node.popup.style.display).to.equal('');
+				expect(node.classList.contains('show')).to.equal(false);
+				expect(node.popup.children.length).to.equal(4);
+
+				const h = node.on('open', function () {
+					expect(node.classList.contains('show')).to.equal(true);
+					node.on('close', function () {
+						expect(node.button.innerHTML).to.equal('Two');
+						expect(node.classList.contains('show')).to.equal(false);
+						expect(node.value).to.equal('two');
+						//
+						node.value = 'four';
+						expect(node.button.innerHTML).to.equal('Four Thousand');
+						expect(node.value).to.equal('four');
+						expect(node.popup.children[3].getAttribute('selected')).to.equal('true');
+						h.remove();
+						done();
+					});
+					on.emit(node.popup.children[1], 'click');
+				});
+				on.emit(node.button, 'click');
+			});
+
+			test('it should open to the left', function (done) {
+				const node = dom.byId('drop2');
+				on.emit(node.button, 'click');
+				expect(node.classList.contains('show')).to.equal(true);
+				setTimeout(function () {
+					const popup = node.popup;
+					const box = dom.box(popup);
+					const win = dom.box(window);
+					expect(win.w - (box.x + box.w)).to.equal(50);
+					setTimeout(function () {
+						on.emit(document.body, 'click');
+						setTimeout(function () {
+							on.emit(node.button, 'click');
+							const box = dom.box(popup);
+							expect(win.w - (box.x + box.w)).to.equal(50);
+							done();
+						}, 50);
+					}, 50);
+				}, 50);
+			});
+
+		});
+	});
+
+	if (!/puppeteer/.test(location.hash)) {
+		mocha.run();
+	}
+
+</script>
+
+</body>
+</html>
