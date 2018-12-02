@@ -2,9 +2,10 @@ const BaseComponent = require('@clubajax/base-component');
 const dom = require('@clubajax/dom');
 const nodash = require('@clubajax/no-dash');
 const emitEvent = require('./lib/emitEvent');
+const FormElement = require('./FormElement');
 require('./ui-radio');
 
-class RadioButtons extends BaseComponent {
+class RadioButtons extends FormElement {
 
 	constructor () {
 		super();
@@ -23,11 +24,13 @@ class RadioButtons extends BaseComponent {
 		return this.items;
 	}
 
-	set value (value) {
+	set value(value) {
 		if (value === this.value) {
 			return;
 		}
+		this.isSettingAttribute = true;
 		this.setAttribute('value', sort(value));
+		this.isSettingAttribute = false;
 		this.setValue(value);
 	}
 
@@ -62,23 +65,27 @@ class RadioButtons extends BaseComponent {
 		}
 	}
 
-	setValue (value, silent) {
-		const isChk = this.type === 'checks';
-		this.radios.forEach((radio) => {
-			const radioValue = isChk ? radio.name : radio.value;
-			if (radioValue === 0) {
-				console.warn('values of `0` may not work as expected');
+	setValue(value, silent) {
+		this.onDomReady(() => {
+			const isChk = this.type === 'checks';
+			value = unDef(value) ? [] : Array.isArray(value) ? value : value.split(',');
+			this.radios.forEach((radio) => {
+				const radioValue = isChk ? radio.name : radio.value;
+				if (radioValue === 0) {
+					console.warn('values of `0` may not work as expected');
+				}
+				const checked = value.includes(radioValue);
+				if (this.type === 'buttons') {
+					dom.attr(radio, 'checked', checked);
+				} else {
+					radio.checked = checked;
+				}
+			});
+
+			if (!silent) {
+				this.emitEvent();
 			}
-			const checked = Array.isArray(value) ? value.includes(radioValue) : value && value === radioValue;
-
-			dom.attr(radio, 'checked', checked);
-			radio.checked = checked;
 		});
-
-		// this.value = value;
-		if (!silent) {
-			this.emitEvent();
-		}
 	}
 
 	add (item) {
@@ -91,10 +98,10 @@ class RadioButtons extends BaseComponent {
 		this.connect();
 	}
 
-	addElement (item) {
+	addElement(item) {
 		const isChk = this.type === 'checks';
 		const isBtn = this.type === 'buttons';
-		const localName = isBtn ? 'button' : 'ui-radio';
+		const localName = isBtn ? 'button' : isChk ? 'ui-checkbox' : 'ui-radio';
 		const cls = isBtn ? 'btn' : isChk ? 'small' : '';
 		const html = isBtn ? item.label : '';
 		const value = this.value;
@@ -115,7 +122,7 @@ class RadioButtons extends BaseComponent {
 		this.innerHTML = '';
 		this.radios = [];
 		if (this.label) {
-			this.labelNode = dom('label', { html: this.label }, this);
+			this.labelNode = dom('label', { html: this.label, class: 'radio-buttons-label' }, this);
 		}
 
 		this.items.forEach((item) => {
@@ -143,7 +150,8 @@ class RadioButtons extends BaseComponent {
 		this.connect = () => {};
 	}
 
-	onCheck (value, checked, silent) {
+	onCheck(value, checked, silent) {
+		// console.log(' ------- onCheck', value, checked);
 		const isBtn = this.type === 'buttons';
 		const isChk = this.type === 'checks';
 		const type = this.type || 'radios';
@@ -190,6 +198,9 @@ class RadioButtons extends BaseComponent {
 	connectButtons () {
 		const eventName = this.type === 'buttons' ? 'click' : 'check-change';
 		this.on(eventName, (e) => {
+			if (e.target.classList.contains('radio-buttons-label')) {
+				return;
+			}
 			let value = e.target.value;
 			const isChecked = e.target.getAttribute('checked');
 			if (isChecked && this['allow-unchecked']) {
@@ -219,8 +230,12 @@ function sort (value) {
 	return nodash.remove(value, '').join(',');
 }
 
+function unDef(value) { 
+	return value === undefined || value === null;
+}
+
 module.exports = BaseComponent.define('ui-radio-buttons', RadioButtons, {
-	props: ['name', 'label', 'type', 'event-name'],
+	props: ['type'],
 	bools: ['allow-unchecked'],
 	attrs: ['index']
 });

@@ -1,5 +1,6 @@
 const BaseComponent = require('@clubajax/base-component');
 const dom = require('@clubajax/dom');
+const uid = require('./lib/uid');
 require('./ui-icon');
 const FormElement = require('./FormElement');
 
@@ -80,12 +81,13 @@ class CheckBox extends FormElement {
 	render() {
 		const type = this.indeterminate ? 'minus' : 'check';
 		const html = this.label || '';
+		const id = this.label ? (this.id || uid('checkbox')): null;
 		if (this['check-after']) {
-			this.labelNode = dom('label', { html }, this);
+			this.labelNode = dom('label', { html, id }, this);
 			this.icon = dom('ui-icon', { type }, this);
 		} else {
 			this.icon = dom('ui-icon', { type }, this);
-			this.labelNode = dom('label', { html }, this);
+			this.labelNode = dom('label', { html, id }, this);
 		}
 
 		if (!this.readonly && !this.disabled) {

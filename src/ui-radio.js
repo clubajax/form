@@ -4,19 +4,19 @@ const FormElement = require('./FormElement');
 
 class Radio extends FormElement {
 
-    get value() {
-        // return dom.normalize(this.getAttribute('value'));
-        return !!this.checked;
-    }
+    // get value() {
+    //     // return dom.normalize(this.getAttribute('value'));
+    //     return !!this.checked;
+    // }
 
-    set value(value) {
-        if (this['is-radio']) {
-            // this.setAttribute('value', value);
-            // this.__value = value;
-        } else {
-            this.checked = value;
-        }
-    }
+    // set value(value) {
+    //     if (this['is-radio']) {
+    //         // this.setAttribute('value', value);
+    //         // this.__value = value;
+    //     } else {
+    //         this.checked = value;
+    //     }
+    // }
 
     get event() {
         return {
