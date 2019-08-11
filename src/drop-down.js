@@ -1,7 +1,6 @@
 const dom = require('@clubajax/dom');
 const on = require('@clubajax/on');
 const PopupList = require('./popup-list');
-const autoId = require('../../lib/autoId');
 
 const DEFAULT_PLACEHOLDER = 'Select One...';
 
@@ -17,8 +16,6 @@ class DropDown extends PopupList {
 		// while selecting, or the blur will trigger a change event in React
 		this.setAttribute('tabindex', '0');
 
-		const testId = this.getAttribute('data-test-id') || autoId(this);
-		this.setAttribute('data-test-id', testId);
 		this.button = dom('div', { class: 'drop-btn', 'data-test-id': `${testId}-button` }, this);
 		super.connected();
 

@@ -1,0 +1,54 @@
+ui-list {
+    display: block;
+    border: 1px solid #999;
+    outline: none;
+    ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        li {
+            padding: 10px;
+            cursor: pointer;
+            border: 0;
+            outline: 0;
+            &:hover:not(.group):not(.label):not([aria-selected="true"]) {
+                background-color: #eee;
+            }
+            &:focus {
+                outline: 0;
+                box-shadow: 0 0 2px 2px $focus inset;
+            }
+            &[aria-selected="true"] {
+                background-color: #333;
+                color: white;
+                &:focus {
+                    box-shadow: 0 0 10px $focus inset;
+                }
+            }
+            &[disabled] {
+                background-color: #ccc;
+                color: #666;
+                font-style: italic;
+                cursor: not-allowed;
+                pointer-events: none;
+            }
+            &.label {
+                background-color: #cecece;
+                pointer-events: none;
+            }
+            &.group {
+                padding: 0 20px;
+                color: rgba(0, 0, 0, 0.322);
+                text-align: right;
+                font-weight: bold;
+                pointer-events: none;
+                &:before {
+                    content: "";
+                    display: block;
+                    border-top: 1px solid #e0e0e0;
+                    margin-bottom: 10px;
+                }
+            }
+        }
+    }
+}

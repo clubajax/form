@@ -1,0 +1,90 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <title>Test List</title>
+    <script src="src/test-files.js"></script>
+    <style>
+        body {
+            padding: 20px 20px 100px 20px;
+            font-family: sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Test List</h1>
+    <div id="mocha"></div>
+    <div id="tests">
+
+    </div>
+    <script>
+
+        mocha.setup('tdd');
+
+        suite('List', function () {
+            this.timeout(3000);
+            var
+                suite = window.suite,
+                test = window.test,
+                dom = window.dom,
+                on = window.on,
+                expect = chai.expect,
+                body = dom.byId('tests'),
+                data = [
+                    {label: 'Orange', value: 'orange'},
+                    {label: 'Red', value: 'red', selected: true},
+                    {label: 'Blue', value: 'blue'},
+                    {label: 'Green', value: 'green'}
+                ],
+                data2 = [
+                    {label: 'Puppy', value: 'puppy'},
+                    {label: 'Birdy', value: 'birdy', selected: true},
+                    {label: 'Kitty', value: 'kitty'},
+                    {label: 'Snakey', value: 'snakey'}
+                ];
+
+            function click(node, index) {
+                const lis = dom.queryAll(node.popup, 'li');
+                node.once('open', function () {
+                    on.emit(lis[index], 'click');
+                });
+                on.emit(node.button, 'click');
+            }
+
+            function select(node, index, eventName) {
+                eventName = eventName || 'change';
+                return new Promise(function (resolve) {
+                    node.once(eventName, function (e) {
+                        resolve(e);
+                    });
+                    node.once('open', function () {
+                        on.emit(node.popup.children[index], 'click');
+                    });
+                    on.emit(node.button, 'click');
+                });
+            }
+
+            suite('test it', function () {
+
+                test('it should render a simple data list', function (done) {
+                    const node = dom('ui-list', {data: data}, body);
+                    onDomReady(node, function () {
+                        done();
+                    });
+                });
+
+            });
+        });
+
+
+        if (!/puppeteer/.test(location.hash)) {
+            mocha.run();
+        }
+
+
+    </script>
+
+</body>
+
+</html>

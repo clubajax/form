@@ -1,7 +1,6 @@
 const dom = require('@clubajax/dom');
 const on = require('@clubajax/on');
 const PopupList = require('./popup-list');
-const autoId = require('../../lib/autoId');
 require('../icons/export');
 
 // TODO: key handler, disabled, ARIA
@@ -45,7 +44,6 @@ class ActionButton extends PopupList {
 		if (!this.button) {
 			this.button = dom('button', {
 				class: cls,
-				'data-test-id': autoId(this),
 				html: html,
 				busy: this.busy,
 				disabled: this.busy

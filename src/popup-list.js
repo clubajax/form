@@ -2,9 +2,8 @@ const BaseComponent = require('@clubajax/base-component');
 const dom = require('@clubajax/dom');
 const on = require('@clubajax/on');
 const keys = require('@clubajax/key-nav');
-const emitEvent = require('../../lib/emitEvent');
-const autoId = require('../../lib/autoId');
-const bindAll = require('../../lib/bindAll');
+const emitEvent = require('./lib/emitEvent');
+const uid = require('./lib/uid');
 
 // TODO: ARIA, reset (w placeholder)
 
@@ -15,7 +14,6 @@ class PopupList extends BaseComponent {
 		this.open = false;
 		this.selfOpen = true;
 		this.emitItem = false;
-		bindAll(this, 'toggle');
 	}
 
 	attributeChanged (prop, value) {
@@ -128,7 +126,7 @@ class PopupList extends BaseComponent {
 			let testId = this.button.getAttribute('data-test-id');
 			this.removeChild(this.button);
 		}
-		testId = testId ? `${testId}-popup` : autoId('popup');
+		testId = testId ? `${testId}-popup` : uid('popup');
 		// TODO: in React, the UL may be set
 		this.popup = dom('ul', { 'data-test-id': testId });
 
@@ -167,7 +165,6 @@ class PopupList extends BaseComponent {
 			this.popup = dom('ul', { 'data-test-id': testId });
 		}
 
-		let postValue;
 		const parentValue = this.value;
 		const popup = this.popup;
 		const self = this;
