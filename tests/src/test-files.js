@@ -3,7 +3,8 @@ window['no-native-shim'] = !isIE;
 const files = '<link rel="stylesheet" href="../node_modules/mocha/mocha.css">' +
 	'<link rel="stylesheet" href="/dist/form.css" />' +
 	'<script src="../node_modules/mocha/mocha.js"></script>' +
-	'<script src="../node_modules/chai/chai.js"></script>' +
+    '<script src="../node_modules/chai/chai.js"></script>' +
+    '<script src="../node_modules/chai-spies/chai-spies.js"></script>' +
 	(isIE ? '<script src="./src/polyfills.js"></script>' : '') +
 	'<script src="../dist/vendor.js"></script>' +
 	'<script src="../dist/dev.js"></script>' +
@@ -38,8 +39,8 @@ document.addEventListener('DOMContentLoaded', function () {
 	function getFileName (frame) {
 		const filename = frame.getFileName();
 		return filename ? filename.split('/')[filename.split('/').length - 1] : '';
-	}
-
+    }
+    
 	chai.Assertion.prototype.assert = function (expr, msg, negateMsg, expected, _actual, showDiff) {
 
 		if (!chai.util.test(this, arguments)) {

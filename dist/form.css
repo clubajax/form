@@ -140,6 +140,8 @@ ui-list {
   display: block;
   border: 1px solid #999;
   outline: none; }
+  ui-list:focus {
+    border-color: black; }
   ui-list ul {
     list-style: none;
     margin: 0;
@@ -154,10 +156,14 @@ ui-list {
       ui-list ul li:focus {
         outline: 0;
         box-shadow: 0 0 2px 2px #83bffc inset; }
-      ui-list ul li[aria-selected="true"] {
+      ui-list ul li[aria-current] {
+        background-color: #ccc; }
+        ui-list ul li[aria-current]:focus {
+          box-shadow: 0 0 10px #83bffc inset; }
+      ui-list ul li[aria-selected] {
         background-color: #333;
         color: white; }
-        ui-list ul li[aria-selected="true"]:focus {
+        ui-list ul li[aria-selected]:focus {
           box-shadow: 0 0 10px #83bffc inset; }
       ui-list ul li[disabled] {
         background-color: #ccc;

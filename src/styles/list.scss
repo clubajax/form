@@ -2,6 +2,9 @@ ui-list {
     display: block;
     border: 1px solid #999;
     outline: none;
+    &:focus{
+        border-color: black;
+    }
     ul {
         list-style: none;
         margin: 0;
@@ -18,13 +21,20 @@ ui-list {
                 outline: 0;
                 box-shadow: 0 0 2px 2px $focus inset;
             }
-            &[aria-selected="true"] {
+            &[aria-current] {
+                background-color: #ccc;
+                &:focus {
+                    box-shadow: 0 0 10px $focus inset;
+                }
+            }
+            &[aria-selected] {
                 background-color: #333;
                 color: white;
                 &:focus {
                     box-shadow: 0 0 10px $focus inset;
                 }
             }
+            
             &[disabled] {
                 background-color: #ccc;
                 color: #666;

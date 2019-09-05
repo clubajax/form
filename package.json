@@ -23,13 +23,14 @@
     "grunt-http-server": "^2.1.0",
     "grunt-sass": "^3.0.2",
     "mocha": "^5.2.0",
-    "node-sass": "^4.10.0"
+    "node-sass": "^4.12.0"
   },
   "dependencies": {
-    "@clubajax/base-component": "^2.3.1",
-    "@clubajax/dom": "^2.8.5",
-    "@clubajax/key-nav": "^1.1.2",
-    "@clubajax/no-dash": "^0.6.1",
-    "@clubajax/on": "^2.1.8"
+    "@clubajax/base-component": "2.3.1",
+    "@clubajax/dom": "2.8.5",
+    "@clubajax/key-nav": "2.2.0",
+    "@clubajax/no-dash": "0.6.1",
+    "@clubajax/on": "2.1.8",
+    "chai-spies": "^1.0.0"
   }
 }

@@ -4,7 +4,12 @@ const on = require('@clubajax/on');
 const keys = require('@clubajax/key-nav');
 const emitEvent = require('./lib/emitEvent');
 
-// TODO extend BaseField
+const ATTR = {
+    SELECTED: 'aria-selected',
+    DISABLED: 'disabled',
+    TABINDEX: 'tabindex',
+    VALUE: 'value'
+};
 
 class UIList extends BaseComponent {
     constructor() {
@@ -18,7 +23,6 @@ class UIList extends BaseComponent {
     }
 
     set value(value) {
-
         this.onConnected(() => {
             if (this.list) {
                 this.select(value);
@@ -30,7 +34,17 @@ class UIList extends BaseComponent {
     }
 
     get value() {
-        return this.__value !== undefined ? this.__value : dom.normalize(this.getAttribute('value'));
+        if (!this.controller) {
+            return this.getAttribute('value');
+        }
+        if (this.multiple) {
+            return this.controller.getSelected().map((node) => node.getAttribute('value'));
+        }
+        const node = this.controller.getSelected();
+        if (node) {
+            return node.getAttribute('value');
+        }
+        return null;
     }
 
     set data(value) {
@@ -78,9 +92,11 @@ class UIList extends BaseComponent {
 
     onDisabled(value) {
         if (value) {
-            this.removeAttribute('tabindex');
+            this.removeAttribute(ATTR.TABINDEX);
+            this.list.removeAttribute(ATTR.TABINDEX);
         } else {
-            this.setAttribute('tabindex', '0');
+            this.setAttribute(ATTR.TABINDEX, '-1');
+            this.list.setAttribute(ATTR.TABINDEX, '0');
         }
     }
 
@@ -96,6 +112,10 @@ class UIList extends BaseComponent {
     }
 
     domReady() {
+        dom.attr(this.list, 'tabindex', 0);
+        if (!this.disabled) {
+            this.onDisabled();
+        }
         if (this.items || this.lazyDataFN) {
             return;
         }
@@ -107,20 +127,17 @@ class UIList extends BaseComponent {
         let postValue;
         let hasChildren = false;
         const parentValue = this.value;
-        // testId = testId ? `${testId}-list` : autoId('list');
-        // TODO: in React, the UL may be set
-        this.list = dom('ul', {});
-
+        this.render();
         while (this.children.length) {
             hasChildren = true;
             if (this.children[0].localName !== 'li') {
                 console.warn("drop-down children should use LI's");
             }
-            if (this.children[0].hasAttribute('selected') || this.children[0].getAttribute('value') === parentValue) {
+            if (this.children[0].hasAttribute(ATTR.SELECTED) || this.children[0].getAttribute(ATTR.VALUE) === parentValue) {
                 this.selectedNode = this.children[0];
                 this.orgSelected = this.children[0];
                 if (!parentValue) {
-                    postValue = this.children[0].getAttribute('value');
+                    postValue = this.children[0].getAttribute(ATTR.VALUE);
                 }
             }
             this.list.appendChild(this.children[0]);
@@ -130,7 +147,7 @@ class UIList extends BaseComponent {
         this.appendChild(this.list);
         this.connect();
 
-        this.disabled = this.hasAttribute('disabled');
+        this.disabled = this.hasAttribute(ATTR.DISABLED);
 
         if (postValue || parentValue) {
             this.select(postValue || parentValue);
@@ -138,11 +155,7 @@ class UIList extends BaseComponent {
     }
 
     setItemsFromData(silent) {
-        let testId;
-        if (!this.list) {
-            this.list = dom('ul', {'data-test-id': testId});
-        }
-
+        this.render();
         const parentValue = this.value;
         const list = this.list;
         const self = this;
@@ -169,7 +182,7 @@ class UIList extends BaseComponent {
             node = dom('li', options, list);
             if (isSelected) {
                 if (self.selectedNode) {
-                    self.selectedNode.removeAttribute('selected');
+                    self.selectedNode.removeAttribute(ATTR.SELECTED);
                 }
                 self.selectedNode = node;
                 self.orgSelected = node;
@@ -183,100 +196,112 @@ class UIList extends BaseComponent {
         this.connect();
     }
 
-    getItem(value) {
-        if (this.items) {
-            for (let i = 0; i < this.items.length; i++) {
-                if (this.items[i].value === value || this.items[i].label === value) {
-                    return this.items[i];
-                }
-            }
-        }
-        return null;
-    }
+    // getItem(value) {
+    //     if (this.items) {
+    //         for (let i = 0; i < this.items.length; i++) {
+    //             if (this.items[i].value === value || this.items[i].label === value) {
+    //                 return this.items[i];
+    //             }
+    //         }
+    //     }
+    //     return null;
+    // }
 
-    select(value, silent) {
-        if (this.__value === value) {
-            return;
-        }
-        const selected = this.selectedNode || dom.query(this.list, '[selected]');
-        if (selected) {
-            selected.removeAttribute('selected');
-        }
-        this.selectedNode = dom.query(this.list, `[value="${value}"]`);
-        if (this.selectedNode) {
-            this.selectedNode.setAttribute('selected', 'true');
-        } else {
-            value = null;
-        }
-        this.lastValue = this.__value;
-        this.__value = value;
-        this.update();
-        if (!silent) {
-            this.emitEvent(value);
-        }
-    }
+    // TODO
+    // Comment out all code not yet used - probably doing things differently anyway
+    // Also, make more use of keys-nav to get and set
 
-    unselect() {
-        if (this.selectedNode) {
-            this.selectedNode.removeAttribute('selected');
-        }
-    }
+    // select(value, silent) {
+    //     if (this.__value === value) {
+    //         return;
+    //     }
+    //     const selected = this.selectedNode || dom.query(this.list, `[${ATTR.SELECTED}]`);
+    //     if (selected) {
+    //         selected.removeAttribute(ATTR.SELECTED);
+    //     }
+    //     this.selectedNode = dom.query(this.list, `[${ATTR.VALUE}="${value}"]`);
+    //     if (this.selectedNode) {
+    //         this.selectedNode.setAttribute(ATTR.SELECTED, 'true');
+    //     } else {
+    //         value = null;
+    //     }
+    //     this.lastValue = this.__value;
+    //     this.__value = value;
+    //     this.update();
+    //     console.log('select...');
+    //     if (!silent) {
+    //         this.emitEvent(value);
+    //     }
+    // }
 
-    updateAfterListChange() {
-        // TODO: doc this
-        const parentValue = getValue(this);
-        this.select(parentValue, true);
-    }
+    // unselect() {
+    //     if (this.selectedNode) {
+    //         this.selectedNode.removeAttribute(ATTR.SELECTED);
+    //     }
+    // }
+
+    // updateAfterListChange() {
+    //     // TODO: doc this
+    //     const parentValue = getValue(this);
+    //     this.select(parentValue, true);
+    // }
 
     emitEvent() {
-        let value;
-        if (this.emitItem) {
-            value = this.getItem(this.value);
-            if (value === null && this['allow-new']) {
-                value = {
-                    label: this.value,
-                    value: this.value,
-                    isNew: true
-                }
-            }
-        } else {
-            value = this.value;
-        }
-
-        emitEvent(this, value);
+        // emits a "change" event
+        emitEvent(this, this.value);
     }
 
-    isValid() {
-        return true;
-    }
+    // isValid() {
+    //     return true;
+    // }
 
-    isValidSelection() {
-        // override me
-        return true;
-    }
+    // isValidSelection() {
+    //     // override me
+    //     return true;
+    // }
 
     update() {
         // override me
+        // called after items insertion, before list insertion
     }
 
-    reset() {
-        const value = this.orgSelected ? this.orgSelected : dom.normalize(this.getAttribute('value'));
-        this.select(value);
-    }
+    // reset() {
+    //     const value = this.orgSelected ? this.orgSelected : dom.normalize(this.getAttribute('value'));
+    //     this.select(value);
+    // }
 
-    undo() {
-        if (this.lastValue !== undefined) {
-            this.select(this.lastValue, true);
-        }
-    }
+    // undo() {
+    //     if (this.lastValue !== undefined) {
+    //         this.select(this.lastValue, true);
+    //     }
+    // }
 
     connect() {
-        this.controller = keys(this.list, {roles: true});
-        // if (this.controller) {
-        //     this.controller.resume();
-        //     this.winHandle.resume();
-        // }   
+        console.log('this.list', this.list);
+        this.controller = keys(this.list, {});  
+        this.controller.log = true;
+        this.on('click', () => {
+            this.list.focus();
+        });
+        this.on('focus', () => {
+            this.list.focus();
+        });
+        this.on('key-select', (e) => {
+            // console.log(' *** KEYS', e);
+            this.emitEvent();
+        });
+        // this.controller.pause();
         this.connect = function () {};
+        this.controller.log = true;
+        this.controller.resume();
+
+        
+    }
+
+    render() {
+        if (!this.list) {
+            this.list = dom('ul', {});
+        }
     }
 
     destroy() {
@@ -286,6 +311,6 @@ class UIList extends BaseComponent {
 
 module.exports = BaseComponent.define('ui-list', UIList, {
     props: ['label', 'limit', 'name', 'event-name', 'align'],
-    bools: ['disabled'],
+    bools: ['disabled', 'readonly', 'multiple'],
     attrs: ['value']
 });

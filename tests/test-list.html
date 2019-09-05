@@ -15,8 +15,8 @@
 <body>
     <h1>Test List</h1>
     <div id="mocha"></div>
+    <input style="margin-bottom: 10px;" />
     <div id="tests">
-
     </div>
     <script>
 
@@ -24,7 +24,7 @@
 
         suite('List', function () {
             this.timeout(3000);
-            var
+            const
                 suite = window.suite,
                 test = window.test,
                 dom = window.dom,
@@ -44,7 +44,9 @@
                     {label: 'Snakey', value: 'snakey'}
                 ];
 
-            function click(node, index) {
+            let node;
+
+            function click(index) {
                 const lis = dom.queryAll(node.popup, 'li');
                 node.once('open', function () {
                     on.emit(lis[index], 'click');
@@ -52,7 +54,7 @@
                 on.emit(node.button, 'click');
             }
 
-            function select(node, index, eventName) {
+            function select(index, eventName) {
                 eventName = eventName || 'change';
                 return new Promise(function (resolve) {
                     node.once(eventName, function (e) {
@@ -65,23 +67,65 @@
                 });
             }
 
-            suite('test it', function () {
+            function key (k) {
+                console.log('key...');
+                on.emit(node.list, 'keydown', {key: k});
+            }
 
-                test('it should render a simple data list', function (done) {
-                    const node = dom('ui-list', {data: data}, body);
+            suite('Single Select', function () {
+
+                test.only('it should render a simple, selectable list', function (done) {
+                    node = dom('ui-list', {data: data, readonly: true, disabled: false, label: 'Read Only List'}, body);
                     onDomReady(node, function () {
+                        // const spy = chai.spy(foo);
+                        const items = dom.queryAll(node, 'li');
+                        let value;
+                        on(node, 'change', function(e){
+                            value = e.value;
+                            console.log('change:', e.value);
+                        });
+                        node.list.focus();
+                        console.log('active:', document.activeElement);
+
+                        key('ArrowDown');
+                        expect(items[1].getAttribute('aria-current')).to.equal("true");
+                        key('ArrowDown');
+                        key('Enter');
+                        expect(items[2].getAttribute('aria-selected')).to.equal("true");
                         done();
                     });
                 });
 
+                test('it should render readonly and with a label', function (done) {
+                    
+                });
+
+                test('it should render with lazy data', function (done) {
+
+                });
+
+                test('it should render a disabled list', function (done) {
+
+                });
+
+                test('it should render custom items', function (done) {
+
+                });
+
+                test('it should programmatically set a value', function (done) {
+
+                });
+
+            });
+
+            suite('Multi Select', function () {
+                test('it should programmatically set a value', function (done) {
+
+                });
             });
         });
 
-
-        if (!/puppeteer/.test(location.hash)) {
-            mocha.run();
-        }
-
+        mocha.run();
 
     </script>
 
