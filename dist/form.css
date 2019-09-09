@@ -138,11 +138,17 @@ ui-radio-buttons {
 
 ui-list {
   display: block;
-  border: 1px solid #999;
   outline: none; }
   ui-list:focus {
     border-color: black; }
+  ui-list[readonly] li, ui-list[disabled] li {
+    cursor: default; }
+    ui-list[readonly] li:hover:not(.group):not(.label):not([readonly]):not([aria-selected="true"]), ui-list[disabled] li:hover:not(.group):not(.label):not([readonly]):not([aria-selected="true"]) {
+      background-color: transparent; }
+  ui-list label {
+    color: #666; }
   ui-list ul {
+    border: 1px solid #999;
     list-style: none;
     margin: 0;
     padding: 0; }
@@ -151,7 +157,7 @@ ui-list {
       cursor: pointer;
       border: 0;
       outline: 0; }
-      ui-list ul li:hover:not(.group):not(.label):not([aria-selected="true"]) {
+      ui-list ul li:hover:not(.group):not(.label):not([readonly]):not([aria-selected="true"]) {
         background-color: #eee; }
       ui-list ul li:focus {
         outline: 0;

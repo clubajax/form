@@ -25,7 +25,12 @@ class UIList extends BaseComponent {
     set value(value) {
         this.onConnected(() => {
             if (this.list) {
-                this.select(value);
+                if (this.multiple) {
+
+                } else {
+                    const selector = `[value=${value}]`;
+                    this.controller.setSelected(dom.query(selector));
+                }
             } else if (this.lazyDataFN) {
                 this.setLazyValue(value);
             }
@@ -62,6 +67,14 @@ class UIList extends BaseComponent {
         return this.items;
     }
 
+    onDisabled(value) {
+        this.connectEvents();
+    }
+
+    onReadonly(value) {
+        this.connectEvents();
+    }
+
     setLazyValue(value) {
         const data = this.lazyDataFN();
         const item = data.find(m => m.value === value);
@@ -85,18 +98,8 @@ class UIList extends BaseComponent {
         this.selectedNode = null;
         this.update();
         this.items = value;
-        if (this.DOMSTATE === 'domready' || this.DOMSTATE === 'connected') {
+        if (/domready|connected/.test(this.DOMSTATE)) {
             this.setItemsFromData();
-        }
-    }
-
-    onDisabled(value) {
-        if (value) {
-            this.removeAttribute(ATTR.TABINDEX);
-            this.list.removeAttribute(ATTR.TABINDEX);
-        } else {
-            this.setAttribute(ATTR.TABINDEX, '-1');
-            this.list.setAttribute(ATTR.TABINDEX, '0');
         }
     }
 
@@ -112,8 +115,7 @@ class UIList extends BaseComponent {
     }
 
     domReady() {
-        dom.attr(this.list, 'tabindex', 0);
-        if (!this.disabled) {
+        if (!this.disabled && !this.readyonly) {
             this.onDisabled();
         }
         if (this.items || this.lazyDataFN) {
@@ -123,6 +125,7 @@ class UIList extends BaseComponent {
     }
 
     setItemsFromDom() {
+        // uses the children of ui-list as the items
         let testId;
         let postValue;
         let hasChildren = false;
@@ -155,14 +158,23 @@ class UIList extends BaseComponent {
     }
 
     setItemsFromData(silent) {
+        // uses an array of objects as the list items
         this.render();
+        this.list.innerHTML = '';
+        if (dom.isNode(this.items[0])) {
+            this.setDomData();
+            return;
+        }
+        console.log('set from data');
         const parentValue = this.value;
         const list = this.list;
         const self = this;
         let node;
-        list.innerHTML = '';
         this.items.forEach(function (item) {
             const label = item.alias ? `${item.alias}: ${item.label}` : item.label;
+            if (item.value === undefined && label === undefined) {
+                throw new Error('[ERROR] each items must have a value or a label');
+            }
             if (item.value === undefined) {
                 node = dom('div', {class: 'label', html: label}, list);
                 node.unselectable = true;
@@ -196,109 +208,84 @@ class UIList extends BaseComponent {
         this.connect();
     }
 
-    // getItem(value) {
-    //     if (this.items) {
-    //         for (let i = 0; i < this.items.length; i++) {
-    //             if (this.items[i].value === value || this.items[i].label === value) {
-    //                 return this.items[i];
-    //             }
-    //         }
-    //     }
-    //     return null;
-    // }
-
-    // TODO
-    // Comment out all code not yet used - probably doing things differently anyway
-    // Also, make more use of keys-nav to get and set
-
-    // select(value, silent) {
-    //     if (this.__value === value) {
-    //         return;
-    //     }
-    //     const selected = this.selectedNode || dom.query(this.list, `[${ATTR.SELECTED}]`);
-    //     if (selected) {
-    //         selected.removeAttribute(ATTR.SELECTED);
-    //     }
-    //     this.selectedNode = dom.query(this.list, `[${ATTR.VALUE}="${value}"]`);
-    //     if (this.selectedNode) {
-    //         this.selectedNode.setAttribute(ATTR.SELECTED, 'true');
-    //     } else {
-    //         value = null;
-    //     }
-    //     this.lastValue = this.__value;
-    //     this.__value = value;
-    //     this.update();
-    //     console.log('select...');
-    //     if (!silent) {
-    //         this.emitEvent(value);
-    //     }
-    // }
-
-    // unselect() {
-    //     if (this.selectedNode) {
-    //         this.selectedNode.removeAttribute(ATTR.SELECTED);
-    //     }
-    // }
-
-    // updateAfterListChange() {
-    //     // TODO: doc this
-    //     const parentValue = getValue(this);
-    //     this.select(parentValue, true);
-    // }
+    setDomData() {
+        // uses array of objects which are dom nodes
+        const list = this.list;
+        this.items.forEach((node) => {
+            if (node.localName !== 'li') {
+                throw new Error('list children should be of type "li"');
+            }
+            if (!node.getAttribute('value')) {
+                node.setAttribute('value', valueify(node.textContent));
+            }
+            list.appendChild(node);
+        });
+        this.appendChild(list);
+        this.update();
+        this.connect();
+    }
 
     emitEvent() {
         // emits a "change" event
         emitEvent(this, this.value);
     }
 
-    // isValid() {
-    //     return true;
-    // }
-
-    // isValidSelection() {
-    //     // override me
-    //     return true;
-    // }
-
     update() {
         // override me
         // called after items insertion, before list insertion
     }
 
-    // reset() {
-    //     const value = this.orgSelected ? this.orgSelected : dom.normalize(this.getAttribute('value'));
-    //     this.select(value);
-    // }
-
-    // undo() {
-    //     if (this.lastValue !== undefined) {
-    //         this.select(this.lastValue, true);
-    //     }
-    // }
-
     connect() {
-        console.log('this.list', this.list);
-        this.controller = keys(this.list, {});  
-        this.controller.log = true;
-        this.on('click', () => {
-            this.list.focus();
-        });
-        this.on('focus', () => {
-            this.list.focus();
-        });
-        this.on('key-select', (e) => {
-            // console.log(' *** KEYS', e);
-            this.emitEvent();
-        });
-        // this.controller.pause();
+        this.connectEvents();
         this.connect = function () {};
-        this.controller.log = true;
-        this.controller.resume();
+    }
 
-        
+    setTabIndicies(enabled) {
+        console.log('setTabIndicies', enabled);
+        if (enabled) {
+            this.setAttribute(ATTR.TABINDEX, '-1');
+            this.list.setAttribute(ATTR.TABINDEX, '0');
+        } else {
+            this.removeAttribute(ATTR.TABINDEX);
+            this.list.removeAttribute(ATTR.TABINDEX);
+        }    
+    }
+    
+    connectEvents() {
+        const enabled = !this.readonly && !this.disabled;
+        this.setTabIndicies(enabled);
+        if (!enabled && !this.controller) {
+            return;
+        }
+        if (!enabled && this.controller) {
+            this.controller.pause();
+            this.connectHandles.pause();
+        } else if (enabled && this.controller) {
+            this.controller.resume();
+            this.connectHandles.resume();
+        } else {
+            this.controller = keys(this.list, {});
+            this.controller.log = true;
+
+            this.connectHandles = on.makeMultiHandle([
+                this.on('click', () => {
+                    this.list.focus();
+                }),
+                this.on('focus', () => {
+                    this.list.focus();
+                }),
+                this.on('key-select', (e) => {
+                    this.emitEvent();
+                })
+            ]);
+        }
     }
 
     render() {
+        if (!this.labelNode && this.label) {
+            // TODO: a11y?
+            this.labelNode = dom('label', {html: this.label}, this);
+        }
         if (!this.list) {
             this.list = dom('ul', {});
         }
@@ -309,6 +296,9 @@ class UIList extends BaseComponent {
     }
 }
 
+function valueify(text){
+    return text.replace(/\s/g, '-').toLowerCase();
+}
 module.exports = BaseComponent.define('ui-list', UIList, {
     props: ['label', 'limit', 'name', 'event-name', 'align'],
     bools: ['disabled', 'readonly', 'multiple'],
