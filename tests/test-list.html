@@ -9,10 +9,12 @@
             padding: 20px 20px 100px 20px;
             font-family: sans-serif;
         }
-        .custom div:first-child{
+
+        .custom div:first-child {
             font-weight: bold;
         }
-        .custom div:last-child{
+
+        .custom div:last-child {
             color: #aaa;
             font-size: 12px;
         }
@@ -85,7 +87,15 @@
                             dom('div', {html: 'Nevada'})
                         ]
                     })
-                ];
+                ],
+                data5 = function () {
+                    return [
+                        {label: 'Puppy', value: 'puppy'},
+                        {label: 'Birdy', value: 'birdy', selected: true},
+                        {label: 'Kitty', value: 'kitty'},
+                        {label: 'Snakey', value: 'snakey'}
+                    ];
+                };
 
             let node;
 
@@ -214,7 +224,7 @@
                     });
                 });
 
-                test.only('it should render complex custom items', function (done) {
+                test('it should render complex custom items', function (done) {
                     setup({data: data4, label: 'Complex Custom Items'});
                     onDomReady(node, function () {
                         node.list.focus();
@@ -225,12 +235,22 @@
                         expect(items[2].getAttribute('aria-selected')).to.equal("true");
                         expect(value).to.equal('Milwaukee');
                         expect(items[2].textContent).to.equal('MilwaukeeWisconsin');
-                        // destroy();
+                        destroy();
                         done();
                     });
                 });
 
-                test('it should render with lazy data', function (done) {
+                test('it should use dom children', function (done) {
+
+                });
+
+                test.only('it should render with lazy data', function (done) {
+                    setup({data: data5, label: 'Lazy data'});
+                    onDomReady(node, function () {
+                        // destroy();
+                        done();
+                    });
+
                 });
 
             });

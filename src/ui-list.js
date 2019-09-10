@@ -27,12 +27,12 @@ class UIList extends BaseComponent {
             if (this.list) {
                 if (this.multiple) {
 
+                } else if (this.lazyDataFN) {
+                    this.setLazyValue(value);
                 } else {
                     const selector = `[value=${value}]`;
                     this.controller.setSelected(dom.query(selector));
                 }
-            } else if (this.lazyDataFN) {
-                this.setLazyValue(value);
             }
             this.__value = value;
         });
@@ -76,13 +76,20 @@ class UIList extends BaseComponent {
     }
 
     setLazyValue(value) {
+        // emits a value, in spite of the list not yet being rendered
         const data = this.lazyDataFN();
         const item = data.find(m => m.value === value);
-        // console.log('setLazyValue', value, item, data);
         if (!item) {
             return;
         }
         this.emitEvent(value);
+    }
+
+    setLazyData() {
+        // to be called externally, for example, by a dropdown
+        this.setData(this.lazyDataFN());
+        // I think this should be next:
+        this.connectEvents();
     }
 
     setData(value) {
@@ -106,9 +113,6 @@ class UIList extends BaseComponent {
     connected() {
         if (this.lazyDataFN) {
             this.update();
-        }
-        if (!this.items) {
-            return;
         }
         this.setItemsFromDom = () => {};
         this.setItemsFromData(true);
@@ -161,6 +165,9 @@ class UIList extends BaseComponent {
         // uses an array of objects as the list items
         this.render();
         this.list.innerHTML = '';
+        if (this.lazyDataFN && !this.items) {
+            this.items = [];
+        }
         if (dom.isNode(this.items[0])) {
             this.setDomData();
             return;
@@ -241,6 +248,9 @@ class UIList extends BaseComponent {
     }
 
     setTabIndicies(enabled) {
+        if (!this.list) {
+            return;
+        }
         console.log('setTabIndicies', enabled);
         if (enabled) {
             this.setAttribute(ATTR.TABINDEX, '-1');
@@ -252,6 +262,9 @@ class UIList extends BaseComponent {
     }
     
     connectEvents() {
+        if (this.lazyDataFN) {
+            return;
+        }
         const enabled = !this.readonly && !this.disabled;
         this.setTabIndicies(enabled);
         if (!enabled && !this.controller) {
