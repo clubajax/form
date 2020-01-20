@@ -31,7 +31,7 @@ class UIList extends BaseComponent {
                     this.setLazyValue(value);
                 } else {
                     const selector = `[value=${value}]`;
-                    this.controller.setSelected(dom.query(selector));
+                    this.controller.setSelected(dom.query(this, selector));
                 }
             }
             this.__value = value;
@@ -88,8 +88,10 @@ class UIList extends BaseComponent {
     setLazyData() {
         // to be called externally, for example, by a dropdown
         this.setData(this.lazyDataFN());
+        this.lazyDataFN = null;
         // I think this should be next:
         this.connectEvents();
+        this.fire('dom-update');
     }
 
     setData(value) {
@@ -172,7 +174,6 @@ class UIList extends BaseComponent {
             this.setDomData();
             return;
         }
-        console.log('set from data');
         const parentValue = this.value;
         const list = this.list;
         const self = this;
@@ -251,7 +252,6 @@ class UIList extends BaseComponent {
         if (!this.list) {
             return;
         }
-        console.log('setTabIndicies', enabled);
         if (enabled) {
             this.setAttribute(ATTR.TABINDEX, '-1');
             this.list.setAttribute(ATTR.TABINDEX, '0');
