@@ -26,6 +26,11 @@
     <div id="mocha"></div>
     <input style="margin-bottom: 10px;" />
     <div id="tests">
+        <ui-list id="declarative">
+            <li value="1">One</li>
+            <li value="2">Dos</li>
+            <li value="3">Tre</li>
+        </ui-list>
     </div>
     <script>
 
@@ -138,10 +143,10 @@
                 function testKeyNav() {
                     node.list.focus();
                     key('ArrowDown');
-                    expect(items[1].getAttribute('aria-current')).to.equal("true");
+                    expect(items[1].getAttribute('aria-current')).to.equal('true');
                     key('ArrowDown');
                     key('Enter');
-                    expect(items[2].getAttribute('aria-selected')).to.equal("true");
+                    expect(items[2].getAttribute('aria-selected')).to.equal('true');
                 }
                 suite('Single select', () => {
                     test('it should render a simple, selectable list', function (done) {
@@ -150,10 +155,10 @@
                             const spy = chai.spy();
                             node.list.focus();
                             key('ArrowDown');
-                            expect(items[1].getAttribute('aria-current')).to.equal("true");
+                            expect(items[1].getAttribute('aria-current')).to.equal('true');
                             key('ArrowDown');
                             key('Enter');
-                            expect(items[2].getAttribute('aria-selected')).to.equal("true");
+                            expect(items[2].getAttribute('aria-selected')).to.equal('true');
                             expect(value).to.equal('blue');
                             done();
                         });
@@ -212,10 +217,10 @@
                         onDomReady(node, function () {
                             node.list.focus();
                             key('ArrowDown');
-                            expect(items[1].getAttribute('aria-current')).to.equal("true");
+                            expect(items[1].getAttribute('aria-current')).to.equal('true');
                             key('ArrowDown');
                             key('Enter');
-                            expect(items[2].getAttribute('aria-selected')).to.equal("true");
+                            expect(items[2].getAttribute('aria-selected')).to.equal('true');
                             expect(value).to.equal('bob-byron');
                             expect(items[2].innerHTML).to.equal('Bob Byron');
                             destroy();
@@ -228,10 +233,10 @@
                         onDomReady(node, function () {
                             node.list.focus();
                             key('ArrowDown');
-                            expect(items[1].getAttribute('aria-current')).to.equal("true");
+                            expect(items[1].getAttribute('aria-current')).to.equal('true');
                             key('ArrowDown');
                             key('Enter');
-                            expect(items[2].getAttribute('aria-selected')).to.equal("true");
+                            expect(items[2].getAttribute('aria-selected')).to.equal('true');
                             expect(value).to.equal('Milwaukee');
                             expect(items[2].textContent).to.equal('MilwaukeeWisconsin');
                             destroy();
@@ -250,7 +255,19 @@
                         });
                     });
 
-                    test('it should use dom children', function (done) {
+                    test('it should use dom children declaratively', function (done) {
+                        node = dom.byId('declarative');
+                        console.log('node', node);
+                        console.log('data', node.data);
+                        expect(node.data.length).to.equal(3);
+                        items = dom.queryAll(node, 'li');
+                        node.list.focus();
+                        key('ArrowDown');
+                        expect(items[1].getAttribute('aria-current')).to.equal('true');
+                        key('ArrowDown');
+                        key('Enter');
+                        expect(items[2].getAttribute('aria-selected')).to.equal('true');
+                        expect(node.value).to.equal('3');
                         done();
                     });
                 });

@@ -64,11 +64,14 @@ class UIList extends BaseComponent {
     }
 
     get data() {
+        console.log('get data');
         return this.items;
     }
 
     onDisabled(value) {
-        this.connectEvents();
+        if (this.items || this.lazyDataFN) {
+            this.connectEvents();
+        }
     }
 
     onReadonly(value) {
@@ -113,14 +116,19 @@ class UIList extends BaseComponent {
     }
 
     connected() {
+        console.log('connected');
         if (this.lazyDataFN) {
             this.update();
         }
-        this.setItemsFromDom = () => {};
-        this.setItemsFromData(true);
+        if (this.items) {
+            this.setItemsFromDom = () => {};
+            this.setItemsFromData(true);
+        }
+        console.log(' - ', this.innerHTML);
     }
 
     domReady() {
+        console.log('domready');
         if (!this.disabled && !this.readyonly) {
             this.onDisabled();
         }
@@ -131,25 +139,30 @@ class UIList extends BaseComponent {
     }
 
     setItemsFromDom() {
+        console.log('items from dom');
         // uses the children of ui-list as the items
-        let testId;
         let postValue;
-        let hasChildren = false;
         const parentValue = this.value;
         this.render();
+        this.items = [];
         while (this.children.length) {
-            hasChildren = true;
-            if (this.children[0].localName !== 'li') {
-                console.warn("drop-down children should use LI's");
+            const child = this.children[0];
+            if (child.localName !== 'li') {
+                console.warn("ui-list children should use LI's");
             }
-            if (this.children[0].hasAttribute(ATTR.SELECTED) || this.children[0].getAttribute(ATTR.VALUE) === parentValue) {
-                this.selectedNode = this.children[0];
-                this.orgSelected = this.children[0];
+            this.items.push({
+                label: child.textContent,
+                value: child.getAttribute(ATTR.VALUE)
+            });
+            if (child.hasAttribute(ATTR.SELECTED) || child.getAttribute(ATTR.VALUE) === parentValue) {
+                this.selectedNode = child;
+                this.orgSelected = child;
+                this.items[this.items.length - 1].selected = true;
                 if (!parentValue) {
-                    postValue = this.children[0].getAttribute(ATTR.VALUE);
+                    postValue = child.getAttribute(ATTR.VALUE);
                 }
             }
-            this.list.appendChild(this.children[0]);
+            this.list.appendChild(child);
         }
 
         this.update();
@@ -244,6 +257,7 @@ class UIList extends BaseComponent {
     }
 
     connect() {
+        console.log('connect');
         this.connectEvents();
         this.connect = function () {};
     }
@@ -262,6 +276,7 @@ class UIList extends BaseComponent {
     }
     
     connectEvents() {
+        console.log('connectEvents');
         if (this.lazyDataFN) {
             return;
         }
@@ -277,6 +292,7 @@ class UIList extends BaseComponent {
             this.controller.resume();
             this.connectHandles.resume();
         } else {
+            console.log('this.list', this.list);
             this.controller = keys(this.list, {});
             this.controller.log = true;
 
