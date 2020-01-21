@@ -25,12 +25,14 @@
     <h1>Test List</h1>
     <div id="mocha"></div>
     <input style="margin-bottom: 10px;" />
-    <div id="tests">
+    <template id="template-1">
         <ui-list id="declarative">
             <li value="1">One</li>
             <li value="2">Dos</li>
             <li value="3">Tre</li>
         </ui-list>
+    </template>
+    <div id="tests">
     </div>
     <script>
 
@@ -122,6 +124,7 @@
                 let items;
                 function setup(options) {
                     node = dom('ui-list', options, body);
+                    console.log('setup', body);
                     node.onDomReady(function () {
                         items = dom.queryAll(node, 'li');
                     });
@@ -256,49 +259,54 @@
                     });
 
                     test('it should use dom children declaratively', function (done) {
+                        const template = dom.byId('template-1');
+                        const clone = template.content.cloneNode(true);
+                        dom.byId('tests').appendChild(clone);
                         node = dom.byId('declarative');
-                        console.log('node', node);
-                        console.log('data', node.data);
-                        expect(node.data.length).to.equal(3);
-                        items = dom.queryAll(node, 'li');
-                        node.list.focus();
-                        key('ArrowDown');
-                        expect(items[1].getAttribute('aria-current')).to.equal('true');
-                        key('ArrowDown');
-                        key('Enter');
-                        expect(items[2].getAttribute('aria-selected')).to.equal('true');
-                        expect(node.value).to.equal('3');
+                        onDomReady(node, function () {
+                            expect(node.data.length).to.equal(3);
+                            items = dom.queryAll(node, 'li');
+                            node.list.focus();
+                            key('ArrowDown');
+                            expect(items[1].getAttribute('aria-current')).to.equal('true');
+                            key('ArrowDown');
+                            key('Enter');
+                            expect(items[2].getAttribute('aria-selected')).to.equal('true');
+                            expect(node.value).to.equal('3');
+                            done();
+                        });
+                    });
+                });
+
+                suite('Multi Select', function () {
+                    test.only('it should select multiple items', function (done) {
+                        console.log('setup...');
+                        setup({data: data, label: 'select multiple items'});
+                        done();
+                    });
+                    test('it should programmatically set multiple values', function (done) {
+                        done();
+                    });
+                    test('it should clear a multiple selection', function (done) {
+                        done();
+                    });
+                });
+
+                suite('Modify List', function () {
+                    test('it should set new data', function (done) {
+                        done();
+                    });
+                    test('it should add an item', function (done) {
+                        done();
+                    });
+                    test('it should add multiple items', function (done) {
+                        done();
+                    });
+                    test('it should remove an item', function (done) {
                         done();
                     });
                 });
             })
-
-            suite('Multi Select', function () {
-                test('it should select multiple items', function (done) {
-                    done();
-                });
-                test('it should programmatically set multiple values', function (done) {
-                    done();
-                });
-                test('it should clear a multiple selection', function (done) {
-                    done();
-                });
-            });
-
-            suite('Modify List', function () {
-                test('it should set new data', function (done) {
-                    done();
-                });
-                test('it should add an item', function (done) {
-                    done();
-                });
-                test('it should add multiple items', function (done) {
-                    done();
-                });
-                test('it should remove an item', function (done) {
-                    done();
-                });
-            });
         });
 
         mocha.run();
