@@ -109,9 +109,9 @@ For example, checking if a Nodes is a SVGElement in a different context, you can
                 nodash = window.nodash,
                 expect = chai.expect,
                 body = dom.byId('tests');
-            function box(node) {
+            function getSizes(node) {
                 const win = dom.box(window);
-                const pop = dom.box(node.popup);
+                const pop = dom.box(node);
                 const btn = dom.box(node.button);
                 const topSpace = btn.top;
                 const botSpace = win.h - btn.top + btn.h;
@@ -124,65 +124,139 @@ For example, checking if a Nodes is a SVGElement in a different context, you can
                 };
             }
 
-            function popup(btn) {
-                dom('ui-popup', {
-                    'buttonid': btn.id,
-                    html: dom('div', {
-                        class: 'popup-box',
-                        html: [
-                            dom('h3', {html: 'My Popup'}),
-                            dom('button', {html: 'Close'})
-                        ]
-                    })
-                }, body);
-            }
-
-            function bigPopup(btn) {
-                dom('ui-popup', {
-                    class: 'big-ui-popup',
-                    'buttonid': btn.id,
-                    html: dom('div', {
-                        class: 'bigtext-box',
-                        html: getBigText()
-                    })
-                }, body);
-            }
-
             describe('ui-popup', function () {
+                let node, btn;
+                function popup() {
+                    node = dom('ui-popup', {
+                        'buttonid': btn.id,
+                        html: dom('div', {
+                            class: 'popup-box',
+                            html: [
+                                dom('h3', {html: 'My Popup'}),
+                                dom('button', {html: 'Close'})
+                            ]
+                        })
+                    }, body);
+                }
+
+                function bigPopup() {
+                    node = dom('ui-popup', {
+                        class: 'big-ui-popup',
+                        'buttonid': btn.id,
+                        html: dom('div', {
+                            class: 'bigtext-box',
+                            html: getBigText()
+                        })
+                    }, body);
+                }
+
+                function ready(cb) {
+                    onDomReady(node, cb);
+                }
+
+                function click(){
+                    on.emit(btn, 'click');
+                }
+
+                function clickoff(cb) {
+                    setTimeout(function() {
+                        on.emit(document.body, 'click');
+                        cb();
+                    }, 110);
+                }
+
+                // popup align
+                function bottomSpace() {
+                    const box = getSizes(node);
+                    return box.pop.h < box.botSpace;
+                }
+                function topSpace() {
+                    const box = getSizes(node);
+                    return box.pop.h < box.topSpace;
+                }
+                function bottom() {
+                    const box = getSizes(node);
+                    return box.pop.y > box.btn.y + box.btn.h; 
+                }
+                function top() {
+                    const box = getSizes(node);
+                    return box.pop.y + box.pop.h < box.btn.y;
+                }
+                function left() {
+                    const box = getSizes(node);
+                    return box.pop.x >= box.btn.x;
+                }
+                function right() {
+                    const box = getSizes(node);
+                    return box.pop.x < box.btn.x;
+                }
+
                 it('should render a popup left-aligned', function (done) {
-                    const btn = dom('button', {id: 'b1', html: 'Left'}, body);
+                    btn = dom('button', {id: 'b1', html: 'Left'}, body);
                     popup(btn);
-                    done();
+                    ready(function() {
+                        click();
+                        expect(bottom()).to.equal(true);  
+                        expect(left()).to.equal(true);  
+                        clickoff(done);
+                    });
                 });
 
                 it('should render a popup right-aligned', function (done) {
-                    const btn = dom('button', {id: 'b2', class: 'right', html: 'Right'}, body);
+                    btn = dom('button', {id: 'b2', class: 'right', html: 'Right'}, body);
                     popup(btn);
-                    done();
+                    ready(function () {
+                        click();
+                        expect(bottom()).to.equal(true);
+                        expect(right()).to.equal(true);
+                        clickoff(done);
+                    });
                 });
 
                 it('should render a popup bottom-aligned', function (done) {
-                    const btn = dom('button', {id: 'b3', class: 'bottom', html: 'Bottom'}, body);
+                    btn = dom('button', {id: 'b3', class: 'bottom', html: 'Bottom'}, body);
                     popup(btn);
-                    done();
+                    ready(function () {
+                        click();
+                        expect(top()).to.equal(true);
+                        expect(left()).to.equal(true);
+                        clickoff(done);
+                    });
                 });
 
                 it('should render a popup bottom-right-aligned', function (done) {
-                    const btn = dom('button', {id: 'b4', class: 'bottom-right', html: 'Bottom Right'}, body);
+                    btn = dom('button', {id: 'b4', class: 'bottom-right', html: 'Bottom Right'}, body);
                     popup(btn);
-                    done();
+                    ready(function () {
+                        click();
+                        expect(top()).to.equal(true);
+                        expect(right()).to.equal(true);
+                        clickoff(done);
+                    });
                 });
 
                 it('should render a big popup', function (done) {
-                    const btn = dom('button', {id: 'b5', class: 'big-pop', html: 'Big Pop'}, body);
+                    btn = dom('button', {id: 'b5', class: 'big-pop', html: 'Big Pop'}, body);
                     bigPopup(btn);
-                    done();
+                    ready(function () {
+                        click();
+                        expect(bottom()).to.equal(true);
+                        expect(bottomSpace()).to.equal(true);
+                        expect(left()).to.equal(true);
+                        clickoff(done);
+                    });
                 });
 
                 it('should render a big popup bottom', function (done) {
-                    const btn = dom('button', {id: 'b6', class: 'big-pop-bottom', html: 'Big Pop Bottom'}, body);
+                    btn = dom('button', {id: 'b6', class: 'big-pop-bottom', html: 'Big Pop Bottom'}, body);
                     bigPopup(btn);
-                    done();
+                    ready(function () {
+                        click();
+                        expect(top()).to.equal(true);
+                        expect(topSpace()).to.equal(true);
+                        expect(left()).to.equal(true);
+                        clickoff(done);
+                    });
                 });
             });
         });

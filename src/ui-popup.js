@@ -35,7 +35,7 @@ class UiPopup extends BaseComponent {
                 this.on(this.button, 'mouseenter', this.show.bind(this));
                 this.on('mouseleave', this.hidden.bind(this));
             } else {
-                this.removeClickOff = this.on(this, 'clickoff', (e) => {
+                this.removeClickOff = this.on(this, 'clickoff', () => {
                     this.hide();
                 });
                 this.on(this.button, 'click', () => {
@@ -89,9 +89,6 @@ function position(popup, button) {
     const topSpace = btn.top;
     const botSpace = win.h - (btn.top + btn.h + GAP);
     
-    console.log('win', win.h);
-    console.log('SPC', topSpace, botSpace);
-
     if (this.align === 'right' || (leftAligned > win.w && rightAligned > 0)) {
         // right
         style.top = btn.y + btn.h + GAP;
@@ -105,14 +102,12 @@ function position(popup, button) {
     if (pop.h > topSpace && pop.h > botSpace) {
         if (botSpace < MIN_BOT_SPACE || topSpace > botSpace * 1.5 ) {
             // force top
-            console.log('TOP');
             style.height = topSpace - (GAP * 2);
             style.bottom = (win.h - btn.y) + GAP;
             style.top = '';
             style.overflow = 'auto';
         } else {
             // force bottom
-            console.log('BOTTOM');
             style.height = botSpace - (GAP * 2);
             // style.bottom = (win.h - btn.y) + GAP;
             style.overflow = 'auto';
