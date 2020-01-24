@@ -110,7 +110,7 @@ class UIList extends BaseComponent {
         }
         this.selectedNode = null;
         this.update();
-        this.items = value;
+        this.items = [...value];
         if (/domready|connected/.test(this.DOMSTATE)) {
             this.setItemsFromData();
         }
@@ -300,7 +300,7 @@ class UIList extends BaseComponent {
                 searchTime: this.getAttribute('search-time')
             }
             this.controller = keys(this.list, options);
-            this.controller.log = true;
+            // this.controller.log = true;
 
             this.connectHandles = on.makeMultiHandle([
                 this.on('click', () => {

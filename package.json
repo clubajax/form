@@ -30,7 +30,7 @@
   "dependencies": {
     "@clubajax/base-component": "2.3.1",
     "@clubajax/dom": "2.8.5",
-    "@clubajax/key-nav": "2.2.0",
+    "@clubajax/key-nav": "2.3.1",
     "@clubajax/no-dash": "0.6.1",
     "@clubajax/on": "2.1.8",
     "chai-spies": "^1.0.0"

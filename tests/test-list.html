@@ -36,12 +36,12 @@
     </div>
     <script>
 
-        mocha.setup('tdd');
+        mocha.setup('bdd');
 
-        suite('List', function () {
+        describe('List', function () {
             this.timeout(3000);
             const
-                suite = window.suite,
+                describe = window.describe,
                 test = window.test,
                 dom = window.dom,
                 on = window.on,
@@ -166,40 +166,40 @@
                 })
             }
 
-            suite('Single select', () => {
-                test('it should render a simple, selectable list', function (done) {
+            describe('Single select', () => {
+                it('should render a simple, selectable list', function (done) {
                     setup({data: data, label: 'Simple List'});
                     onDomReady(node, function () {
                         node.list.focus();
                         key('ArrowDown');
-                        expect(items[1].getAttribute('aria-current')).to.equal('true');
+                        expect(items[0].getAttribute('aria-current')).to.equal('true');
                         key('ArrowDown');
                         key('Enter');
-                        expect(items[2].getAttribute('aria-selected')).to.equal('true');
-                        expect(value).to.equal('blue');
+                        expect(items[1].getAttribute('aria-selected')).to.equal('true');
+                        expect(value).to.equal('red');
                         done();
                     });
                 });
 
-                test('it should clear the selection', function (done) {
+                it('should clear the selection', function (done) {
                     setup({data: data, label: 'clear selection'});
                     onDomReady(node, function () {
                         node.list.focus();
                         key('ArrowDown');
-                        expect(items[1].getAttribute('aria-current')).to.equal('true');
+                        expect(items[0].getAttribute('aria-current')).to.equal('true');
                         key('ArrowDown');
                         key('Enter');
-                        expect(items[2].getAttribute('aria-selected')).to.equal('true');
-                        expect(value).to.equal('blue');
+                        expect(items[1].getAttribute('aria-selected')).to.equal('true');
+                        expect(value).to.equal('red');
 
                         node.value = null;
                         expect(node.value).to.equal(null);
-                        expect(items[2].getAttribute('aria-selected')).to.equal(null);
+                        expect(items[1].getAttribute('aria-selected')).to.equal(null);
                         done();
                     });
                 });
 
-                test('it should programmatically set a value', function (done) {
+                it('should programmatically set a value', function (done) {
                     setup({data: data, label: 'Programmatic Value'});
                     node.value = 'blue';
                     onDomReady(node, function () {
@@ -210,7 +210,7 @@
                     });
                 });
 
-                test('it should render readonly and with a label', function (done) {
+                it('should render readonly and with a label', function (done) {
                     setup({data: data, readonly: true, label: 'Read Only List'});
                     onDomReady(node, function () {
 
@@ -228,7 +228,7 @@
                     });
                 });
 
-                test('it should render disabled and with a label', function (done) {
+                it('should render disabled and with a label', function (done) {
                     setup({data: data, disabled: true, label: 'Disabled List'});
                     onDomReady(node, function () {
                         const items = dom.queryAll(node, 'li');
@@ -246,39 +246,39 @@
                     });
                 });
 
-                test('it should render simple custom items', function (done) {
+                it('should render simple custom items', function (done) {
                     setup({data: data3, label: 'Simple Custom Items'});
                     onDomReady(node, function () {
                         node.list.focus();
                         key('ArrowDown');
-                        expect(items[1].getAttribute('aria-current')).to.equal('true');
+                        expect(items[0].getAttribute('aria-current')).to.equal('true');
                         key('ArrowDown');
                         key('Enter');
-                        expect(items[2].getAttribute('aria-selected')).to.equal('true');
-                        expect(value).to.equal('bob-byron');
-                        expect(items[2].innerHTML).to.equal('Bob Byron');
+                        expect(items[1].getAttribute('aria-selected')).to.equal('true');
+                        expect(value).to.equal('lance-cox');
+                        expect(items[1].innerHTML).to.equal('Lance Cox');
                         destroy();
                         done();
                     });
                 });
 
-                test('it should render complex custom items', function (done) {
+                it('should render complex custom items', function (done) {
                     setup({data: data4, label: 'Complex Custom Items'});
                     onDomReady(node, function () {
                         node.list.focus();
                         key('ArrowDown');
-                        expect(items[1].getAttribute('aria-current')).to.equal('true');
+                        expect(items[0].getAttribute('aria-current')).to.equal('true');
                         key('ArrowDown');
                         key('Enter');
-                        expect(items[2].getAttribute('aria-selected')).to.equal('true');
-                        expect(value).to.equal('Milwaukee');
-                        expect(items[2].textContent).to.equal('MilwaukeeWisconsin');
+                        expect(items[1].getAttribute('aria-selected')).to.equal('true');
+                        expect(value).to.equal('Detroit');
+                        expect(items[1].textContent).to.equal('DetroitMichigan');
                         destroy();
                         done();
                     });
                 });
 
-                test('it should render with lazy data', function (done) {
+                it('should render with lazy data', function (done) {
                     setup({data: data5, label: 'Lazy data'});
                     onDomReady(node, function () {
                         node.setLazyData();
@@ -287,7 +287,7 @@
                     });
                 });
 
-                test('it should use dom children declaratively', function (done) {
+                it('should use dom children declaratively', function (done) {
                     const template = dom.byId('template-1');
                     const clone = template.content.cloneNode(true);
                     dom.byId('tests').appendChild(clone);
@@ -297,44 +297,48 @@
                         items = dom.queryAll(node, 'li');
                         node.list.focus();
                         key('ArrowDown');
-                        expect(items[1].getAttribute('aria-current')).to.equal('true');
+                        expect(items[0].getAttribute('aria-current')).to.equal('true');
                         key('ArrowDown');
                         key('Enter');
-                        expect(items[2].getAttribute('aria-selected')).to.equal('true');
-                        expect(node.value).to.equal('3');
+                        expect(items[1].getAttribute('aria-selected')).to.equal('true');
+                        expect(node.value).to.equal('2');
                         done();
                     });
                 });
+            
+                it('should skip disabled items', function(done) {
+                    done();
+                });
             });
 
-            suite('Multi Select', function () {
-                test('it should select multiple items', function (done) {
+            describe('Multi Select', function () {
+                it('should select multiple items', function (done) {
                     setup({data: data, label: 'select multiple items', multiple: true});
                     key('ArrowDown');
                     key('Enter');
                     key('ArrowDown');
                     key('Shift');
                     key('Enter');
-                    expectMultiValue(['red', 'blue']);
+                    expectMultiValue(['orange', 'red']);
                     done();
                 });
-                test('it should select one item with multiple option', function (done) {
+                it('should select one item with multiple option', function (done) {
                     setup({data: data, label: 'select one item with multiple', multiple: true});
                     key('ArrowDown');
                     key('Enter');
                     key('ArrowDown');
                     key('Enter');
-                    expectMultiValue(['blue']);
+                    expectMultiValue(['red']);
                     done();
                 });
-                test('it should have initial multiple values', function (done) {
+                it('should have initial multiple values', function (done) {
                     setup({data: data6, label: 'initial multiple values', multiple: true});
                     onDomReady(node, function () {
                         expectMultiValue(['red', 'blue']);
                         done();
                     });
                 });
-                test('it should programmatically set multiple values', function (done) {
+                it('should programmatically set multiple values', function (done) {
                     setup({data: data, label: 'select multiple items', multiple: true});
                     onDomReady(node, function () {
                         node.value = ['red', 'blue'];
@@ -343,7 +347,7 @@
                         done();
                     });
                 });
-                test('it should clear a multiple selection', function (done) {
+                it('should clear a multiple selection', function (done) {
                     setup({data: data6, label: 'initial multiple values', multiple: true});
                     onDomReady(node, function () {
                         expectMultiValue(['red', 'blue']);
@@ -354,10 +358,10 @@
                 });
             });
 
-            suite('Modify List', function () {
+            describe('Modify List', function () {
                 const getListValues = () => items.map(node => node.getAttribute('value'));
 
-                test('it should replace the data', function (done) {
+                it('should replace the data', function (done) {
                     setup({data: data, label: 'replace data'});
                     onDomReady(node, function () {
                         expectMultiValue(getListValues(), ["orange", "red", "blue", "green"]);
@@ -367,7 +371,7 @@
                         done();
                     });
                 });
-                test('it should add an item', function (done) {
+                it('should add an item', function (done) {
                     setup({data: data, label: 'add an item'});
                     onDomReady(node, function () {
                         expectMultiValue(getListValues(), ["orange", "red", "blue", "green"]);
@@ -380,7 +384,7 @@
                         done();
                     });
                 });
-                test('it should add multiple items', function (done) {
+                it('should add multiple items', function (done) {
                     setup({data: data, label: 'add multiple items'});
                     onDomReady(node, function () {
                         expectMultiValue(getListValues(), ["orange", "red", "blue", "green"]);
@@ -396,7 +400,7 @@
                         done();
                     });
                 });
-                test('it should remove an item', function (done) {
+                it('should remove an item', function (done) {
                     setup({data: data, label: 'remove an item'});
                     onDomReady(node, function () {
                         expectMultiValue(getListValues(), ["orange", "red", "blue", "green"]);
@@ -406,7 +410,7 @@
                         done();
                     });
                 });
-                test.only('it should remove items', function (done) {
+                it('should remove items', function (done) {
                     setup({data: data, label: 'remove items'});
                     onDomReady(node, function () {
                         expectMultiValue(getListValues(), ["orange", "red", "blue", "green"]);
