@@ -25,16 +25,20 @@ class UIList extends BaseComponent {
     set value(value) {
         this.onConnected(() => {
             if (this.list) {
-                if (this.multiple) {
+                function getSelector(val) {
+                    return `[value="${val}"]`;
+                }
 
-                } else if (this.lazyDataFN) {
-                    this.setLazyValue(value);
+                if (Array.isArray(value)) {
+                    if (!this.multiple) {
+                        throw new Error('trying to set multiple values without the `multiple` attribute');
+                    }
+                    const selector = value.map(getSelector).join(',');
+                    this.controller.setSelected(dom.queryAll(this, selector));
                 } else {
-                    const selector = `[value=${value}]`;
-                    this.controller.setSelected(dom.query(this, selector));
+                    this.controller.setSelected(dom.query(this, getSelector(value)));
                 }
             }
-            this.__value = value;
         });
     }
 
@@ -64,7 +68,6 @@ class UIList extends BaseComponent {
     }
 
     get data() {
-        console.log('get data');
         return this.items;
     }
 
@@ -98,9 +101,7 @@ class UIList extends BaseComponent {
     }
 
     setData(value) {
-        if (!Array.isArray(value)) {
-            value = [value];
-        }
+        value = Array.isArray(value) ? value : [value];
         if (value.length && typeof value[0] !== 'object') {
             value = value.map(item => ({label: item, value: item}));
         }
@@ -115,8 +116,25 @@ class UIList extends BaseComponent {
         }
     }
 
+    addData(items) {
+        items = Array.isArray(items) ? items : [items];
+        this.items = [...(this.items || []), ...items];
+        this.setItemsFromData();
+    }
+
+    removeData(value) {
+        value = Array.isArray(value) ? value : [value];
+        value.forEach((value) => {
+            const index = this.items.findIndex(item => item.value === value);
+            if (index === -1) {
+                console.warn('remove value, not found', value);
+            }
+            this.items.splice(index, 1);
+        });
+        this.setItemsFromData();
+    }
+
     connected() {
-        console.log('connected');
         if (this.lazyDataFN) {
             this.update();
         }
@@ -124,11 +142,9 @@ class UIList extends BaseComponent {
             this.setItemsFromDom = () => {};
             this.setItemsFromData(true);
         }
-        console.log(' - ', this.innerHTML);
     }
 
     domReady() {
-        console.log('domready');
         if (!this.disabled && !this.readyonly) {
             this.onDisabled();
         }
@@ -139,7 +155,6 @@ class UIList extends BaseComponent {
     }
 
     setItemsFromDom() {
-        console.log('items from dom');
         // uses the children of ui-list as the items
         let postValue;
         const parentValue = this.value;
@@ -189,7 +204,6 @@ class UIList extends BaseComponent {
         }
         const parentValue = this.value;
         const list = this.list;
-        const self = this;
         let node;
         this.items.forEach(function (item) {
             const label = item.alias ? `${item.alias}: ${item.label}` : item.label;
@@ -204,7 +218,7 @@ class UIList extends BaseComponent {
             const options = {html: label, value: item.value};
             const isSelected = item.selected || item.value === parentValue;
             if (isSelected) {
-                options.selected = true;
+                options['aria-selected'] = true;
             }
             if (item.class) {
                 options.class = item.class;
@@ -213,16 +227,6 @@ class UIList extends BaseComponent {
                 options.disabled = true;
             }
             node = dom('li', options, list);
-            if (isSelected) {
-                if (self.selectedNode) {
-                    self.selectedNode.removeAttribute(ATTR.SELECTED);
-                }
-                self.selectedNode = node;
-                self.orgSelected = node;
-                if (!parentValue) {
-                    self.__value = item.value;
-                }
-            }
         });
         this.appendChild(this.list);
         this.update();
@@ -257,7 +261,6 @@ class UIList extends BaseComponent {
     }
 
     connect() {
-        console.log('connect');
         this.connectEvents();
         this.connect = function () {};
     }
@@ -276,7 +279,6 @@ class UIList extends BaseComponent {
     }
     
     connectEvents() {
-        console.log('connectEvents');
         if (this.lazyDataFN) {
             return;
         }
@@ -292,8 +294,12 @@ class UIList extends BaseComponent {
             this.controller.resume();
             this.connectHandles.resume();
         } else {
-            console.log('this.list', this.list);
-            this.controller = keys(this.list, {});
+            const options = {
+                canSelectNone: this.getAttribute('can-select-none'),
+                multiple: this.multiple,
+                searchTime: this.getAttribute('search-time')
+            }
+            this.controller = keys(this.list, options);
             this.controller.log = true;
 
             this.connectHandles = on.makeMultiHandle([

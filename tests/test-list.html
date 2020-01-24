@@ -49,13 +49,13 @@
                 body = dom.byId('tests'),
                 data = [
                     {label: 'Orange', value: 'orange'},
-                    {label: 'Red', value: 'red', selected: true},
+                    {label: 'Red', value: 'red'},
                     {label: 'Blue', value: 'blue'},
                     {label: 'Green', value: 'green'}
                 ],
                 data2 = [
                     {label: 'Puppy', value: 'puppy'},
-                    {label: 'Birdy', value: 'birdy', selected: true},
+                    {label: 'Birdy', value: 'birdy'},
                     {label: 'Kitty', value: 'kitty'},
                     {label: 'Snakey', value: 'snakey'}
                 ],
@@ -98,11 +98,17 @@
                 data5 = function () {
                     return [
                         {label: 'Puppy', value: 'puppy'},
-                        {label: 'Birdy', value: 'birdy', selected: true},
+                        {label: 'Birdy', value: 'birdy'},
                         {label: 'Kitty', value: 'kitty'},
                         {label: 'Snakey', value: 'snakey'}
                     ];
-                };
+                },
+                data6 = [
+                    {label: 'Orange', value: 'orange'},
+                    {label: 'Red', value: 'red', selected: true},
+                    {label: 'Blue', value: 'blue', selected: true},
+                    {label: 'Green', value: 'green'}
+                ];
 
             let node;
 
@@ -118,195 +124,299 @@
                 on.emit(node.list, 'keydown', {key: k});
             }
 
-            suite('Single Select', function () {
 
-                let value;
-                let items;
-                function setup(options) {
-                    node = dom('ui-list', options, body);
-                    console.log('setup', body);
-                    node.onDomReady(function () {
+            let value;
+            let items;
+            function setup(options) {
+                node = dom('ui-list', options, body);
+                node.onDomReady(function () {
+                    items = dom.queryAll(node, 'li');
+                });
+                on(node, 'dom-update', () => {
+                    items = dom.queryAll(node, 'li');
+                });
+                value = false;
+                on(node, 'change', function (e) {
+                    value = e.value;
+                });
+            }
+
+            function update() {
+                items = dom.queryAll(node, 'li');
+            }
+
+            function destroy() {
+                node.destroy();
+                value = false;
+            }
+
+            function testKeyNav() {
+                node.list.focus();
+                key('ArrowDown');
+                expect(items[1].getAttribute('aria-current')).to.equal('true');
+                key('ArrowDown');
+                key('Enter');
+                expect(items[2].getAttribute('aria-selected')).to.equal('true');
+            }
+
+            function expectMultiValue(expectValue, compareValue = node.value) {
+                expect(expectValue.length).to.equal(compareValue.length);
+                expectValue.forEach((v, i) => {
+                    expect(v).to.equal(compareValue[i]);
+                })
+            }
+
+            suite('Single select', () => {
+                test('it should render a simple, selectable list', function (done) {
+                    setup({data: data, label: 'Simple List'});
+                    onDomReady(node, function () {
+                        node.list.focus();
+                        key('ArrowDown');
+                        expect(items[1].getAttribute('aria-current')).to.equal('true');
+                        key('ArrowDown');
+                        key('Enter');
+                        expect(items[2].getAttribute('aria-selected')).to.equal('true');
+                        expect(value).to.equal('blue');
+                        done();
+                    });
+                });
+
+                test('it should clear the selection', function (done) {
+                    setup({data: data, label: 'clear selection'});
+                    onDomReady(node, function () {
+                        node.list.focus();
+                        key('ArrowDown');
+                        expect(items[1].getAttribute('aria-current')).to.equal('true');
+                        key('ArrowDown');
+                        key('Enter');
+                        expect(items[2].getAttribute('aria-selected')).to.equal('true');
+                        expect(value).to.equal('blue');
+
+                        node.value = null;
+                        expect(node.value).to.equal(null);
+                        expect(items[2].getAttribute('aria-selected')).to.equal(null);
+                        done();
+                    });
+                });
+
+                test('it should programmatically set a value', function (done) {
+                    setup({data: data, label: 'Programmatic Value'});
+                    node.value = 'blue';
+                    onDomReady(node, function () {
+                        expect(items[2].getAttribute('aria-selected')).to.equal('true');
+                        node.value = 'red';
+                        expect(items[1].getAttribute('aria-selected')).to.equal('true');
+                        done();
+                    });
+                });
+
+                test('it should render readonly and with a label', function (done) {
+                    setup({data: data, readonly: true, label: 'Read Only List'});
+                    onDomReady(node, function () {
+
+                        node.list.focus();
+                        // expect(document.activeElement).to.equal(document.body);
+
+                        key('ArrowDown');
+                        expect(items[1].getAttribute('aria-current')).to.equal(null);
+                        key('ArrowDown');
+                        key('Enter');
+                        expect(items[2].getAttribute('aria-selected')).to.equal(null);
+                        expect(value).to.equal(false);
+                        destroy();
+                        done();
+                    });
+                });
+
+                test('it should render disabled and with a label', function (done) {
+                    setup({data: data, disabled: true, label: 'Disabled List'});
+                    onDomReady(node, function () {
+                        const items = dom.queryAll(node, 'li');
+                        node.list.focus();
+                        // expect(document.activeElement).to.equal(document.body);
+
+                        key('ArrowDown');
+                        expect(items[1].getAttribute('aria-current')).to.equal(null);
+                        key('ArrowDown');
+                        key('Enter');
+                        expect(items[2].getAttribute('aria-selected')).to.equal(null);
+                        expect(value).to.equal(false);
+                        destroy();
+                        done();
+                    });
+                });
+
+                test('it should render simple custom items', function (done) {
+                    setup({data: data3, label: 'Simple Custom Items'});
+                    onDomReady(node, function () {
+                        node.list.focus();
+                        key('ArrowDown');
+                        expect(items[1].getAttribute('aria-current')).to.equal('true');
+                        key('ArrowDown');
+                        key('Enter');
+                        expect(items[2].getAttribute('aria-selected')).to.equal('true');
+                        expect(value).to.equal('bob-byron');
+                        expect(items[2].innerHTML).to.equal('Bob Byron');
+                        destroy();
+                        done();
+                    });
+                });
+
+                test('it should render complex custom items', function (done) {
+                    setup({data: data4, label: 'Complex Custom Items'});
+                    onDomReady(node, function () {
+                        node.list.focus();
+                        key('ArrowDown');
+                        expect(items[1].getAttribute('aria-current')).to.equal('true');
+                        key('ArrowDown');
+                        key('Enter');
+                        expect(items[2].getAttribute('aria-selected')).to.equal('true');
+                        expect(value).to.equal('Milwaukee');
+                        expect(items[2].textContent).to.equal('MilwaukeeWisconsin');
+                        destroy();
+                        done();
+                    });
+                });
+
+                test('it should render with lazy data', function (done) {
+                    setup({data: data5, label: 'Lazy data'});
+                    onDomReady(node, function () {
+                        node.setLazyData();
+                        expect(items.length).to.equal(4);
+                        done();
+                    });
+                });
+
+                test('it should use dom children declaratively', function (done) {
+                    const template = dom.byId('template-1');
+                    const clone = template.content.cloneNode(true);
+                    dom.byId('tests').appendChild(clone);
+                    node = dom.byId('declarative');
+                    onDomReady(node, function () {
+                        expect(node.data.length).to.equal(3);
                         items = dom.queryAll(node, 'li');
+                        node.list.focus();
+                        key('ArrowDown');
+                        expect(items[1].getAttribute('aria-current')).to.equal('true');
+                        key('ArrowDown');
+                        key('Enter');
+                        expect(items[2].getAttribute('aria-selected')).to.equal('true');
+                        expect(node.value).to.equal('3');
+                        done();
                     });
-                    on(node, 'dom-update', () => {
-                        items = dom.queryAll(node, 'li');
-                    });
-                    value = false;
-                    on(node, 'change', function (e) {
-                        value = e.value;
-                        // console.log('change:', e.value);
-                    });
-                }
+                });
+            });
 
-                function destroy() {
-                    node.destroy();
-                    value = false;
-                }
-
-                function testKeyNav() {
-                    node.list.focus();
-                    key('ArrowDown');
-                    expect(items[1].getAttribute('aria-current')).to.equal('true');
+            suite('Multi Select', function () {
+                test('it should select multiple items', function (done) {
+                    setup({data: data, label: 'select multiple items', multiple: true});
                     key('ArrowDown');
                     key('Enter');
-                    expect(items[2].getAttribute('aria-selected')).to.equal('true');
-                }
-                suite('Single select', () => {
-                    test('it should render a simple, selectable list', function (done) {
-                        setup({data: data, label: 'Simple List'});
-                        onDomReady(node, function () {
-                            const spy = chai.spy();
-                            node.list.focus();
-                            key('ArrowDown');
-                            expect(items[1].getAttribute('aria-current')).to.equal('true');
-                            key('ArrowDown');
-                            key('Enter');
-                            expect(items[2].getAttribute('aria-selected')).to.equal('true');
-                            expect(value).to.equal('blue');
-                            done();
-                        });
-                    });
-
-                    test('it should programmatically set a value', function (done) {
-                        setup({data: data, label: 'Programmatic Value'});
-                        node.value = 'blue';
-                        onDomReady(node, function () {
-                            console.log('PROG NODE', node);
-                            expect(items[2].getAttribute('aria-selected')).to.equal('true');
-                            node.value = 'red';
-                            expect(items[1].getAttribute('aria-selected')).to.equal('true');
-                            done();
-                        });
-                    });
-
-                    test('it should render readonly and with a label', function (done) {
-                        setup({data: data, readonly: true, label: 'Read Only List'});
-                        onDomReady(node, function () {
-
-                            node.list.focus();
-                            // expect(document.activeElement).to.equal(document.body);
-
-                            key('ArrowDown');
-                            expect(items[1].getAttribute('aria-current')).to.equal(null);
-                            key('ArrowDown');
-                            key('Enter');
-                            expect(items[2].getAttribute('aria-selected')).to.equal(null);
-                            expect(value).to.equal(false);
-                            destroy();
-                            done();
-                        });
-                    });
-
-                    test('it should render disabled and with a label', function (done) {
-                        setup({data: data, disabled: true, label: 'Disabled List'});
-                        onDomReady(node, function () {
-                            const items = dom.queryAll(node, 'li');
-                            node.list.focus();
-                            // expect(document.activeElement).to.equal(document.body);
-
-                            key('ArrowDown');
-                            expect(items[1].getAttribute('aria-current')).to.equal(null);
-                            key('ArrowDown');
-                            key('Enter');
-                            expect(items[2].getAttribute('aria-selected')).to.equal(null);
-                            expect(value).to.equal(false);
-                            destroy();
-                            done();
-                        });
-                    });
-
-                    test('it should render simple custom items', function (done) {
-                        setup({data: data3, label: 'Simple Custom Items'});
-                        onDomReady(node, function () {
-                            node.list.focus();
-                            key('ArrowDown');
-                            expect(items[1].getAttribute('aria-current')).to.equal('true');
-                            key('ArrowDown');
-                            key('Enter');
-                            expect(items[2].getAttribute('aria-selected')).to.equal('true');
-                            expect(value).to.equal('bob-byron');
-                            expect(items[2].innerHTML).to.equal('Bob Byron');
-                            destroy();
-                            done();
-                        });
-                    });
-
-                    test('it should render complex custom items', function (done) {
-                        setup({data: data4, label: 'Complex Custom Items'});
-                        onDomReady(node, function () {
-                            node.list.focus();
-                            key('ArrowDown');
-                            expect(items[1].getAttribute('aria-current')).to.equal('true');
-                            key('ArrowDown');
-                            key('Enter');
-                            expect(items[2].getAttribute('aria-selected')).to.equal('true');
-                            expect(value).to.equal('Milwaukee');
-                            expect(items[2].textContent).to.equal('MilwaukeeWisconsin');
-                            destroy();
-                            done();
-                        });
-                    });
-
-                    test('it should render with lazy data', function (done) {
-                        setup({data: data5, label: 'Lazy data'});
-                        onDomReady(node, function () {
-                            node.setLazyData();
-                            expect(items.length).to.equal(4);
-                            console.log('items', items);
-                            // destroy();
-                            done();
-                        });
-                    });
-
-                    test('it should use dom children declaratively', function (done) {
-                        const template = dom.byId('template-1');
-                        const clone = template.content.cloneNode(true);
-                        dom.byId('tests').appendChild(clone);
-                        node = dom.byId('declarative');
-                        onDomReady(node, function () {
-                            expect(node.data.length).to.equal(3);
-                            items = dom.queryAll(node, 'li');
-                            node.list.focus();
-                            key('ArrowDown');
-                            expect(items[1].getAttribute('aria-current')).to.equal('true');
-                            key('ArrowDown');
-                            key('Enter');
-                            expect(items[2].getAttribute('aria-selected')).to.equal('true');
-                            expect(node.value).to.equal('3');
-                            done();
-                        });
-                    });
+                    key('ArrowDown');
+                    key('Shift');
+                    key('Enter');
+                    expectMultiValue(['red', 'blue']);
+                    done();
                 });
-
-                suite('Multi Select', function () {
-                    test.only('it should select multiple items', function (done) {
-                        console.log('setup...');
-                        setup({data: data, label: 'select multiple items'});
-                        done();
-                    });
-                    test('it should programmatically set multiple values', function (done) {
-                        done();
-                    });
-                    test('it should clear a multiple selection', function (done) {
+                test('it should select one item with multiple option', function (done) {
+                    setup({data: data, label: 'select one item with multiple', multiple: true});
+                    key('ArrowDown');
+                    key('Enter');
+                    key('ArrowDown');
+                    key('Enter');
+                    expectMultiValue(['blue']);
+                    done();
+                });
+                test('it should have initial multiple values', function (done) {
+                    setup({data: data6, label: 'initial multiple values', multiple: true});
+                    onDomReady(node, function () {
+                        expectMultiValue(['red', 'blue']);
                         done();
                     });
                 });
-
-                suite('Modify List', function () {
-                    test('it should set new data', function (done) {
-                        done();
-                    });
-                    test('it should add an item', function (done) {
-                        done();
-                    });
-                    test('it should add multiple items', function (done) {
-                        done();
-                    });
-                    test('it should remove an item', function (done) {
+                test('it should programmatically set multiple values', function (done) {
+                    setup({data: data, label: 'select multiple items', multiple: true});
+                    onDomReady(node, function () {
+                        node.value = ['red', 'blue'];
+                        expect(items[1].getAttribute('aria-selected')).to.equal('true');
+                        expect(items[2].getAttribute('aria-selected')).to.equal('true');
                         done();
                     });
                 });
-            })
+                test('it should clear a multiple selection', function (done) {
+                    setup({data: data6, label: 'initial multiple values', multiple: true});
+                    onDomReady(node, function () {
+                        expectMultiValue(['red', 'blue']);
+                        node.value = null;
+                        expectMultiValue([]);
+                        done();
+                    });
+                });
+            });
+
+            suite('Modify List', function () {
+                const getListValues = () => items.map(node => node.getAttribute('value'));
+
+                test('it should replace the data', function (done) {
+                    setup({data: data, label: 'replace data'});
+                    onDomReady(node, function () {
+                        expectMultiValue(getListValues(), ["orange", "red", "blue", "green"]);
+                        node.data = data2;
+                        update();
+                        expectMultiValue(getListValues(), ["puppy", "birdy", "kitty", "snakey"]);
+                        done();
+                    });
+                });
+                test('it should add an item', function (done) {
+                    setup({data: data, label: 'add an item'});
+                    onDomReady(node, function () {
+                        expectMultiValue(getListValues(), ["orange", "red", "blue", "green"]);
+                        node.addData({
+                            value: 'purple',
+                            label: 'Purple'
+                        });
+                        update(); 
+                        expectMultiValue(getListValues(), ["orange", "red", "blue", "green", "purple"]);
+                        done();
+                    });
+                });
+                test('it should add multiple items', function (done) {
+                    setup({data: data, label: 'add multiple items'});
+                    onDomReady(node, function () {
+                        expectMultiValue(getListValues(), ["orange", "red", "blue", "green"]);
+                        node.addData([{
+                            value: 'purple',
+                            label: 'Purple'
+                        }, {
+                            value: 'black',
+                            label: 'Black'
+                        }]);
+                        update();
+                        expectMultiValue(getListValues(), ["orange", "red", "blue", "green", "purple", "black"]);
+                        done();
+                    });
+                });
+                test('it should remove an item', function (done) {
+                    setup({data: data, label: 'remove an item'});
+                    onDomReady(node, function () {
+                        expectMultiValue(getListValues(), ["orange", "red", "blue", "green"]);
+                        node.removeData('red');
+                        update();
+                        expectMultiValue(getListValues(), ["orange", "blue", "green"]);
+                        done();
+                    });
+                });
+                test.only('it should remove items', function (done) {
+                    setup({data: data, label: 'remove items'});
+                    onDomReady(node, function () {
+                        expectMultiValue(getListValues(), ["orange", "red", "blue", "green"]);
+                        node.removeData(['red', 'orange']);
+                        update();
+                        expectMultiValue(getListValues(), ["blue", "green"]);
+                        done();
+                    });
+                });
+            });
         });
 
         mocha.run();
