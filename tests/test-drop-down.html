@@ -70,12 +70,10 @@
 <div id="tests"></div>
 <script>
 
-	mocha.setup('tdd');
-
-	window.dom = require('@clubajax/dom');
-	window.on = require('@clubajax/on');
-
+    mocha.setup('tdd');
+    
 	suite('DropDown', function () {
+
 		this.timeout(3000);
 		const
 			suite = window.suite,
@@ -198,11 +196,14 @@
 		}
 
 		function select (node, index) {
+            console.log('select::', index);
 			return new Promise(function (resolve) {
 				node.once('open', function () {
+                    console.log('    open');
 					on.emit(node.popup.children[index], 'click');
 				});
 				node.once('close', function () {
+                    console.log('    close');
 					setTimeout(function () {
 						resolve(node.value);
 					}, 30);
@@ -213,7 +214,7 @@
 
 		suite('drop-down', function () {
 
-			test.only('it should lazy render without a value', function (done) {
+			test('it should lazy render without a value', function (done) {
 				const node = dom('drop-down', { data: randomList }, body);
 				onDomReady(node, function () {
 					expect(node.button.innerHTML).to.equal('Select One...');
@@ -233,7 +234,7 @@
 				});
 			});
 
-			test('it should lazy render and handle the value', function (done) {
+			test.only('it should lazy render and handle the value', function (done) {
 				let index = 0;
 				const amounts = [10, 8, 3, 10];
 				const node = dom('drop-down', {
@@ -250,8 +251,10 @@
 				});
 				onDomReady(node, function () {
 					expect(node.popup).to.equal(undefined);
-					expect(node.button.innerHTML).to.equal('Michelob');
+                    expect(node.button.innerHTML).to.equal('Michelob');
+                    console.log('select...');
 					select(node, 2).then(function () {
+                        console.log('    selected');
 						expect(node.popup.children.length).to.equal(10);
 						expect(node.button.innerHTML).to.equal('Miller Lite');
 						select(node, 6).then(function () {

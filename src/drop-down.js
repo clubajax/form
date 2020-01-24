@@ -16,7 +16,7 @@ class DropDown extends PopupList {
 		// while selecting, or the blur will trigger a change event in React
 		this.setAttribute('tabindex', '0');
 
-		this.button = dom('div', { class: 'drop-btn', 'data-test-id': `${testId}-button` }, this);
+		this.button = dom('div', { class: 'drop-btn' }, this);
 		super.connected();
 
 		if (this.label) {

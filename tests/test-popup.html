@@ -1,0 +1,87 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<title>Test Popup</title>
+	<script src="src/test-files.js"></script>
+	<style>
+		html, body {
+			height: 100%;
+		}
+
+		body {
+			padding: 20px 20px 100px 20px;
+			margin-bottom: 100px;
+			font-family: sans-serif;
+		}
+
+		.popup-box{
+            width: 200px;
+            height: 100px;
+            border: 1px solid #333;
+            background-color: #eee;
+            padding: 10px;
+            text-align: center;
+        }
+
+	</style>
+</head>
+<body>
+<h1>Test Popup</h1>
+<div id="mocha"></div>
+<div id="tests"></div>
+<script>
+
+    mocha.setup('bdd');
+    
+	describe('UiPopup', function () {
+
+		this.timeout(3000);
+		const
+			describe = window.describe,
+			test = window.test,
+			dom = window.dom,
+			on = window.on,
+			nodash = window.nodash,
+			expect = chai.expect,
+			body = dom.byId('tests');
+		function box (node) {
+			const win = dom.box(window);
+			const pop = dom.box(node.popup);
+			const btn = dom.box(node.button);
+			const topSpace = btn.top;
+			const botSpace = win.h - btn.top + btn.h;
+			return {
+				pop: pop,
+				win: win,
+				btn: btn,
+				topSpace: topSpace,
+				botSpace: botSpace
+			};
+		}
+
+		describe('ui-popup', function () {
+
+			it('should render a popup', function (done) {
+                dom('ui-popup', {
+                    html: dom('div', {
+                        class: 'popup-box',
+                        html: [
+                            dom('h3', {html: 'My Popup'}),
+                            dom('button', {html: 'Close'})
+                        ]
+                    })
+                }, body);
+                expect(true).to.equal(true);
+                done();
+            });
+        });
+	});
+
+	if (!/puppeteer/.test(location.hash)) {
+		mocha.run();
+	}
+
+</script>
+
+</body>
+</html>

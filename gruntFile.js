@@ -50,7 +50,10 @@ module.exports = function (grunt) {
 	}
 
 	const dev = {
-		// dev - concat, no babel (in neither vendor nor src)
+        // dev - concat, no babel (in neither vendor nor src)
+        //
+        // TODO: use minifier from calendar
+        //
 		vendor: {
 			src: ['.'],
 			dest: 'dist/vendor.js',

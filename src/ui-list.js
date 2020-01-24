@@ -25,10 +25,6 @@ class UIList extends BaseComponent {
     set value(value) {
         this.onConnected(() => {
             if (this.list) {
-                function getSelector(val) {
-                    return `[value="${val}"]`;
-                }
-
                 if (Array.isArray(value)) {
                     if (!this.multiple) {
                         throw new Error('trying to set multiple values without the `multiple` attribute');
@@ -71,13 +67,13 @@ class UIList extends BaseComponent {
         return this.items;
     }
 
-    onDisabled(value) {
+    onDisabled() {
         if (this.items || this.lazyDataFN) {
             this.connectEvents();
         }
     }
 
-    onReadonly(value) {
+    onReadonly() {
         this.connectEvents();
     }
 
@@ -191,7 +187,7 @@ class UIList extends BaseComponent {
         }
     }
 
-    setItemsFromData(silent) {
+    setItemsFromData() {
         // uses an array of objects as the list items
         this.render();
         this.list.innerHTML = '';
@@ -309,7 +305,7 @@ class UIList extends BaseComponent {
                 this.on('focus', () => {
                     this.list.focus();
                 }),
-                this.on('key-select', (e) => {
+                this.on('key-select', () => {
                     this.emitEvent();
                 })
             ]);
@@ -331,9 +327,14 @@ class UIList extends BaseComponent {
     }
 }
 
+function getSelector(val) {
+    return `[value="${val}"]`;
+}
+
 function valueify(text){
     return text.replace(/\s/g, '-').toLowerCase();
 }
+
 module.exports = BaseComponent.define('ui-list', UIList, {
     props: ['label', 'limit', 'name', 'event-name', 'align'],
     bools: ['disabled', 'readonly', 'multiple'],
