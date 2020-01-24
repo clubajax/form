@@ -1,20 +1,22 @@
 <!DOCTYPE HTML>
 <html lang="en">
+
 <head>
-	<title>Test Popup</title>
-	<script src="src/test-files.js"></script>
-	<style>
-		html, body {
-			height: 100%;
-		}
+    <title>Test Popup</title>
+    <script src="src/test-files.js"></script>
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
 
-		body {
-			padding: 20px 20px 100px 20px;
-			margin-bottom: 100px;
-			font-family: sans-serif;
-		}
+        body {
+            padding: 20px 20px 100px 20px;
+            margin-bottom: 100px;
+            font-family: sans-serif;
+        }
 
-		.popup-box{
+        .popup-box {
             width: 200px;
             height: 100px;
             border: 1px solid #333;
@@ -23,46 +25,108 @@
             text-align: center;
         }
 
-	</style>
+        button {
+            border: 1px solid rgb(29, 89, 129);
+            background-color: rgb(73, 180, 252);
+            padding: 6px 12px;
+            font-size: 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            outline: 0;
+        }
+
+        button:hover {
+            background-color: rgb(152, 214, 255);
+        }
+
+        .big-pop {
+            position: absolute;
+            top: 300px;
+            left: 200px;
+        }
+
+        .big-pop-bottom {
+            position: absolute;
+            bottom: 200px;
+            left: 200px;
+        }
+
+        .bigtext-box {
+            width: 150px;
+            
+        }
+
+        .big-ui-popup {
+            padding: 10px;
+            border: 1px solid #ccc;
+            box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.4);
+            background-color: white;
+        }
+
+        .right {
+            position: absolute;
+            top: 100px;
+            right: 25px;
+        }
+
+        .bottom {
+            position: absolute;
+            left: 25px;
+            bottom: 50px;
+        }
+
+        .bottom-right {
+            position: absolute;
+            right: 25px;
+            bottom: 50px;
+        }
+    </style>
 </head>
+
 <body>
-<h1>Test Popup</h1>
-<div id="mocha"></div>
-<div id="tests"></div>
-<script>
+    <h1>Test Popup</h1>
+    <div id="mocha"></div>
+    <div id="tests"></div>
+    <script>
 
-    mocha.setup('bdd');
-    
-	describe('UiPopup', function () {
+        mocha.setup('bdd');
 
-		this.timeout(3000);
-		const
-			describe = window.describe,
-			test = window.test,
-			dom = window.dom,
-			on = window.on,
-			nodash = window.nodash,
-			expect = chai.expect,
-			body = dom.byId('tests');
-		function box (node) {
-			const win = dom.box(window);
-			const pop = dom.box(node.popup);
-			const btn = dom.box(node.button);
-			const topSpace = btn.top;
-			const botSpace = win.h - btn.top + btn.h;
-			return {
-				pop: pop,
-				win: win,
-				btn: btn,
-				topSpace: topSpace,
-				botSpace: botSpace
-			};
-		}
+        describe('UiPopup', function () {
 
-		describe('ui-popup', function () {
+            this.timeout(3000);
+            function getBigText() {
+                return `Different scopes have different execution environments. This means that they have different built-ins (different global object, different constructors, etc.). This may result in unexpected results. For instance, [] instanceof window.frames[0].Array will return false, because Array.prototype !== window.frames[0].Array and arrays inherit from the former.
 
-			it('should render a popup', function (done) {
+This may not make sense at first, but for scripts dealing with multiple frames or windows, and passing objects from one context to another via functions, this will be a valid and strong issue. For instance, you can securely check if a given object is, in fact, an Array using Array.isArray(myObj)
+
+For example, checking if a Nodes is a SVGElement in a different context, you can use myNode instanceof myNode SVGElement.`;
+            }
+            const
+                describe = window.describe,
+                test = window.test,
+                dom = window.dom,
+                on = window.on,
+                nodash = window.nodash,
+                expect = chai.expect,
+                body = dom.byId('tests');
+            function box(node) {
+                const win = dom.box(window);
+                const pop = dom.box(node.popup);
+                const btn = dom.box(node.button);
+                const topSpace = btn.top;
+                const botSpace = win.h - btn.top + btn.h;
+                return {
+                    pop: pop,
+                    win: win,
+                    btn: btn,
+                    topSpace: topSpace,
+                    botSpace: botSpace
+                };
+            }
+
+            function popup(btn) {
                 dom('ui-popup', {
+                    'buttonid': btn.id,
                     html: dom('div', {
                         class: 'popup-box',
                         html: [
@@ -71,17 +135,64 @@
                         ]
                     })
                 }, body);
-                expect(true).to.equal(true);
-                done();
+            }
+
+            function bigPopup(btn) {
+                dom('ui-popup', {
+                    class: 'big-ui-popup',
+                    'buttonid': btn.id,
+                    html: dom('div', {
+                        class: 'bigtext-box',
+                        html: getBigText()
+                    })
+                }, body);
+            }
+
+            describe('ui-popup', function () {
+                it('should render a popup left-aligned', function (done) {
+                    const btn = dom('button', {id: 'b1', html: 'Left'}, body);
+                    popup(btn);
+                    done();
+                });
+
+                it('should render a popup right-aligned', function (done) {
+                    const btn = dom('button', {id: 'b2', class: 'right', html: 'Right'}, body);
+                    popup(btn);
+                    done();
+                });
+
+                it('should render a popup bottom-aligned', function (done) {
+                    const btn = dom('button', {id: 'b3', class: 'bottom', html: 'Bottom'}, body);
+                    popup(btn);
+                    done();
+                });
+
+                it('should render a popup bottom-right-aligned', function (done) {
+                    const btn = dom('button', {id: 'b4', class: 'bottom-right', html: 'Bottom Right'}, body);
+                    popup(btn);
+                    done();
+                });
+
+                it('should render a big popup', function (done) {
+                    const btn = dom('button', {id: 'b5', class: 'big-pop', html: 'Big Pop'}, body);
+                    bigPopup(btn);
+                    done();
+                });
+
+                it('should render a big popup bottom', function (done) {
+                    const btn = dom('button', {id: 'b6', class: 'big-pop-bottom', html: 'Big Pop Bottom'}, body);
+                    bigPopup(btn);
+                    done();
+                });
             });
         });
-	});
 
-	if (!/puppeteer/.test(location.hash)) {
-		mocha.run();
-	}
+        if (!/puppeteer/.test(location.hash)) {
+            mocha.run();
+        }
 
-</script>
+    </script>
 
 </body>
+
 </html>

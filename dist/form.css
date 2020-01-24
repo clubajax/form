@@ -193,6 +193,18 @@ ui-list {
           margin-bottom: 10px; }
 
 ui-popup {
-  display: block; }
+  display: none;
+  box-sizing: border-box;
+  position: absolute;
+  z-index: 10; }
+  ui-popup.open {
+    display: block; }
+  ui-popup.right-aligned {
+    left: auto;
+    right: 0; }
+  ui-popup.top-aligned {
+    top: auto;
+    bottom: 36px;
+    transform: translateY(0%); }
 
 /*# sourceMappingURL=form.css.map */

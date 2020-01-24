@@ -1,3 +1,21 @@
-ui-popup{
-    display: block;
+ui-popup {
+    display: none;
+    box-sizing: border-box;
+    position: absolute;
+    z-index: 10;
+    &.open {
+        display: block;
+    }
+    &.right-aligned{
+        left: auto;
+        right: 0;
+    }
+    &.top-aligned{
+        top: auto;
+        bottom: 36px;
+        transform: translateY(0%);
+    }
+    &.center-aligned{
+        
+    }
 }

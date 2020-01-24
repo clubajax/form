@@ -5,6 +5,9 @@ const keys = require('@clubajax/key-nav');
 const emitEvent = require('./lib/emitEvent');
 const uid = require('./lib/uid');
 
+// TODO
+// allow for a variable size list
+
 class UiPopup extends BaseComponent {
     constructor() {
         super();
@@ -16,16 +19,60 @@ class UiPopup extends BaseComponent {
             // this.value = value;
         }
     }
+
+    connected() {
+        
+    }
+
+    domReady() {
+        this.button = dom.byId(this.buttonid);
+        this.connectEvents();
+    }
+
+    connectEvents() {
+        if (this.button) {
+            if (this['use-hover']) {
+                this.on(this.button, 'mouseenter', this.show.bind(this));
+                this.on('mouseleave', this.hidden.bind(this));
+            } else {
+                this.removeClickOff = this.on(this, 'clickoff', (e) => {
+                    this.hide();
+                });
+                this.on(this.button, 'click', () => {
+                    this.removeClickOff.resume();
+                    this.show();
+                });
+            }
+        }
+    }
+
+    show() {
+        this.classList.add('open');
+        position(this, this.button);
+    }
+
+    hide() {
+        this.classList.remove('open');
+        if (this.removeClickOff) {
+            this.removeClickOff.pause();
+        }
+    }
+
+    destroy() {
+        this.removeClickOff.remove();
+        super.destroy();
+    }
 }
 
+
 function position(popup, button) {
-    popup.classList.remove('right-aligned');
-    popup.classList.remove('top-aligned');
-    popup.classList.remove('center-aligned');
     dom.style(popup, {
-        height: '',
         left: '',
-        width: ''
+        right: '',
+        top: '',
+        bottom: '',
+        height: '',
+        overflow: ''
     });
     const win = {
         w: window.innerWidth,
@@ -33,55 +80,52 @@ function position(popup, button) {
     };
     const pop = dom.box(popup);
     const btn = dom.box(button);
-
+    const GAP = 5;
+    const MIN_BOT_SPACE = 200;
+    const style = {};
     const leftAligned = btn.x + pop.w;
     const rightAligned = btn.x + btn.w - pop.w;
 
     const topSpace = btn.top;
-    const botSpace = win.h - (btn.top + btn.h);
+    const botSpace = win.h - (btn.top + btn.h + GAP);
+    
+    console.log('win', win.h);
+    console.log('SPC', topSpace, botSpace);
 
-    if (this.align === 'right' || leftAligned > win.w && rightAligned > 0) {
-        popup.classList.add('right-aligned');
+    if (this.align === 'right' || (leftAligned > win.w && rightAligned > 0)) {
+        // right
+        style.top = btn.y + btn.h + GAP;
+        style.right = win.w - (btn.x + btn.w);
     } else if (leftAligned < win.w) {
-        popup.classList.remove('right-aligned');
-    } else {
-        popup.classList.add('center-aligned');
-        const pad = dom.style(document.body, 'padding');
-        let left, wpad;
-        // FIXME
-        // works for smart-ar - but what about right-aligned buttons?
-        if (pad) {
-            left = btn.x * -1 + pad;
-            wpad = pad * 2;
+        // left
+        style.top = btn.y + btn.h + GAP;
+        style.left = btn.x;
+    }
+
+    if (pop.h > topSpace && pop.h > botSpace) {
+        if (botSpace < MIN_BOT_SPACE || topSpace > botSpace * 1.5 ) {
+            // force top
+            console.log('TOP');
+            style.height = topSpace - (GAP * 2);
+            style.bottom = (win.h - btn.y) + GAP;
+            style.top = '';
+            style.overflow = 'auto';
         } else {
-            left = btn.x * -1 + 10;
-            wpad = 20;
+            // force bottom
+            console.log('BOTTOM');
+            style.height = botSpace - (GAP * 2);
+            // style.bottom = (win.h - btn.y) + GAP;
+            style.overflow = 'auto';
         }
-        dom.style(popup, {
-            left,
-            width: win.w - wpad
-        });
+    } else if (botSpace < pop.h) {
+        // bottom
+        style.top = '';
+        style.bottom = (win.h - btn.y) + GAP;
     }
 
-    if (pop.h > botSpace && pop.h < topSpace) {
-        popup.classList.add('top-aligned');
-
-    } else if (pop.h < botSpace) {
-        popup.classList.remove('top-aligned');
-
-    } else if (botSpace > topSpace) {
-        // bottom, and scroll
-        popup.classList.remove('top-aligned');
-        dom.style(popup, 'height', botSpace - 100);
-    } else {
-        // top and scroll
-        popup.classList.add('top-aligned');
-        dom.style(popup, 'height', topSpace - 20);
-    }
+    dom.style(popup, style);
 }
 
 module.exports = BaseComponent.define('ui-popup', UiPopup, {
-    props: ['placeholder', 'label', 'limit', 'name', 'event-name', 'align', 'btn-class'],
-    bools: ['disabled', 'open-when-blank', 'allow-new', 'required', 'case-sensitive', 'autofocus', 'busy'],
-    attrs: ['value']
+    props: ['buttonid', 'button-selector', 'event-name', 'align', 'use-hover']
 });
