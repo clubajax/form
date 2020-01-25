@@ -8,6 +8,9 @@ class Icon extends BaseComponent {
             console.warn('icon type missing:', type);
             return;
         }
+        if (!missingStylesheet()) {
+            console.warn('Icon stylesheet missing');
+        }
         this.className = iconMap[type];
     }
 }
@@ -15,3 +18,9 @@ class Icon extends BaseComponent {
 module.exports = BaseComponent.define('ui-icon', Icon, {
     props: ['type']
 });
+
+let missing;
+function missingStylesheet() {
+    missing = missing !== undefined ? missing : Boolean(dom.queryAll('link').find(link => /fontawesome/.test(link.href)));
+    return missing;
+}

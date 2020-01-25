@@ -136,6 +136,27 @@ ui-radio-buttons {
     ui-radio-buttons button.btn:hover {
       background-color: #f2f2f2; }
 
+ui-input {
+  display: block;
+  position: relative;
+  border: 1px solid #d8d8d8;
+  border-radius: 2px; }
+  ui-input label {
+    display: block; }
+  ui-input input {
+    border: 0;
+    background: none;
+    padding: 6px;
+    font-size: 13px;
+    width: 100%; }
+  ui-input.has-icon {
+    display: flex;
+    align-items: center; }
+    ui-input.has-icon input {
+      flex-basis: 1 1 calc(100% - 30px); }
+    ui-input.has-icon ui-icon {
+      margin: 0 5px; }
+
 ui-list {
   display: block;
   outline: none; }

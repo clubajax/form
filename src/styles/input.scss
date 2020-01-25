@@ -1,0 +1,28 @@
+@import "./colors.scss";
+
+ui-input{
+    display: block;
+    position: relative;
+    border: 1px solid $brd-clr-lt; 
+    border-radius: 2px;
+    label{
+        display: block;
+    }
+    input{
+        border: 0;
+        background: none;
+        padding: 6px;
+        font-size: 13px;
+        width: 100%;
+    }
+    &.has-icon{
+        display: flex;
+        align-items: center;
+        input{
+            flex-basis: 1 1 calc(100% - 30px);
+        }
+        ui-icon{
+            margin: 0 5px;
+        }
+    }
+}

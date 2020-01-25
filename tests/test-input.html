@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <title>Test Input</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+        integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+    <script src="src/test-files.js"></script>
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            padding: 20px 20px 100px 20px;
+            margin-bottom: 100px;
+            font-family: sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Test Input</h1>
+    <div id="mocha"></div>
+    <div id="tests"></div>
+    <script>
+
+        mocha.setup('bdd');
+
+        describe('UiInput', function () {
+
+            this.timeout(3000);
+            
+            const
+                describe = window.describe,
+                test = window.test,
+                dom = window.dom,
+                on = window.on,
+                nodash = window.nodash,
+                expect = chai.expect,
+                body = dom.byId('tests'),
+                data = [
+                    {label: 'Orange', value: 'orange'},
+                    {label: 'Red', value: 'red'},
+                    {label: 'Blue', value: 'blue'},
+                    {label: 'Green', value: 'green'}
+                ];
+            
+
+            describe('ui-input', function () {
+                let node, btn;
+                
+                function ready(cb) {
+                    onDomReady(node, cb);
+                }
+
+                function click(){
+                    on.emit(btn, 'click');
+                }
+
+                it('should render an input', function (done) {
+                    node = dom('ui-input', {value: 'I read books!', icon: 'books'}, body);
+                    done();
+                });
+
+            });
+        });
+
+        if (!/puppeteer/.test(location.hash)) {
+            mocha.run();
+        }
+
+    </script>
+
+</body>
+
+</html>
