@@ -27,6 +27,9 @@ class UiPopup extends BaseComponent {
     domReady() {
         this.button = dom.byId(this.buttonid);
         this.connectEvents();
+        if (!this.parentNode) {
+            document.body.appendChild(this);
+        }
     }
 
     connectEvents() {
@@ -47,6 +50,7 @@ class UiPopup extends BaseComponent {
     }
 
     show() {
+        console.log('show');
         this.classList.add('open');
         position(this, this.button);
     }

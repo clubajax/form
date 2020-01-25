@@ -11,6 +11,12 @@ const ATTR = {
     VALUE: 'value'
 };
 
+// TODO
+// divider
+// group
+// label
+// disabled items
+
 class UIList extends BaseComponent {
     constructor() {
         super();
@@ -188,6 +194,7 @@ class UIList extends BaseComponent {
     }
 
     setItemsFromData() {
+        console.log('setItemsFromData');
         // uses an array of objects as the list items
         this.render();
         this.list.innerHTML = '';

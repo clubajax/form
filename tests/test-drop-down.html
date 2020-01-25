@@ -213,6 +213,27 @@
 		}
 
 		suite('drop-down', function () {
+            test.only('it should have a label', function (done) {
+                const node = dom('drop-down', {data: data3, placeholder: 'Get a room...', label: 'Room Chooser'}, body);
+                // onDomReady(node, function () {
+                //     expect(node.value).to.equal(null);
+                //     select(node, 2).then(function () {
+                //         expect(node.value).to.equal('Den');
+                //         done();
+                //     });
+                // });
+            });
+
+            test('it should allow for simple array data', function (done) {
+                const node = dom('drop-down', {data: data3, placeholder: 'Get a room...'}, body);
+                onDomReady(node, function () {
+                    expect(node.value).to.equal(null);
+                    select(node, 2).then(function () {
+                        expect(node.value).to.equal('Den');
+                        done();
+                    });
+                });
+            });
 
 			test('it should lazy render without a value', function (done) {
 				const node = dom('drop-down', { data: randomList }, body);
@@ -234,7 +255,7 @@
 				});
 			});
 
-			test.only('it should lazy render and handle the value', function (done) {
+			test('it should lazy render and handle the value', function (done) {
 				let index = 0;
 				const amounts = [10, 8, 3, 10];
 				const node = dom('drop-down', {
@@ -350,28 +371,6 @@
 				onDomReady(node, function () {
 					select(node, 2).then(function () {
 						expect(node.value).to.equal('diamonds');
-						done();
-					});
-				});
-			});
-
-			test('it should have a label', function (done) {
-				const node = dom('drop-down', { data: data3, placeholder: 'Get a room...', label: 'Room Chooser' }, body);
-				onDomReady(node, function () {
-					expect(node.value).to.equal(null);
-					select(node, 2).then(function () {
-						expect(node.value).to.equal('Den');
-						done();
-					});
-				});
-			});
-
-			test('it should allow for simple array data', function (done) {
-				const node = dom('drop-down', { data: data3, placeholder: 'Get a room...' }, body);
-				onDomReady(node, function () {
-					expect(node.value).to.equal(null);
-					select(node, 2).then(function () {
-						expect(node.value).to.equal('Den');
 						done();
 					});
 				});
