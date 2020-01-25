@@ -1,0 +1,23 @@
+ui-icon {
+    display: inline-block;
+}
+
+button {
+    display: block;
+    padding: 10px;
+    font-size: 14px;
+    background-color: $btn-bk;
+    border: $brd;
+    border-radius: 2px;
+    outline: 0;
+    cursor: pointer;
+    &:hover {
+        background-color: $btn-bk-hvr;
+    }
+    &:active {
+        background-color: $btn-bk-act;
+    }
+    &:focus{
+        border-color: $focus-brd;
+    }
+}

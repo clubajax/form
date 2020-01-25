@@ -1,3 +1,22 @@
+ui-icon {
+  display: inline-block; }
+
+button {
+  display: block;
+  padding: 10px;
+  font-size: 14px;
+  background-color: #ccf6ff;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  outline: 0;
+  cursor: pointer; }
+  button:hover {
+    background-color: #e8fbff; }
+  button:active {
+    background-color: #f8feff; }
+  button:focus {
+    border-color: #6c9fd8; }
+
 ui-checkbox {
   display: inline-flex;
   flex-direction: row;
@@ -227,5 +246,10 @@ ui-popup {
     top: auto;
     bottom: 36px;
     transform: translateY(0%); }
+
+ui-dropdown {
+  display: block; }
+  ui-dropdown ui-icon {
+    margin-left: 10px; }
 
 /*# sourceMappingURL=form.css.map */

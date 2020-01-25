@@ -30,10 +30,10 @@
     "eslint": "^6.8.0"
   },
   "dependencies": {
-    "@clubajax/base-component": "2.3.1",
+    "@clubajax/base-component": "2.3.2",
     "@clubajax/dom": "2.8.5",
     "@clubajax/key-nav": "2.3.1",
     "@clubajax/no-dash": "0.6.1",
-    "@clubajax/on": "2.1.8"
+    "@clubajax/on": "2.2.0"
   }
 }

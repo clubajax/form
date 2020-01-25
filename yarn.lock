@@ -638,12 +638,12 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@clubajax/base-component@2.3.1":
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/@clubajax/base-component/-/base-component-2.3.1.tgz#1142650e58e751e75d2f19ac324a7929f80548bf"
-  integrity sha512-HF/P1iTE62oz41BOd8bPSHe2Ju7WUqBwwbjft5esr4vsdCnQM1Q9YvjD4DYQr06WbEA5Jvx+OBOpRwIKPibIjA==
+"@clubajax/base-component@2.3.2":
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/@clubajax/base-component/-/base-component-2.3.2.tgz#482a306cc3213ff89c13e4b0758a589a3cc70f8f"
+  integrity sha512-EuFtNULn8JCkoAsfVCBwdGNH0kZGcgzfI0ovfE8FrwN2KZj+VgG5xZ2qNzmOsJ+tnnHUXEu7ialkvWyCAOjSAQ==
   dependencies:
-    "@clubajax/on" "^2.1.8"
+    "@clubajax/on" "^2.2.0"
 
 "@clubajax/custom-elements-polyfill@^0.9.4":
   version "0.9.4"
@@ -667,7 +667,15 @@
   resolved "https://registry.yarnpkg.com/@clubajax/no-dash/-/no-dash-0.6.1.tgz#da41c723d0a664343203dee6e22571f2b3bd749a"
   integrity sha512-9hxTHcofdaw0iZ4M3Nx5dW8BSwsbnh4TqmmlGwfMeyvoYReuQ+jBYZL4u4MiWiDT+qHk0wfg6mrl8PBWsOrwmg==
 
-"@clubajax/on@2.1.8", "@clubajax/on@^2.1.8":
+"@clubajax/on@2.2.0", "@clubajax/on@^2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@clubajax/on/-/on-2.2.0.tgz#b0f1be8c2b02a641a4b41856cbad48589aac2c39"
+  integrity sha512-hJb67QTgkJpkGzRC8ySiAn7nCSOdHK/ii0inFNia1GkWz9QKAv1j+x9NaRLTh1cdVC/NKpquJAwOLNP9BMFT0g==
+  dependencies:
+    grunt "^1.0.1"
+    grunt-contrib-uglify "^2.3.0"
+
+"@clubajax/on@^2.1.8":
   version "2.1.8"
   resolved "https://registry.yarnpkg.com/@clubajax/on/-/on-2.1.8.tgz#b04fa40ef0b1a5d697d7dcea82def98a3b0329c3"
   integrity sha1-sE+kDvCxpdaX19zqgt75ijsDKcM=

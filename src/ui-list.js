@@ -73,6 +73,10 @@ class UIList extends BaseComponent {
         return this.items;
     }
 
+    getItem(value) {
+        return this.items ? this.items.find(item => item.value === value) : null;
+    }
+
     onDisabled() {
         if (this.items || this.lazyDataFN) {
             this.connectEvents();

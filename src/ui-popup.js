@@ -14,16 +14,6 @@ class UiPopup extends BaseComponent {
         this.open = false;
     }
 
-    attributeChanged(prop, value) {
-        if (prop === 'open') {
-            // this.value = value;
-        }
-    }
-
-    connected() {
-        
-    }
-
     domReady() {
         this.button = dom.byId(this.buttonid);
         this.connectEvents();
@@ -50,7 +40,6 @@ class UiPopup extends BaseComponent {
     }
 
     show() {
-        console.log('show');
         this.classList.add('open');
         position(this, this.button);
     }

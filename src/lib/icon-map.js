@@ -4,7 +4,8 @@ const map = {
     minus: 'fas fa-minus',
     plus: 'fas fa-plus',
     books: 'fas fa-book-reader',
-    chess: 'fas fa-chess-rook'
+    chess: 'fas fa-chess-rook',
+    caretDown: 'fas fa-caret-down'
 };
 
 module.exports = map;
