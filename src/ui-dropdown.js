@@ -5,6 +5,8 @@ require('./ui-popup');
 require('./ui-list');
 require('./ui-icon');
 
+// https://blog.mobiscroll.com/how-to-do-multiple-selection-on-mobile/
+
 const DEFAULT_PLACEHOLDER = 'Select One...';
 
 class UiDropdown extends BaseComponent {
