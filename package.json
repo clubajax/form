@@ -2,7 +2,7 @@
   "name": "@clubajax/form",
   "version": "0.5.1",
   "description": "Web Components for Forms",
-  "main": "index.js",
+  "main": "build/index.js",
   "repository": "https://github.com/clubajax/form.git",
   "author": "clubajax <anm9tr@gmail.com>",
   "license": "MIT",
