@@ -25,10 +25,7 @@ class UiDropdown extends BaseComponent {
     }
 
     set data(data) {
-        console.log('data...');
         this.onDomReady(() => {
-            console.log('domready...', this.list);
-            console.log('on dom ready');
             this.list.data = data;
         });
         this.__data = data;
@@ -41,6 +38,7 @@ class UiDropdown extends BaseComponent {
     setDisplay() {
         this.button.innerHTML = '';
         const item = this.list ? this.list.getItem(this.value) : {};
+        this.__value = item ? item.value : this.__value;
         dom('span', {html: isNull(this.value) ? this.placeholder || DEFAULT_PLACEHOLDER : item.label}, this.button);
         dom('ui-icon', {type: 'caretDown'}, this.button);
 
@@ -51,6 +49,10 @@ class UiDropdown extends BaseComponent {
         }
     }
 
+    reset() {
+        this.list.reset();
+    }
+
     connected() {
         this.render();
         this.connectEvents();
@@ -59,24 +61,24 @@ class UiDropdown extends BaseComponent {
 
     connectEvents() {
         this.list.on('list-change', (e) => {
-            console.log('list change', e.detail.value);
             this.setDisplay();
             setTimeout(() => {
                 this.popup.hide();
             }, 300);
         });
-        this.on(this.button, 'keyup', (e) => {
-            console.log('up');
-        });
+    }
+
+    reset() {
+        // this.list.value = 
     }
 
     renderButton(buttonid) {
-        this.button = dom('button', {id: buttonid, class: 'drop-input'}, this);
+        this.button = dom('button', {id: buttonid, class: 'ui-button drop-input'}, this);
         this.setDisplay();
     }
 
     render() {
-        console.log('render!!');
+        this.labelNode = dom('label', {html: this.label, class: 'ui-label'}, this);
         const buttonid = uid('drop-button');
         this.renderButton(buttonid);
         this.list = dom('ui-list', {
@@ -84,6 +86,7 @@ class UiDropdown extends BaseComponent {
         });
         this.popup = dom('ui-popup', {
             buttonid,
+            label: this.label,
             html: this.list
         }, document.body);
         this.setDisplay();

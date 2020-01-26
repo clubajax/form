@@ -5,17 +5,34 @@ ui-popup {
     z-index: 10;
     &.open {
         display: block;
-    }
-    &.right-aligned{
-        left: auto;
-        right: 0;
-    }
-    &.top-aligned{
-        top: auto;
-        bottom: 36px;
-        transform: translateY(0%);
-    }
-    &.center-aligned{
-        
+        .ui-label,
+        .ui-button-row{
+            display: none;
+        }
+        &.is-mobile {
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            .ui-label {
+                display: block;
+                flex: 0 0 20px;
+                padding: 10px;
+                background-color: #eee;
+            }
+            .ui-button-row {
+                display: flex;
+                flex: 0 0 50px;
+            }
+            & > *:nth-child(2) {
+                flex: 1;
+            }
+            ui-list ul {
+                border: 0;
+            }
+        }
     }
 }

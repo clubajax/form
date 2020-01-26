@@ -1,8 +1,18 @@
+* {
+    box-sizing: border-box;
+}
 ui-icon {
     display: inline-block;
 }
 
-button {
+.ui-label {
+    display: block;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.ui-button {
     display: block;
     padding: 10px;
     font-size: 14px;
@@ -17,7 +27,31 @@ button {
     &:active {
         background-color: $btn-bk-act;
     }
-    &:focus{
+    &:focus {
         border-color: $focus-brd;
     }
+    &.secondary {
+    }
+    &.tertiary {
+        background-color: transparent;
+        border-color: transparent;
+        &:hover {
+            background-color: $btn-bk-hvr;
+        }
+        &:active {
+            background-color: $btn-bk-act;
+        }
+        &:focus {
+            border-color: $focus-brd;
+        }
+    }
+    &.link {
+    }
+}
+
+.ui-button-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-top: 20px;
 }

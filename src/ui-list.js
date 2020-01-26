@@ -16,6 +16,8 @@ const ATTR = {
 // group
 // label
 // disabled items
+// a11y
+// mobile
 
 class UIList extends BaseComponent {
     constructor() {
@@ -42,11 +44,12 @@ class UIList extends BaseComponent {
                 }
             }
         });
+        this.__value = value;
     }
 
     get value() {
         if (!this.controller) {
-            return this.getAttribute('value');
+            return this.__value || this.getAttribute('value');
         }
         if (this.multiple) {
             return this.controller.getSelected().map((node) => node.getAttribute('value'));
@@ -55,7 +58,7 @@ class UIList extends BaseComponent {
         if (node) {
             return node.getAttribute('value');
         }
-        return null;
+        return this.__value || null;
     }
 
     set data(value) {
@@ -198,7 +201,6 @@ class UIList extends BaseComponent {
     }
 
     setItemsFromData() {
-        console.log('setItemsFromData');
         // uses an array of objects as the list items
         this.render();
         this.list.innerHTML = '';
@@ -282,9 +284,9 @@ class UIList extends BaseComponent {
         } else {
             this.removeAttribute(ATTR.TABINDEX);
             this.list.removeAttribute(ATTR.TABINDEX);
-        }    
+        }
     }
-    
+
     connectEvents() {
         if (this.lazyDataFN) {
             return;
@@ -323,6 +325,11 @@ class UIList extends BaseComponent {
         }
     }
 
+    reset() {
+        console.log('RESET', this.__value);
+        this.value = this.__value;
+    }
+
     render() {
         if (!this.labelNode && this.label) {
             // TODO: a11y?
@@ -342,7 +349,7 @@ function getSelector(val) {
     return `[value="${val}"]`;
 }
 
-function valueify(text){
+function valueify(text) {
     return text.replace(/\s/g, '-').toLowerCase();
 }
 

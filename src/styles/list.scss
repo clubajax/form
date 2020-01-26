@@ -1,6 +1,5 @@
 ui-list {
     display: block;
-    outline: none;
     &:focus{
         border-color: black;
     }
@@ -12,14 +11,16 @@ ui-list {
             }
         }
     }
-    label{
-        color: #666;
-    }
     ul {
-        border: 1px solid #999;
+        border: $brd;
+        background-color: white;
         list-style: none;
         margin: 0;
         padding: 0;
+        outline: none;
+        &:focus{
+            border-color: $focus-brd;
+        }
         li {
             padding: 10px;
             cursor: pointer;
