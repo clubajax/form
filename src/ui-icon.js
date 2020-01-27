@@ -4,14 +4,13 @@ const iconMap = require('./lib/icon-map');
 
 class Icon extends BaseComponent {
     onType(type) { 
-        if (!iconMap[type]) {
-            console.warn('icon type missing:', type);
-            return;
-        }
+        // if (!iconMap[type]) {
+        //     console.warn('icon type missing:', type);
+        // }
         if (!missingStylesheet()) {
             console.warn('Icon stylesheet missing');
         }
-        this.className = iconMap[type];
+        this.className = iconMap[type] || type;
     }
 }
 

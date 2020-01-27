@@ -2941,7 +2941,19 @@ const map = {
     plus: 'fas fa-plus',
     books: 'fas fa-book-reader',
     chess: 'fas fa-chess-rook',
-    caretDown: 'fas fa-caret-down'
+    caretDown: 'fas fa-caret-down',
+
+    'folder': 'far fa-folder',
+    'file': 'far fa-file-alt',
+    'file-archive': 'far fa-file-archive',
+    'file-audio': 'far far fa-file-audio',
+    'file-code': 'far far fa-file-code',
+    'file-image': 'far far fa-file-image',
+    'file-pdf': 'far far fa-file-pdf',
+    'file-video': 'far far fa-file-video',
+    'file-excel': 'far far fa-file-excel',
+    'file-powerpoint': 'far far fa-file-powerpoint',
+    'file-word': 'far far fa-file-word'
 };
 
 module.exports = map;
@@ -3177,14 +3189,13 @@ const iconMap = require('./lib/icon-map');
 
 class Icon extends BaseComponent {
     onType(type) { 
-        if (!iconMap[type]) {
-            console.warn('icon type missing:', type);
-            return;
-        }
+        // if (!iconMap[type]) {
+        //     console.warn('icon type missing:', type);
+        // }
         if (!missingStylesheet()) {
             console.warn('Icon stylesheet missing');
         }
-        this.className = iconMap[type];
+        this.className = iconMap[type] || type;
     }
 }
 
