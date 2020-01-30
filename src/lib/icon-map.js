@@ -20,4 +20,5 @@ const map = {
     'file-word': 'far far fa-file-word'
 };
 
+
 module.exports = map;
