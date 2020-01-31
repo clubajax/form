@@ -10,6 +10,10 @@ ui-icon {
   color: #666;
   margin-bottom: 5px; }
 
+.ui-input {
+  font-size: 16px;
+  padding: 10px; }
+
 .ui-button {
   display: block;
   padding: 10px;
@@ -40,6 +44,20 @@ ui-icon {
   flex-direction: row;
   justify-content: flex-end;
   margin-top: 20px; }
+
+ui-icon {
+  position: relative; }
+  ui-icon[type="spinner"] {
+    animation-name: busy-spin;
+    animation-duration: 800ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear; }
+
+@keyframes busy-spin {
+  from {
+    transform: rotate(0deg); }
+  to {
+    transform: rotate(360deg); } }
 
 ui-checkbox {
   display: inline-flex;
@@ -190,8 +208,11 @@ ui-input {
     border: 0;
     background: none;
     padding: 6px;
-    font-size: 13px;
+    font-size: 16px;
     width: 100%; }
+    ui-input input::placeholder {
+      color: #ccc;
+      font-style: italic; }
   ui-input.has-icon {
     display: flex;
     align-items: center; }

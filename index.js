@@ -5,3 +5,4 @@ require('./src/ui-radio-buttons');
 require('./src/ui-list');
 require('./src/ui-popup');
 require('./src/ui-dropdown');
+require('./src/ui-search');

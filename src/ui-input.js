@@ -24,6 +24,7 @@ class UiInput extends BaseComponent {
     setValue(value) {
         if (this.input) {
             this.input.value = value;
+            this.setPlaceholder();
         }
     }
 
@@ -41,6 +42,10 @@ class UiInput extends BaseComponent {
         if (this.input) {
             this.input.readonly = value;
         }
+    }
+
+    setPlaceholder() {
+        // dom.classList.toggle(this, 'has-placeholder')
     }
 
     emitEvent() {
@@ -69,14 +74,19 @@ class UiInput extends BaseComponent {
             value: this._value || '',
             readonly: this.readonly,
             disabled: this.disabled,
-            placeholder: this.placeholder || ''
+            placeholder: this.placeholder || DEFAULT_PLACEHOLDER
         }, this);
         if (this.icon) {
             this.iconNode = dom('ui-icon', {type: this.icon}, this);
             this.classList.add('has-icon');
         }
+        this.setPlaceholder();
         this.connect();
     }
+}
+
+function isNull(value) {
+    return value === null || value === undefined;
 }
 
 module.exports = BaseComponent.define('ui-input', UiInput, {

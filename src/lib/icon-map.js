@@ -6,6 +6,8 @@ const map = {
     books: 'fas fa-book-reader',
     chess: 'fas fa-chess-rook',
     caretDown: 'fas fa-caret-down',
+    search: 'fas fa-search',
+    spinner: 'fas fa-sync-alt',
 
     'folder': 'far fa-folder',
     'file': 'far fa-file-alt',

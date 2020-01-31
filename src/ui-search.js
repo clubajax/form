@@ -4,12 +4,13 @@ const uid = require('./lib/uid');
 require('./ui-popup');
 require('./ui-list');
 require('./ui-icon');
+require('./ui-input');
 
 // https://blog.mobiscroll.com/how-to-do-multiple-selection-on-mobile/
 
-const DEFAULT_PLACEHOLDER = 'Select One...';
+const DEFAULT_PLACEHOLDER = 'Begin typing...';
 
-class UiDropdown extends BaseComponent {
+class UiSearch extends BaseComponent {
 
     set value(value) {
         this.onDomReady(() => {
@@ -37,16 +38,20 @@ class UiDropdown extends BaseComponent {
         return this.list ? this.list.items : this.__data;
     }
 
+    onBusy(value) {
+        this.input.icon = value ? 'spinner' : 'search';
+    }
+
     setDisplay() {
-        this.button.innerHTML = '';
         const item = this.list ? this.list.getItem(this.value) : {};
         this.__value = item ? item.value : this.__value;
-        dom('span', {html: isNull(this.value) ? this.placeholder || DEFAULT_PLACEHOLDER : item.label}, this.button);
-        dom('ui-icon', {type: 'caretDown'}, this.button);
+
+        this.input.value = isNull(this.value) ? '' : item.label;
+        
 
         if (this.popup) {
             dom.style(this.popup, {
-                'min-width': dom.box(this.button).w
+                'min-width': dom.box(this.input).w
             });
         }
     }
@@ -62,7 +67,7 @@ class UiDropdown extends BaseComponent {
     }
 
     connectEvents() {
-        this.list.on('list-change', (e) => {
+        this.list.on('list-change', () => {
             this.setDisplay();
             setTimeout(() => {
                 this.popup.hide();
@@ -71,7 +76,12 @@ class UiDropdown extends BaseComponent {
     }
 
     renderButton(buttonid) {
-        this.button = dom('button', {id: buttonid, class: 'ui-button drop-input'}, this);
+        this.input = dom('ui-input', {
+            id: buttonid,
+            class: 'search-input',
+            placeholder: this.placeholder || DEFAULT_PLACEHOLDER,
+            icon: this.busy ? 'spinner' : 'search'
+        }, this);
         this.setDisplay();
     }
 
@@ -95,7 +105,7 @@ function isNull(value) {
     return value === null || value === undefined;
 }
 
-module.exports = BaseComponent.define('ui-dropdown', UiDropdown, {
+module.exports = BaseComponent.define('ui-search', UiSearch, {
     props: ['placeholder', 'label', 'limit', 'name', 'event-name', 'align', 'btn-class'],
     bools: ['disabled', 'open-when-blank', 'allow-new', 'required', 'case-sensitive', 'autofocus', 'busy'],
     attrs: ['value']
