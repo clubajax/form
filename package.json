@@ -32,7 +32,7 @@
   "dependencies": {
     "@clubajax/base-component": "2.3.2",
     "@clubajax/dom": "2.8.5",
-    "@clubajax/key-nav": "2.3.1",
+    "@clubajax/key-nav": "2.4.0",
     "@clubajax/no-dash": "0.6.1",
     "@clubajax/on": "2.2.0"
   }

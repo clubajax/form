@@ -73,6 +73,11 @@ class UiSearch extends BaseComponent {
                 this.popup.hide();
             }, 300);
         });
+
+        this.input.on('key-search', (e) => { 
+            console.log('searched:::', e.detail.value);
+            this.fire('search', {value: e.detail.value});
+        })
     }
 
     renderButton(buttonid) {
@@ -90,7 +95,9 @@ class UiSearch extends BaseComponent {
         const buttonid = uid('drop-button');
         this.renderButton(buttonid);
         this.list = dom('ui-list', {
-            'event-name': 'list-change'
+            'event-name': 'list-change',
+            'external-search': true,
+            buttonid
         });
         this.popup = dom('ui-popup', {
             buttonid,
@@ -98,6 +105,7 @@ class UiSearch extends BaseComponent {
             html: this.list
         }, document.body);
         this.setDisplay();
+        console.log('go!!!');
     }
 }
 

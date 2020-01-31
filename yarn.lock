@@ -655,10 +655,10 @@
   resolved "https://registry.yarnpkg.com/@clubajax/dom/-/dom-2.8.5.tgz#1d8893d9956f500d5354f248e5e553576cd55a64"
   integrity sha512-uDj2meNcvcrGE/mC1Jfzuq5mDRqydBLseFR9TSlH1529wYFWfqwvAl5lV22uXngIJerBFPcbULwZFDoeqkIU+g==
 
-"@clubajax/key-nav@2.3.1":
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/@clubajax/key-nav/-/key-nav-2.3.1.tgz#cfcb4d1fb5e99c707a075be6e6b6454dbe205717"
-  integrity sha512-QnevTYPgFFGr/VdYp+EJEZR3Sz7SznUy7ery57tbRqnWYD4h47jq/vd14W/T8M/FTJXWw3prJH36Y1QZihtmAA==
+"@clubajax/key-nav@2.4.0":
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/@clubajax/key-nav/-/key-nav-2.4.0.tgz#ebd372652bf3ea83a1381423ecd18bef716f0fbf"
+  integrity sha512-0m5FHrmfjyqN+yExQJAdnz0twSDDaWMBSYAaUTM/DhmbIbRRSqJE0BQPoNU8Qz0WABq4EqurrHVQTKn5TmKTJQ==
   dependencies:
     "@clubajax/on" "^2.1.8"
 

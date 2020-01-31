@@ -303,10 +303,13 @@ class UIList extends BaseComponent {
             this.controller.resume();
             this.connectHandles.resume();
         } else {
+            console.log('EXT SEARCH', this['external-search']);
             const options = {
                 canSelectNone: this.getAttribute('can-select-none'),
                 multiple: this.multiple,
-                searchTime: this.getAttribute('search-time')
+                searchTime: this.getAttribute('search-time'),
+                externalSearch: this['external-search'],
+                buttonId: this.buttonid
             }
             this.controller = keys(this.list, options);
             // this.controller.log = true;
@@ -354,7 +357,7 @@ function valueify(text) {
 }
 
 module.exports = BaseComponent.define('ui-list', UIList, {
-    props: ['label', 'limit', 'name', 'event-name', 'align'],
+    props: ['label', 'limit', 'name', 'event-name', 'align', 'buttonid', 'external-search'],
     bools: ['disabled', 'readonly', 'multiple'],
     attrs: ['value']
 });
