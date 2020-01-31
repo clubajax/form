@@ -4223,7 +4223,6 @@ class UiSearch extends BaseComponent {
     }
 
     onBusy(value) {
-        console.log('BUST', value);
         this.input.icon = value ? 'spinner' : 'search';
     }
 
