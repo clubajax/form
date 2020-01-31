@@ -15,8 +15,14 @@ require('./src/ui-radio-buttons');
 require('./src/ui-list');
 require('./src/ui-popup');
 require('./src/ui-dropdown');
+require('./src/ui-search');
+const iconMap = require('./src/lib/icon-map');
 
-},{"./src/ui-checkbox":17,"./src/ui-dropdown":18,"./src/ui-input":20,"./src/ui-list":21,"./src/ui-popup":22,"./src/ui-radio":24,"./src/ui-radio-buttons":23}],3:[function(require,module,exports){
+module.exports = {
+    iconMap
+};
+
+},{"./src/lib/icon-map":15,"./src/ui-checkbox":17,"./src/ui-dropdown":18,"./src/ui-input":20,"./src/ui-list":21,"./src/ui-popup":22,"./src/ui-radio":24,"./src/ui-radio-buttons":23,"./src/ui-search":25}],3:[function(require,module,exports){
 const on = require('@clubajax/on');
 
 class BaseComponent extends HTMLElement {
@@ -1666,6 +1672,7 @@ BaseComponent.addPlugin({
 }));
 
 },{}],10:[function(require,module,exports){
+/* eslint-disable max-lines-per-function, object-shorthand, sort-vars, no-nested-ternary, indent, indent-legacy, complexity, no-plusplus, prefer-reflect*/
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
@@ -1678,18 +1685,12 @@ BaseComponent.addPlugin({
     } else {
         // Browser globals (root is window)
         root.returnExports = factory();
-        root['keys'] = factory(root.on);
+        root.keys = factory(root.on);
     }
 }(this, function (on) {
-
-    'use strict';
     function keys(listNode, options) {
 
         options = options || {};
-
-        // TODO options:
-        // search an option and/or a function?
-        // space select an option?
 
         const
             controller = {
@@ -1719,13 +1720,14 @@ BaseComponent.addPlugin({
             canSelectNone = options.canSelectNone !== undefined ? options.canSelectNone : true,
             multiple = options.multiple,
             searchStringTime = options.searchTime || 1000,
+            externalSearch = options.externalSearch,
             // children is a live NodeList, so the reference will update if nodes are added or removed
-            children = tableMode ? listNode.querySelectorAll('td') : listNode.children;
+            children = tableMode ? listNode.querySelectorAll('td') : listNode.children,
+            button = options.buttonId ? document.getElementById(options.buttonId) : null;
 
         let
             shift = false,
             meta = false,
-            multiHandle,
             observer,
             searchString = '',
             searchStringTimer,
@@ -1733,10 +1735,10 @@ BaseComponent.addPlugin({
             selected,
             highlighted;
 
-        selected = select(getSelected(children, options), false, true),
-            highlighted = highlight(fromArray(selected), options.defaultToFirst);
+        selected = select(getSelected(children, options));
+        highlighted = highlight(fromArray(selected), options.defaultToFirst);
 
-        const nodeType = (highlighted || children[0]).localName;
+        const nodeType = (highlighted || children[0] || {}).localName || 'li';
 
         function unhighlight() {
             if (highlighted) {
@@ -1751,7 +1753,7 @@ BaseComponent.addPlugin({
             unhighlight();
             if (!node) {
                 if (!children[0] || !defaultToFirst) {
-                    return;
+                    return null;
                 }
                 node = children[0];
             }
@@ -1811,14 +1813,111 @@ BaseComponent.addPlugin({
             if (!highlighted) {
                 return;
             }
-            let top = highlighted.offsetTop;
-            let height = highlighted.offsetHeight;
-            let listHeight = listNode.offsetHeight;
+            const top = highlighted.offsetTop;
+            const height = highlighted.offsetHeight;
+            const listHeight = listNode.offsetHeight;
 
             if (top - height < listNode.scrollTop) {
                 listNode.scrollTop = top - height;
-            } else if (top + height * 2 > listNode.scrollTop + listHeight) {
-                listNode.scrollTop = top - listHeight + height * 2;
+            } else if (top + (height * 2) > listNode.scrollTop + listHeight) {
+                listNode.scrollTop = top - listHeight + (height * 2);
+            }
+        }
+        function onKeyDown(e) {
+            if (e.defaultPrevented) {
+                return;
+            }
+            switch (e.key) {
+                case 'Meta':
+                case 'Control':
+                case 'Command':
+                    meta = true;
+                    break;
+                case 'Shift':
+                    shift = true;
+                    break;
+                case 'Enter':
+                    select(highlighted);
+                    pivotNode = highlighted;
+                    break;
+                case 'Escape':
+                    if (canSelectNone) {
+                        select(null);
+                    }
+                    break;
+
+                case 'ArrowDown':
+                    if (tableMode) {
+                        highlight(getCell(children, highlighted || selected, 'down'));
+                        break;
+                    } else {
+                        const node = getNode(children, highlighted || selected, 'down');
+                        highlight(node);
+                        if (multiple && (shift || meta)) {
+                            pivotNode = pivotNode || node;
+                            select(node);
+                        }
+                    }
+                    scrollTo();
+                    e.preventDefault();
+                // fallthrough
+                case 'ArrowRight':
+                    if (tableMode) {
+                        highlight(getNode(children, highlighted || selected, 'down'));
+                    }
+                    break;
+
+                case 'ArrowUp':
+                    if (tableMode) {
+                        highlight(getCell(children, highlighted || selected, 'up'));
+                        e.preventDefault();
+                        break;
+                    } else {
+                        const node = getNode(children, highlighted || selected, 'up');
+                        highlight(node);
+                        if (multiple && (shift || meta)) {
+                            pivotNode = pivotNode || node;
+                            select(node);
+                        }
+                    }
+                    scrollTo();
+                    e.preventDefault();
+                // fallthrough
+                case 'ArrowLeft':
+                    if (tableMode) {
+                        highlight(getNode(children, highlighted || selected, 'up'));
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        function onInputSearch(e) {
+            if (on.isAlphaNumeric(e.key) || e.key === 'Backspace' || e.key === 'Delete') {
+                if (meta) {
+                    return;
+                }
+                on.fire(button, 'key-search', { value: button.value });
+            }
+        }
+        
+        function onListSearch(e) {
+            if (on.isAlphaNumeric(e.key)) {
+                if (e.key === 'r' && meta) {
+                    return;
+                }
+                searchString += e.key;
+                const searchNode = searchHtmlContent(children, searchString);
+                if (searchNode) {
+                    highlight(select(searchNode));
+                    scrollTo();
+                }
+            
+                clearTimeout(searchStringTimer);
+                searchStringTimer = setTimeout(function () {
+                    searchString = '';
+                }, searchStringTime);
             }
         }
 
@@ -1841,101 +1940,8 @@ BaseComponent.addPlugin({
                 shift = Boolean(e.shiftKey);
                 meta = false;
             }),
-            on(listNode, 'keydown', function (e) {
-                if (e.defaultPrevented) {
-                    return;
-                }
-                switch (e.key) {
-                    case 'Meta':
-                    case 'Control':
-                    case 'Command':
-                        meta = true;
-                        break;
-                    case 'Shift':
-                        shift = true;
-                        break;
-                }
-            }),
-            on(listNode, 'keydown', function (e) {
-                if (e.defaultPrevented) {
-                    return;
-                }
-                switch (e.key) {
-                    case 'Enter':
-                        select(highlighted);
-                        pivotNode = highlighted;
-                        break;
-                    case 'Escape':
-                        if (canSelectNone) {
-                            select(null);
-                        }
-                        break;
-
-                    case 'ArrowDown':
-                        if (tableMode) {
-                            highlight(getCell(children, highlighted || selected, 'down'));
-                            break;
-                        } else {
-                            const node = getNode(children, highlighted || selected, 'down');
-                            highlight(node);
-                            if (multiple && (shift || meta)) {
-                                pivotNode = pivotNode || node;
-                                select(node, true);
-                            }
-                        }
-                        scrollTo();
-                        e.preventDefault();
-                    // fallthrough
-                    case 'ArrowRight':
-                        if (tableMode) {
-                            highlight(getNode(children, highlighted || selected, 'down'));
-                        }
-                        break;
-
-                    case 'ArrowUp':
-                        if (tableMode) {
-                            highlight(getCell(children, highlighted || selected, 'up'));
-                            e.preventDefault();
-                            break;
-                        } else {
-                            const node = getNode(children, highlighted || selected, 'up');
-                            highlight(node);
-                            if (multiple && (shift || meta)) {
-                                pivotNode = pivotNode || node;
-                                select(node, true);
-                            }
-                        }
-                        scrollTo();
-                        e.preventDefault();
-                    //fallthrough
-                    case 'ArrowLeft':
-                        if (tableMode) {
-                            highlight(getNode(children, highlighted || selected, 'up'));
-                        }
-                        break;
-                    default:
-                        // the event is not handled
-                        if (on.isAlphaNumeric(e.key)) {
-                            if (e.key === 'r' && meta) {
-                                return true;
-                            }
-                            searchString += e.key;
-                            let searchNode = searchHtmlContent(children, searchString);
-                            if (searchNode) {
-                                highlight(select(searchNode));
-                                scrollTo();
-                            }
-
-                            clearTimeout(searchStringTimer);
-                            searchStringTimer = setTimeout(function () {
-                                searchString = '';
-                            }, searchStringTime);
-
-                            break;
-                        }
-                        return;
-                }
-            }),
+            on(listNode, 'keydown', onKeyDown),
+            on(listNode, 'keydown', onListSearch),
             on(listNode, 'blur', unhighlight),
             {
                 pause: function () {if (controller.log) {console.log('pause');} },
@@ -1943,6 +1949,13 @@ BaseComponent.addPlugin({
                 remove: function () {if (controller.log) {console.log('remove');} }
             }
         ];
+
+        if (button) {
+            controller.handles.push(on(button, 'keydown', onKeyDown));
+            if (externalSearch) {
+                controller.handles.push(on(button, 'keyup', onInputSearch));
+            }
+        }
 
         if (!options.noRoles) {
             addRoles(listNode);
@@ -1963,7 +1976,7 @@ BaseComponent.addPlugin({
 
         scrollTo();
 
-        multiHandle = on.makeMultiHandle(controller.handles);
+        const multiHandle = on.makeMultiHandle(controller.handles);
         Object.keys(multiHandle).forEach(function (key) {
             controller[key] = multiHandle[key];
         });
@@ -2071,31 +2084,29 @@ BaseComponent.addPlugin({
                 break;
             }
         }
-        if (dir === 'down') {
-            return getNext(children, index);
-        } else if (dir === 'up') {
+        if (dir === 'up') {
             return getPrev(children, index);
         }
+        return getNext(children, index);
     }
 
     function getCell(children, highlighted, dir) {
-        let
+        const
             cellIndex = getIndex(highlighted),
             row = highlighted.parentNode,
             rowIndex = getIndex(row),
             rowAmount = row.parentNode.rows.length;
 
-        if (dir === 'down') {
-            if (rowIndex + 1 < rowAmount) {
-                return row.parentNode.rows[rowIndex + 1].cells[cellIndex];
-            }
-            return row.parentNode.rows[0].cells[cellIndex];
-        } else if (dir === 'up') {
+        if (dir === 'up') {
             if (rowIndex > 0) {
                 return row.parentNode.rows[rowIndex - 1].cells[cellIndex];
             }
             return row.parentNode.rows[rowAmount - 1].cells[cellIndex];
         }
+        if (rowIndex + 1 < rowAmount) {
+            return row.parentNode.rows[rowIndex + 1].cells[cellIndex];
+        }
+        return row.parentNode.rows[0].cells[cellIndex];
     }
 
     function getIndex(el) {
@@ -2942,6 +2953,8 @@ const map = {
     books: 'fas fa-book-reader',
     chess: 'fas fa-chess-rook',
     caretDown: 'fas fa-caret-down',
+    search: 'fas fa-search',
+    spinner: 'fas fa-sync-alt',
 
     'folder': 'far fa-folder',
     'file': 'far fa-file-alt',
@@ -2955,6 +2968,7 @@ const map = {
     'file-powerpoint': 'far far fa-file-powerpoint',
     'file-word': 'far far fa-file-word'
 };
+
 
 module.exports = map;
 
@@ -3147,10 +3161,6 @@ class UiDropdown extends BaseComponent {
         });
     }
 
-    reset() {
-        // this.list.value = 
-    }
-
     renderButton(buttonid) {
         this.button = dom('button', {id: buttonid, class: 'ui-button drop-input'}, this);
         this.setDisplay();
@@ -3236,9 +3246,14 @@ class UiInput extends BaseComponent {
     setValue(value) {
         if (this.input) {
             this.input.value = value;
+            this.setPlaceholder();
         }
     }
 
+    onIcon(type) {
+        this.iconNode.type = type;
+    }
+    
     onLabel() {
         this.labelNode.innerHTML = this.label;
     }
@@ -3253,6 +3268,10 @@ class UiInput extends BaseComponent {
         if (this.input) {
             this.input.readonly = value;
         }
+    }
+
+    setPlaceholder() {
+        // dom.classList.toggle(this, 'has-placeholder')
     }
 
     emitEvent() {
@@ -3281,14 +3300,19 @@ class UiInput extends BaseComponent {
             value: this._value || '',
             readonly: this.readonly,
             disabled: this.disabled,
-            placeholder: this.placeholder || ''
+            placeholder: this.placeholder || DEFAULT_PLACEHOLDER
         }, this);
         if (this.icon) {
             this.iconNode = dom('ui-icon', {type: this.icon}, this);
             this.classList.add('has-icon');
         }
+        this.setPlaceholder();
         this.connect();
     }
+}
+
+function isNull(value) {
+    return value === null || value === undefined;
 }
 
 module.exports = BaseComponent.define('ui-input', UiInput, {
@@ -3603,10 +3627,13 @@ class UIList extends BaseComponent {
             this.controller.resume();
             this.connectHandles.resume();
         } else {
+            console.log('EXT SEARCH', this['external-search']);
             const options = {
                 canSelectNone: this.getAttribute('can-select-none'),
                 multiple: this.multiple,
-                searchTime: this.getAttribute('search-time')
+                searchTime: this.getAttribute('search-time'),
+                externalSearch: this['external-search'],
+                buttonId: this.buttonid
             }
             this.controller = keys(this.list, options);
             // this.controller.log = true;
@@ -3654,7 +3681,7 @@ function valueify(text) {
 }
 
 module.exports = BaseComponent.define('ui-list', UIList, {
-    props: ['label', 'limit', 'name', 'event-name', 'align'],
+    props: ['label', 'limit', 'name', 'event-name', 'align', 'buttonid', 'external-search'],
     bools: ['disabled', 'readonly', 'multiple'],
     attrs: ['value']
 });
@@ -4155,4 +4182,159 @@ module.exports = BaseComponent.define('ui-radio', Radio, {
     bools: ['checked', 'check-after'],
     attrs: []
 });
-},{"./lib/BaseField":13,"./lib/uid":16,"@clubajax/base-component":4,"@clubajax/dom":8}]},{},[1]);
+},{"./lib/BaseField":13,"./lib/uid":16,"@clubajax/base-component":4,"@clubajax/dom":8}],25:[function(require,module,exports){
+const BaseComponent = require('@clubajax/base-component');
+const dom = require('@clubajax/dom');
+const uid = require('./lib/uid');
+require('./ui-popup');
+require('./ui-list');
+require('./ui-icon');
+require('./ui-input');
+
+// https://blog.mobiscroll.com/how-to-do-multiple-selection-on-mobile/
+
+const DEFAULT_PLACEHOLDER = 'Begin typing...';
+
+class UiSearch extends BaseComponent {
+    set value(value) {
+        this.onDomReady(() => {
+            this.list.value = value;
+            this.setDisplay();
+        });
+        this.__value = value;
+    }
+
+    get value() {
+        if (!this.list) {
+            return this.__value || this.getAttribute('value');
+        }
+        return this.list.value;
+    }
+
+    set data(data) {
+        this.onDomReady(() => {
+            this.list.data = data;
+        });
+        this.__data = data;
+    }
+
+    get data() {
+        return this.list ? this.list.items : this.__data;
+    }
+
+    onBusy(value) {
+        console.log('BUST', value);
+        this.input.icon = value ? 'spinner' : 'search';
+    }
+
+    setDisplay() {
+        const item = this.list ? this.list.getItem(this.value) : {};
+        this.__value = item ? item.value : this.__value;
+
+        this.input.value = isNull(this.value) ? '' : item.label;
+
+        if (this.popup) {
+            dom.style(this.popup, {
+                'min-width': dom.box(this.input).w,
+            });
+        }
+    }
+
+    reset() {
+        this.list.reset();
+    }
+
+    connected() {
+        this.render();
+        this.connectEvents();
+        this.connected = () => {};
+    }
+
+    connectEvents() {
+        this.list.on('list-change', () => {
+            this.setDisplay();
+            setTimeout(() => {
+                this.popup.hide();
+            }, 300);
+        });
+
+        this.input.on('key-search', e => {
+            this.fire('search', { value: e.detail.value });
+        });
+
+        this.input.on('focus', () => {
+            this.classList.add('is-focused');
+        });
+        this.input.on('focus', () => {
+            this.classList.remove('is-focused');
+        });
+    }
+
+    renderButton(buttonid) {
+        this.input = dom(
+            'ui-input',
+            {
+                id: buttonid,
+                class: 'search-input',
+                placeholder: this.placeholder || DEFAULT_PLACEHOLDER,
+                icon: this.busy ? 'spinner' : 'search',
+            },
+            this
+        );
+        this.setDisplay();
+    }
+
+    render() {
+        this.labelNode = dom(
+            'label',
+            { html: this.label, class: 'ui-label' },
+            this
+        );
+        const buttonid = uid('drop-button');
+        this.renderButton(buttonid);
+        this.list = dom('ui-list', {
+            'event-name': 'list-change',
+            'external-search': true,
+            buttonid,
+        });
+        this.popup = dom(
+            'ui-popup',
+            {
+                buttonid,
+                label: this.label,
+                html: this.list,
+            },
+            document.body
+        );
+        this.setDisplay();
+        console.log('go!!!');
+    }
+}
+
+function isNull(value) {
+    return value === null || value === undefined;
+}
+
+module.exports = BaseComponent.define('ui-search', UiSearch, {
+    props: [
+        'placeholder',
+        'label',
+        'limit',
+        'name',
+        'event-name',
+        'align',
+        'btn-class',
+    ],
+    bools: [
+        'disabled',
+        'open-when-blank',
+        'allow-new',
+        'required',
+        'case-sensitive',
+        'autofocus',
+        'busy',
+    ],
+    attrs: ['value'],
+});
+
+},{"./lib/uid":16,"./ui-icon":19,"./ui-input":20,"./ui-list":21,"./ui-popup":22,"@clubajax/base-component":4,"@clubajax/dom":8}]},{},[1]);

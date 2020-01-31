@@ -11,7 +11,6 @@ require('./ui-input');
 const DEFAULT_PLACEHOLDER = 'Begin typing...';
 
 class UiSearch extends BaseComponent {
-
     set value(value) {
         this.onDomReady(() => {
             this.list.value = value;
@@ -39,6 +38,7 @@ class UiSearch extends BaseComponent {
     }
 
     onBusy(value) {
+        console.log('BUST', value);
         this.input.icon = value ? 'spinner' : 'search';
     }
 
@@ -47,11 +47,10 @@ class UiSearch extends BaseComponent {
         this.__value = item ? item.value : this.__value;
 
         this.input.value = isNull(this.value) ? '' : item.label;
-        
 
         if (this.popup) {
             dom.style(this.popup, {
-                'min-width': dom.box(this.input).w
+                'min-width': dom.box(this.input).w,
             });
         }
     }
@@ -74,36 +73,54 @@ class UiSearch extends BaseComponent {
             }, 300);
         });
 
-        this.input.on('key-search', (e) => { 
-            console.log('searched:::', e.detail.value);
-            this.fire('search', {value: e.detail.value});
-        })
+        this.input.on('key-search', e => {
+            this.fire('search', { value: e.detail.value });
+        });
+
+        this.input.on('focus', () => {
+            this.classList.add('is-focused');
+        });
+        this.input.on('focus', () => {
+            this.classList.remove('is-focused');
+        });
     }
 
     renderButton(buttonid) {
-        this.input = dom('ui-input', {
-            id: buttonid,
-            class: 'search-input',
-            placeholder: this.placeholder || DEFAULT_PLACEHOLDER,
-            icon: this.busy ? 'spinner' : 'search'
-        }, this);
+        this.input = dom(
+            'ui-input',
+            {
+                id: buttonid,
+                class: 'search-input',
+                placeholder: this.placeholder || DEFAULT_PLACEHOLDER,
+                icon: this.busy ? 'spinner' : 'search',
+            },
+            this
+        );
         this.setDisplay();
     }
 
     render() {
-        this.labelNode = dom('label', {html: this.label, class: 'ui-label'}, this);
+        this.labelNode = dom(
+            'label',
+            { html: this.label, class: 'ui-label' },
+            this
+        );
         const buttonid = uid('drop-button');
         this.renderButton(buttonid);
         this.list = dom('ui-list', {
             'event-name': 'list-change',
             'external-search': true,
-            buttonid
-        });
-        this.popup = dom('ui-popup', {
             buttonid,
-            label: this.label,
-            html: this.list
-        }, document.body);
+        });
+        this.popup = dom(
+            'ui-popup',
+            {
+                buttonid,
+                label: this.label,
+                html: this.list,
+            },
+            document.body
+        );
         this.setDisplay();
         console.log('go!!!');
     }
@@ -114,7 +131,23 @@ function isNull(value) {
 }
 
 module.exports = BaseComponent.define('ui-search', UiSearch, {
-    props: ['placeholder', 'label', 'limit', 'name', 'event-name', 'align', 'btn-class'],
-    bools: ['disabled', 'open-when-blank', 'allow-new', 'required', 'case-sensitive', 'autofocus', 'busy'],
-    attrs: ['value']
+    props: [
+        'placeholder',
+        'label',
+        'limit',
+        'name',
+        'event-name',
+        'align',
+        'btn-class',
+    ],
+    bools: [
+        'disabled',
+        'open-when-blank',
+        'allow-new',
+        'required',
+        'case-sensitive',
+        'autofocus',
+        'busy',
+    ],
+    attrs: ['value'],
 });

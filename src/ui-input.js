@@ -28,6 +28,10 @@ class UiInput extends BaseComponent {
         }
     }
 
+    onIcon(type) {
+        this.iconNode.type = type;
+    }
+    
     onLabel() {
         this.labelNode.innerHTML = this.label;
     }

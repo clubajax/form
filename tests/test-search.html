@@ -56,6 +56,9 @@
                 ];
 
             function search(value) {
+                if (!value) {
+                    return [];
+                }
                 function label(item) {
                     return `${item.firstName} ${item.lastName}`;
                 }
@@ -107,7 +110,12 @@
                 }
 
                 function onSearch(e) {
-                    node.data = search(e.detail.value);
+                    node.busy = true;
+                    setTimeout(function () {
+                        node.busy = false;
+                        node.data = search(e.detail.value);
+                    }, 500)
+                    
                 }
 
 
@@ -115,10 +123,7 @@
                     on(document, 'data-ready', () => {
                         node = dom('ui-search', { data: [], label: 'Simple Search', placeholder: 'Type to search!' }, body);
                         node.on('search', onSearch);
-                        setTimeout(() => {
-                            node.data = data;
-                            done();
-                        }, 300);
+                        done();
                     });
 
                 });

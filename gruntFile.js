@@ -299,6 +299,14 @@ module.exports = function (grunt) {
                     logConcurrentOutput: true
                 }
             }
+        },
+
+        copy: {
+            package: {
+                files: [
+                    {src: './src/package.json', dest: 'build/package.json'}
+                ]
+            }
         }
     });
 
@@ -327,6 +335,7 @@ module.exports = function (grunt) {
         setConfig();
         grunt.task.run('sass:prod');
         grunt.task.run('browserify:prod');
+        grunt.task.run('copy:package');
     });
 
 
@@ -358,7 +367,7 @@ module.exports = function (grunt) {
     });
 
     grunt.loadNpmTasks('grunt-concurrent');
-    // grunt.loadNpmTasks('grunt-contrib-less');
+    grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-sass');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-browserify');
