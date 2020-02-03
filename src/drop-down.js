@@ -27,7 +27,6 @@ class DropDown extends PopupList {
     }
 
     update() {
-        // console.log('update', this.value, this.__value);
         if (this.button) {
             let html;
             const placeholder = this.placeholder || DEFAULT_PLACEHOLDER;

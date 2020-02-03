@@ -158,7 +158,6 @@ class RadioButtons extends FormElement {
 	}
 
 	onCheck(value, checked, silent) {
-		// console.log(' ------- onCheck', value, checked);
 		const isBtn = this.type === 'buttons';
 		const isChk = this.type === 'checks';
 		const type = this.type || 'radios';

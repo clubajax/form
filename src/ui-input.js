@@ -52,7 +52,8 @@ class UiInput extends BaseComponent {
         // dom.classList.toggle(this, 'has-placeholder')
     }
 
-    emitEvent() {
+    emitEvent(e) {
+        e.stopPropagation();
         this._value = this.input.value;
         emitEvent(this, this._value);
     }
@@ -64,9 +65,11 @@ class UiInput extends BaseComponent {
 
     connect() {
         this.on(this.input, 'blur', () => {
+            this.focused = false;
             this.emit('blur');
         });
         this.on(this.input, 'focus', () => {
+            this.focused = true;
             this.emit('focus');
         });
         this.on(this.input, 'change', this.emitEvent.bind(this));

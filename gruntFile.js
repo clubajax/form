@@ -333,6 +333,7 @@ module.exports = function (grunt) {
     // task that builds files for production
     grunt.registerTask('deploy', function () {
         setConfig();
+        grunt.task.run('version');
         grunt.task.run('sass:prod');
         grunt.task.run('browserify:prod');
         grunt.task.run('copy:package');
@@ -359,6 +360,23 @@ module.exports = function (grunt) {
         grunt.task.run('build');
         grunt.task.run('sass');
         grunt.task.run('concurrent:target');
+    });
+
+    grunt.registerTask('version', function () {
+        const buildPackage = JSON.parse(fs.readFileSync('./src/package.json').toString());
+        const mainPackage = JSON.parse(fs.readFileSync('./package.json').toString());
+        if (mainPackage.version !== buildPackage.version) {
+            // has been manually updated
+        } else {
+            // increment main version
+            const version = mainPackage.version.split('.');
+            version[2] = parseInt(version[2], 10) + 1;
+            mainPackage.version = version.join('.');
+            console.log('package.version changed to:', mainPackage.version);
+        }
+        buildPackage.version = mainPackage.version;
+        fs.writeFileSync('./src/package.json', JSON.stringify(buildPackage, null, 2));
+        fs.writeFileSync('./package.json', JSON.stringify(mainPackage, null, 2));
     });
 
     // alias for server

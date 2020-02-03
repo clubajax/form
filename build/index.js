@@ -3274,7 +3274,8 @@ class UiInput extends BaseComponent {
         // dom.classList.toggle(this, 'has-placeholder')
     }
 
-    emitEvent() {
+    emitEvent(e) {
+        e.stopPropagation();
         this._value = this.input.value;
         emitEvent(this, this._value);
     }
@@ -3286,9 +3287,11 @@ class UiInput extends BaseComponent {
 
     connect() {
         this.on(this.input, 'blur', () => {
+            this.focused = false;
             this.emit('blur');
         });
         this.on(this.input, 'focus', () => {
+            this.focused = true;
             this.emit('focus');
         });
         this.on(this.input, 'change', this.emitEvent.bind(this));
@@ -3627,7 +3630,6 @@ class UIList extends BaseComponent {
             this.controller.resume();
             this.connectHandles.resume();
         } else {
-            console.log('EXT SEARCH', this['external-search']);
             const options = {
                 canSelectNone: this.getAttribute('can-select-none'),
                 multiple: this.multiple,
@@ -3737,7 +3739,6 @@ class UiPopup extends BaseComponent {
         }
         dom.queryAll('.ui-button-row .ui-button').forEach((button, i) => {
             this.on(button, 'click', () => {
-                console.log('this.component.reset', this.component);
                 if (i === 1) {
                     if (this.component.emitEvent) {
                         this.component.blockEvent = false;
@@ -4011,7 +4012,6 @@ class RadioButtons extends FormElement {
 	}
 
 	onCheck(value, checked, silent) {
-		// console.log(' ------- onCheck', value, checked);
 		const isBtn = this.type === 'buttons';
 		const isChk = this.type === 'checks';
 		const type = this.type || 'radios';
@@ -4214,6 +4214,9 @@ class UiSearch extends BaseComponent {
     set data(data) {
         this.onDomReady(() => {
             this.list.data = data;
+            if (this.input.focused) {
+                this.popup.show();
+            }
         });
         this.__data = data;
     }
@@ -4252,6 +4255,7 @@ class UiSearch extends BaseComponent {
     connectEvents() {
         this.list.on('list-change', () => {
             this.setDisplay();
+            this.emit('change', {value: this.value});
             setTimeout(() => {
                 this.popup.hide();
             }, 300);
@@ -4274,6 +4278,7 @@ class UiSearch extends BaseComponent {
             'ui-input',
             {
                 id: buttonid,
+                'event-name': 'input-change',
                 class: 'search-input',
                 placeholder: this.placeholder || DEFAULT_PLACEHOLDER,
                 icon: this.busy ? 'spinner' : 'search',
@@ -4306,7 +4311,6 @@ class UiSearch extends BaseComponent {
             document.body
         );
         this.setDisplay();
-        console.log('go!!!');
     }
 }
 

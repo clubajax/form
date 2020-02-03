@@ -123,6 +123,9 @@
                     on(document, 'data-ready', () => {
                         node = dom('ui-search', { data: [], label: 'Simple Search', placeholder: 'Type to search!' }, body);
                         node.on('search', onSearch);
+                        node.on('change', (e) => {
+                            console.log('CHANGE', e);
+                        })
                         done();
                     });
 

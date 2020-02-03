@@ -48,7 +48,6 @@ class UiPopup extends BaseComponent {
         }
         dom.queryAll('.ui-button-row .ui-button').forEach((button, i) => {
             this.on(button, 'click', () => {
-                console.log('this.component.reset', this.component);
                 if (i === 1) {
                     if (this.component.emitEvent) {
                         this.component.blockEvent = false;

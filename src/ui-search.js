@@ -29,6 +29,9 @@ class UiSearch extends BaseComponent {
     set data(data) {
         this.onDomReady(() => {
             this.list.data = data;
+            if (this.input.focused) {
+                this.popup.show();
+            }
         });
         this.__data = data;
     }
@@ -67,6 +70,7 @@ class UiSearch extends BaseComponent {
     connectEvents() {
         this.list.on('list-change', () => {
             this.setDisplay();
+            this.emit('change', {value: this.value});
             setTimeout(() => {
                 this.popup.hide();
             }, 300);
@@ -89,6 +93,7 @@ class UiSearch extends BaseComponent {
             'ui-input',
             {
                 id: buttonid,
+                'event-name': 'input-change',
                 class: 'search-input',
                 placeholder: this.placeholder || DEFAULT_PLACEHOLDER,
                 icon: this.busy ? 'spinner' : 'search',
@@ -121,7 +126,6 @@ class UiSearch extends BaseComponent {
             document.body
         );
         this.setDisplay();
-        console.log('go!!!');
     }
 }
 

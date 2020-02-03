@@ -303,7 +303,6 @@ class UIList extends BaseComponent {
             this.controller.resume();
             this.connectHandles.resume();
         } else {
-            console.log('EXT SEARCH', this['external-search']);
             const options = {
                 canSelectNone: this.getAttribute('can-select-none'),
                 multiple: this.multiple,

@@ -55,7 +55,6 @@ class PopupList extends BaseComponent {
     setLazyValue(value) {
         const data = this.lazyDataFN();
         const item = data.find(m => m.value === value);
-        // console.log('setLazyValue', value, item, data);
         if (!item) {
             return;
         }
@@ -301,7 +300,6 @@ class PopupList extends BaseComponent {
     }
 
     show() {
-        // console.log('show', this.items);
         // FIXME: was hiding drop if no items
         if (this.disabled) { // || !this.items || !this.items.length) {
             return;
