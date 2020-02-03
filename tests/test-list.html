@@ -67,28 +67,32 @@
                 ],
                 data4 = [
                     dom('li', {
-                        value: 'Boston',
+                        value: 'boston',
+                        alias: 'Boston, Massachussetts',
                         class: 'custom', html: [
                             dom('div', {html: 'Boston'}),
                             dom('div', {html: 'Massachussetts'})
                         ]
                     }),
                     dom('li', {
-                        value: 'Detroit',
+                        value: 'detroit',
+                        alias: 'Detroit, Michigan',
                         class: 'custom', html: [
                             dom('div', {html: 'Detroit'}),
                             dom('div', {html: 'Michigan'})
                         ]
                     }),
                     dom('li', {
-                        value: 'Milwaukee',
+                        value: 'milwaukee',
+                        alias: 'Milwaukee, Wisconsin',
                         class: 'custom', html: [
                             dom('div', {html: 'Milwaukee'}),
                             dom('div', {html: 'Wisconsin'})
                         ]
                     }),
                     dom('li', {
-                        value: 'Las Vega',
+                        value: 'las-vegas',
+                        alias: 'Las Vegas, Nevada',
                         class: 'custom', html: [
                             dom('div', {html: 'Las Vegas'}),
                             dom('div', {html: 'Nevada'})
@@ -303,14 +307,14 @@
                         key('ArrowDown');
                         key('Enter');
                         expect(items[1].getAttribute('aria-selected')).to.equal('true');
-                        expect(value).to.equal('Detroit');
+                        expect(value).to.equal('detroit');
                         expect(items[1].textContent).to.equal('DetroitMichigan');
                         console.log('DONE');
                         done();
                     });
                 });
 
-                it.only('should handle a document fragment', function (done) {
+                it('should handle a document fragment', function (done) {
                     console.log('SETUP');
                     setup({data: frag, label: 'Document Fragment'});
                     // node = dom('ui-list', {data: frag, label: 'Document Fragment'}, body);

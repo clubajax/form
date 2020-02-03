@@ -337,6 +337,7 @@ module.exports = function (grunt) {
         grunt.task.run('sass:prod');
         grunt.task.run('browserify:prod');
         grunt.task.run('copy:package');
+        // grunt.task.run('publish');
     });
 
 
@@ -383,6 +384,13 @@ module.exports = function (grunt) {
     grunt.registerTask('serve', function () {
         grunt.task.run('http-server');
     });
+
+    grunt.registerTask('publish', function () {
+        const exec = require('child_process').execSync;
+        exec('cd ./build');
+        const result = exec('npm publish');
+        exec('cd ../');
+});
 
     grunt.loadNpmTasks('grunt-concurrent');
     grunt.loadNpmTasks('grunt-contrib-copy');

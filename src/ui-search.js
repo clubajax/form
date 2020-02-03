@@ -48,7 +48,7 @@ class UiSearch extends BaseComponent {
         const item = this.list ? this.list.getItem(this.value) : {};
         this.__value = item ? item.value : this.__value;
 
-        this.input.value = isNull(this.value) ? '' : item.label;
+        this.input.value = isNull(this.value) ? '' : item.display || item.alias || item.label;
 
         if (this.popup) {
             dom.style(this.popup, {

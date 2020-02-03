@@ -5,10 +5,13 @@ const keys = require('@clubajax/key-nav');
 const emitEvent = require('./lib/emitEvent');
 
 const ATTR = {
+    LABEL: 'aria-label',
+    ALIAS: 'alias',
+    DISPLAY: 'display',
     SELECTED: 'aria-selected',
     DISABLED: 'disabled',
     TABINDEX: 'tabindex',
-    VALUE: 'value'
+    VALUE: 'value',
 };
 
 // TODO
@@ -35,12 +38,16 @@ class UIList extends BaseComponent {
             if (this.list) {
                 if (Array.isArray(value)) {
                     if (!this.multiple) {
-                        throw new Error('trying to set multiple values without the `multiple` attribute');
+                        throw new Error(
+                            'trying to set multiple values without the `multiple` attribute'
+                        );
                     }
                     const selector = value.map(getSelector).join(',');
                     this.controller.setSelected(dom.queryAll(this, selector));
                 } else {
-                    this.controller.setSelected(dom.query(this, getSelector(value)));
+                    this.controller.setSelected(
+                        dom.query(this, getSelector(value))
+                    );
                 }
             }
         });
@@ -52,7 +59,9 @@ class UIList extends BaseComponent {
             return this.__value || this.getAttribute('value');
         }
         if (this.multiple) {
-            return this.controller.getSelected().map((node) => node.getAttribute('value'));
+            return this.controller
+                .getSelected()
+                .map(node => node.getAttribute('value'));
         }
         const node = this.controller.getSelected();
         if (node) {
@@ -77,7 +86,9 @@ class UIList extends BaseComponent {
     }
 
     getItem(value) {
-        return this.items ? this.items.find(item => item.value === value) : null;
+        return this.items
+            ? this.items.find(item => item.value === value)
+            : null;
     }
 
     onDisabled() {
@@ -112,7 +123,7 @@ class UIList extends BaseComponent {
     setData(value) {
         value = Array.isArray(value) ? value : [value];
         if (value.length && typeof value[0] !== 'object') {
-            value = value.map(item => ({label: item, value: item}));
+            value = value.map(item => ({ label: item, value: item }));
         }
         if (!this.lazyDataFN) {
             this.__value = undefined;
@@ -133,7 +144,7 @@ class UIList extends BaseComponent {
 
     removeData(value) {
         value = Array.isArray(value) ? value : [value];
-        value.forEach((value) => {
+        value.forEach(value => {
             const index = this.items.findIndex(item => item.value === value);
             if (index === -1) {
                 console.warn('remove value, not found', value);
@@ -143,8 +154,54 @@ class UIList extends BaseComponent {
         this.setItemsFromData();
     }
 
-    setItemsFromDom() {
-        // uses the children of ui-list as the items
+    setItemsFromData() {
+        // uses an array of objects as the list items
+        this.render();
+        this.list.innerHTML = '';
+        if (this.lazyDataFN && !this.items) {
+            this.items = [];
+        }
+        if (dom.isNode(this.items[0])) {
+            this.setDomData();
+            return;
+        }
+        const parentValue = this.value;
+        const list = this.list;
+        let node;
+        this.items.forEach(function(item) {
+            const label = item.alias
+                ? `${item.alias}: ${item.label}`
+                : item.label;
+            if (item.value === undefined && label === undefined) {
+                throw new Error(
+                    '[ERROR] each items must have a value or a label'
+                );
+            }
+            if (item.value === undefined) {
+                node = dom('div', { class: 'label', html: label }, list);
+                node.unselectable = true;
+                return;
+            }
+            const options = { html: label, value: item.value };
+            const isSelected = item.selected || item.value === parentValue;
+            if (isSelected) {
+                options['aria-selected'] = true;
+            }
+            if (item.class) {
+                options.class = item.class;
+            }
+            if (item.disabled) {
+                options.disabled = true;
+            }
+            node = dom('li', options, list);
+        });
+        this.appendChild(this.list);
+        this.update();
+        this.connect();
+    }
+
+    initDomData() {
+        // used only for the children of ui-list as the items
         let postValue;
         const parentValue = this.value;
         this.render();
@@ -156,9 +213,12 @@ class UIList extends BaseComponent {
             }
             this.items.push({
                 label: child.textContent,
-                value: child.getAttribute(ATTR.VALUE)
+                value: child.getAttribute(ATTR.VALUE),
             });
-            if (child.hasAttribute(ATTR.SELECTED) || child.getAttribute(ATTR.VALUE) === parentValue) {
+            if (
+                child.hasAttribute(ATTR.SELECTED) ||
+                child.getAttribute(ATTR.VALUE) === parentValue
+            ) {
                 this.selectedNode = child;
                 this.orgSelected = child;
                 this.items[this.items.length - 1].selected = true;
@@ -180,76 +240,15 @@ class UIList extends BaseComponent {
         }
     }
 
-    setItemsFromData() {
-        // uses an array of objects as the list items
-        this.render();
-        this.list.innerHTML = '';
-        if (this.lazyDataFN && !this.items) {
-            this.items = [];
-        }
-        if (dom.isNode(this.items[0])) {
-            this.setDomData();
-            return;
-        }
-        const parentValue = this.value;
-        const list = this.list;
-        let node;
-        this.items.forEach(function (item) {
-            const label = item.alias ? `${item.alias}: ${item.label}` : item.label;
-            if (item.value === undefined && label === undefined) {
-                throw new Error('[ERROR] each items must have a value or a label');
-            }
-            if (item.value === undefined) {
-                node = dom('div', {class: 'label', html: label}, list);
-                node.unselectable = true;
-                return;
-            }
-            const options = {html: label, value: item.value};
-            const isSelected = item.selected || item.value === parentValue;
-            if (isSelected) {
-                options['aria-selected'] = true;
-            }
-            if (item.class) {
-                options.class = item.class;
-            }
-            if (item.disabled) {
-                options.disabled = true;
-            }
-            node = dom('li', options, list);
-        });
-        this.appendChild(this.list);
-        this.update();
-        this.connect();
-    }
-
-    connected() {
-        if (this.lazyDataFN) {
-            this.update();
-        }
-        if (this.items) {
-            this.setItemsFromDom = () => {};
-            this.setItemsFromData(true);
-        }
-    }
-
-    domReady() {
-        if (!this.disabled && !this.readyonly) {
-            this.onDisabled();
-        }
-        if (this.items || this.lazyDataFN) {
-            return;
-        }
-        this.setItemsFromDom();
-    }
-    
     setDomData() {
+        // uses array of dom nodes, or document fragment
         // TODO: Do nodes need to be cloned?
-        // uses array of objects which are dom nodes
         const list = this.list;
         if (this.items[0] && this.items[0].nodeType === 11) {
-            list.appendChild(this.items[0])
+            // document fragment
+            list.appendChild(this.items[0]);
         } else {
-            this.items.forEach((node) => {
+            this.items.forEach(node => {
                 if (node.localName !== 'li') {
                     throw new Error('list children should be of type "li"');
                 }
@@ -260,8 +259,45 @@ class UIList extends BaseComponent {
             });
         }
         this.appendChild(list);
+        this.setItemsFromDom();
         this.update();
         this.connect();
+    }
+
+    setItemsFromDom() {
+        // derives items list from dom 
+        this.items = [];
+        [...this.list.children].forEach(child => {
+            if (child.localName !== 'li') {
+                console.warn("ui-list children should use LI's");
+            }
+            this.items.push({
+                label: child.getAttribute(ATTR.LABEL) || child.textContent,
+                value: child.getAttribute(ATTR.VALUE),
+                alias: child.getAttribute(ATTR.ALIAS),
+                display: child.getAttribute(ATTR.DISPLAY),
+            });
+        });
+    }
+
+    connected() {
+        if (this.lazyDataFN) {
+            this.update();
+        }
+        if (this.items) {
+            this.initDomData = () => {};
+            this.setItemsFromData();
+        }
+    }
+
+    domReady() {
+        if (!this.disabled && !this.readyonly) {
+            this.onDisabled();
+        }
+        if (this.items || this.lazyDataFN) {
+            return;
+        }
+        this.initDomData();
     }
 
     emitEvent() {
@@ -276,7 +312,7 @@ class UIList extends BaseComponent {
 
     connect() {
         this.connectEvents();
-        this.connect = function () {};
+        this.connect = function() {};
     }
 
     setTabIndicies(enabled) {
@@ -313,8 +349,8 @@ class UIList extends BaseComponent {
                 multiple: this.multiple,
                 searchTime: this.getAttribute('search-time'),
                 externalSearch: this['external-search'],
-                buttonId: this.buttonid
-            }
+                buttonId: this.buttonid,
+            };
             this.controller = keys(this.list, options);
             // this.controller.log = true;
 
@@ -327,20 +363,19 @@ class UIList extends BaseComponent {
                 }),
                 this.on('key-select', () => {
                     this.emitEvent();
-                })
+                }),
             ]);
         }
     }
 
     reset() {
-        console.log('RESET', this.__value);
         this.value = this.__value;
     }
 
     render() {
         if (!this.labelNode && this.label) {
             // TODO: a11y?
-            this.labelNode = dom('label', {html: this.label}, this);
+            this.labelNode = dom('label', { html: this.label }, this);
         }
         if (!this.list) {
             this.list = dom('ul', {});
@@ -361,7 +396,15 @@ function valueify(text) {
 }
 
 module.exports = BaseComponent.define('ui-list', UIList, {
-    props: ['label', 'limit', 'name', 'event-name', 'align', 'buttonid', 'external-search'],
+    props: [
+        'label',
+        'limit',
+        'name',
+        'event-name',
+        'align',
+        'buttonid',
+        'external-search',
+    ],
     bools: ['disabled', 'readonly', 'multiple'],
-    attrs: ['value']
+    attrs: ['value'],
 });

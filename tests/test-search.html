@@ -49,10 +49,10 @@
                 expect = chai.expect,
                 body = dom.byId('tests'),
                 data = [
-                    { label: 'Orange', value: 'orange' },
-                    { label: 'Red', value: 'red' },
-                    { label: 'Blue', value: 'blue' },
-                    { label: 'Green', value: 'green' }
+                    {label: 'Orange', value: 'orange'},
+                    {label: 'Red', value: 'red'},
+                    {label: 'Blue', value: 'blue'},
+                    {label: 'Green', value: 'green'}
                 ];
 
             function search(value) {
@@ -69,12 +69,14 @@
                 return nameData.filter((item) => {
                     return item.firstName.toLowerCase().indexOf(value) === 0 || item.lastName.toLowerCase().indexOf(value) === 0
                 })
-                .map((item) => {
-                    return {
-                        value: val(item),
-                        label: label(item)
-                    }
-                });
+                    .map((item) => {
+                        return {
+                            value: val(item),
+                            label: label(item),
+                            // alias: item.firstName,
+                            display: item.firstName
+                        }
+                    });
             }
             function setSearch(items) {
                 function label(item) {
@@ -86,7 +88,7 @@
                 dom.clean(searchNode);
                 const frag = document.createDocumentFragment();
                 items.forEach((item) => {
-                    dom('li', { html: label(item), value: val(item) }, frag);
+                    dom('li', {html: label(item), value: val(item), alias: item.firstName}, frag);
                 });
                 searchNode.appendChild(frag);
             }
@@ -115,13 +117,13 @@
                         node.busy = false;
                         node.data = search(e.detail.value);
                     }, 500)
-                    
+
                 }
 
 
                 it('should render a Search', function (done) {
                     on(document, 'data-ready', () => {
-                        node = dom('ui-search', { data: [], label: 'Simple Search', placeholder: 'Type to search!' }, body);
+                        node = dom('ui-search', {data: [], label: 'Simple Search', placeholder: 'Type to search!'}, body);
                         node.on('search', onSearch);
                         node.on('change', (e) => {
                             console.log('CHANGE', e);
