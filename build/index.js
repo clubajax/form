@@ -3470,26 +3470,6 @@ class UIList extends BaseComponent {
         this.setItemsFromData();
     }
 
-    connected() {
-        if (this.lazyDataFN) {
-            this.update();
-        }
-        if (this.items) {
-            this.setItemsFromDom = () => {};
-            this.setItemsFromData(true);
-        }
-    }
-
-    domReady() {
-        if (!this.disabled && !this.readyonly) {
-            this.onDisabled();
-        }
-        if (this.items || this.lazyDataFN) {
-            return;
-        }
-        this.setItemsFromDom();
-    }
-
     setItemsFromDom() {
         // uses the children of ui-list as the items
         let postValue;
@@ -3569,18 +3549,43 @@ class UIList extends BaseComponent {
         this.connect();
     }
 
+    connected() {
+        if (this.lazyDataFN) {
+            this.update();
+        }
+        if (this.items) {
+            this.setItemsFromDom = () => {};
+            this.setItemsFromData(true);
+        }
+    }
+
+    domReady() {
+        if (!this.disabled && !this.readyonly) {
+            this.onDisabled();
+        }
+        if (this.items || this.lazyDataFN) {
+            return;
+        }
+        this.setItemsFromDom();
+    }
+    
     setDomData() {
+        // TODO: Do nodes need to be cloned?
         // uses array of objects which are dom nodes
         const list = this.list;
-        this.items.forEach((node) => {
-            if (node.localName !== 'li') {
-                throw new Error('list children should be of type "li"');
-            }
-            if (!node.getAttribute('value')) {
-                node.setAttribute('value', valueify(node.textContent));
-            }
-            list.appendChild(node);
-        });
+        if (this.items[0] && this.items[0].nodeType === 11) {
+            list.appendChild(this.items[0])
+        } else {
+            this.items.forEach((node) => {
+                if (node.localName !== 'li') {
+                    throw new Error('list children should be of type "li"');
+                }
+                if (!node.getAttribute('value')) {
+                    node.setAttribute('value', valueify(node.textContent));
+                }
+                list.appendChild(node);
+            });
+        }
         this.appendChild(list);
         this.update();
         this.connect();

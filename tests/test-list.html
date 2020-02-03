@@ -95,6 +95,36 @@
                         ]
                     })
                 ],
+                dataF = [
+                    dom('li', {
+                        value: 'Boston',
+                        class: 'custom', html: [
+                            dom('div', {html: 'Boston'}),
+                            dom('div', {html: 'Massachussetts'})
+                        ]
+                    }),
+                    dom('li', {
+                        value: 'Detroit',
+                        class: 'custom', html: [
+                            dom('div', {html: 'Detroit'}),
+                            dom('div', {html: 'Michigan'})
+                        ]
+                    }),
+                    dom('li', {
+                        value: 'Milwaukee',
+                        class: 'custom', html: [
+                            dom('div', {html: 'Milwaukee'}),
+                            dom('div', {html: 'Wisconsin'})
+                        ]
+                    }),
+                    dom('li', {
+                        value: 'Las Vega',
+                        class: 'custom', html: [
+                            dom('div', {html: 'Las Vegas'}),
+                            dom('div', {html: 'Nevada'})
+                        ]
+                    })
+                ],
                 data5 = function () {
                     return [
                         {label: 'Puppy', value: 'puppy'},
@@ -111,6 +141,8 @@
                 ];
 
             let node;
+
+            const frag = dom.frag(dataF);
 
             function click(index) {
                 const lis = dom.queryAll(node.popup, 'li');
@@ -262,7 +294,7 @@
                     });
                 });
 
-                it('should render complex custom items', function (done) {
+                it.only('should render complex custom items', function (done) {
                     setup({data: data4, label: 'Complex Custom Items'});
                     onDomReady(node, function () {
                         node.list.focus();
@@ -273,7 +305,19 @@
                         expect(items[1].getAttribute('aria-selected')).to.equal('true');
                         expect(value).to.equal('Detroit');
                         expect(items[1].textContent).to.equal('DetroitMichigan');
-                        // destroy();
+                        console.log('DONE');
+                        done();
+                    });
+                });
+
+                it.only('should handle a document fragment', function (done) {
+                    console.log('SETUP');
+                    setup({data: frag, label: 'Document Fragment'});
+                    // node = dom('ui-list', {data: frag, label: 'Document Fragment'}, body);
+
+                    onDomReady(node, function () {
+                        expect(items[1].textContent).to.equal('DetroitMichigan');
+                        expect(items.length).to.equal(4);
                         done();
                     });
                 });
