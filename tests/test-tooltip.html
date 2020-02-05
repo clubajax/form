@@ -1,0 +1,128 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <title>Test Tooltip</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+        integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+    <script src="src/test-files.js"></script>
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            padding: 20px 20px 100px 20px;
+            margin-bottom: 100px;
+            font-family: sans-serif;
+        }
+
+        ui-icon[type="chess"] {
+            position: absolute;
+            right: 50px;
+            top: 100px;
+        }
+
+        ui-icon[type="books"] {
+            position: absolute;
+            left: 200px;
+            top: 350px;
+        }
+
+        ui-icon[type="file-video"] {
+            position: absolute;
+            left: 500px;
+            top: 300px;
+        }
+
+        ui-icon[type="file-powerpoint"] {
+            position: absolute;
+            left: 500px;
+            top: 500px;
+        }
+
+        ui-icon[type="folder"] {
+            position: absolute;
+            left: 200px;
+            top: 700px;
+        }
+
+        .large-tooltip {
+            width: 200px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Test Tooltip</h1>
+    <div id="mocha"></div>
+    <div id="tests">
+        <ui-icon type="search">
+            <ui-tooltip value="This icon has search functionality" />
+        </ui-icon>
+        <ui-icon type="chess">
+            <ui-tooltip value="Click here to play chess" align='L' />
+        </ui-icon>
+        <ui-icon type="books">
+            <ui-tooltip value="Easy Reader™" align='B' />
+        </ui-icon>
+        <ui-icon type="file-video">
+            <ui-tooltip value="I would prefer to watch television, thanks." align='T' />
+        </ui-icon>
+        <ui-icon type="file-powerpoint">
+            <ui-tooltip
+                value="We can combine the two by making the React state be the “single source of truth”. Then the React component that renders a form also controls what happens in that form on subsequent user input. An input form element whose value is controlled by React in this way is called a “controlled component”."
+                tip-class="large-tooltip" align='L' />
+        </ui-icon>
+        <ui-icon type="folder">
+            <ui-tooltip align='B'>
+                I wanna ride - a rollercoaster baby baby
+            </ui-tooltip>
+        </ui-icon>
+    </div>
+
+    <script>
+
+        mocha.setup('bdd');
+
+        describe('UiTooltip', function () {
+
+            this.timeout(3000);
+
+            const
+                describe = window.describe,
+                test = window.test,
+                dom = window.dom,
+                on = window.on,
+                nodash = window.nodash,
+                expect = chai.expect,
+                body = dom.byId('tests')
+
+
+            describe('ui-tooltip', function () {
+                let node, btn;
+
+                function ready(cb) {
+                    onDomReady(node, cb);
+                }
+
+
+                it('should render a Tooltip', function (done) {
+                    // node = dom('ui-tooltip', {value: 'Simple tooltip'}, body);
+                    done();
+                });
+
+            });
+        });
+
+        if (!/puppeteer/.test(location.hash)) {
+            mocha.run();
+        }
+
+    </script>
+
+</body>
+
+</html>

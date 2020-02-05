@@ -313,3 +313,38 @@ ui-dropdown {
   display: block; }
   ui-dropdown ui-icon {
     margin-left: 10px; }
+
+.ui-tooltip {
+  background-color: white;
+  box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.3);
+  padding: 10px;
+  border-radius: 3px;
+  border: 1px solid #CCCCCC; }
+  .ui-tooltip:before {
+    content: ' ';
+    width: 0;
+    height: 0;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 100%;
+    border-width: 8px;
+    border-style: solid;
+    border-color: transparent #aeaeae transparent transparent; }
+  .ui-tooltip.L:before {
+    right: 0;
+    transform: translate(100%, -50%);
+    border-color: transparent transparent transparent #aeaeae; }
+  .ui-tooltip.B:before {
+    right: auto;
+    left: 50%;
+    top: 0;
+    transform: translate(-50%, -100%);
+    border-color: transparent transparent #aeaeae transparent; }
+  .ui-tooltip.T:before {
+    top: auto;
+    right: auto;
+    left: 50%;
+    bottom: 0;
+    transform: translate(-50%, 100%);
+    border-color: #aeaeae transparent transparent transparent; }
