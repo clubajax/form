@@ -39,9 +39,10 @@ class UiDropdown extends BaseComponent {
 
     setDisplay() {
         this.button.innerHTML = '';
+        
         const item = this.list ? this.list.getItem(this.value) : {};
         this.__value = item ? item.value : this.__value;
-        dom('span', {html: isNull(this.value) ? this.placeholder || DEFAULT_PLACEHOLDER : item.label}, this.button);
+        dom('span', {html: isNull(this.value) ? this.placeholder || DEFAULT_PLACEHOLDER : (item.alias || item.label)}, this.button);
         dom('ui-icon', {type: 'caretDown'}, this.button);
 
         if (this.popup) {

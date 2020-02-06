@@ -1,11 +1,14 @@
 // this is a className, not a node name
 .ui-tooltip {
-    background-color: white;
-    box-shadow: 3px 3px 7px rgba(0,0,0,0.3);
-    padding: 10px;
-    border-radius: 3px;
-    border: 1px solid $gray3;
+    background-color: var(--tip-bg);
+    color: var(--tip-txt);
+    box-shadow: var(--tip-shadow);
+    padding: var(--tip-pad);
+    font-size: var(--tip-txt-size);
+    border-radius: var(--tip-brd-rad);
+    border: 1px solid var(--tip-brd);
     &:before {
+        // R
         content: ' ';
         width: 0;
         height: 0;
@@ -13,15 +16,15 @@
         top: 50%;
         transform: translateY(-50%);
         right: 100%;
-        border-width: 8px;
+        border-width: var(--tip-arrow-size);
         border-style: solid;
-        border-color: transparent #aeaeae transparent transparent;
+        border-color: transparent var(--tip-brd) transparent transparent;
     }
     &.L{
         &:before{
             right: 0;
             transform: translate(100%, -50%);
-            border-color: transparent transparent transparent #aeaeae;
+            border-color: transparent transparent transparent var(--tip-brd);
         }
     }
     &.B{
@@ -30,7 +33,7 @@
             left: 50%;
             top: 0;
             transform: translate(-50%, -100%);
-            border-color: transparent transparent #aeaeae transparent;
+            border-color: transparent transparent var(--tip-brd) transparent;
         }
     }
     &.T{
@@ -40,7 +43,30 @@
             left: 50%;
             bottom: 0;
             transform: translate(-50%, 100%);
-            border-color: #aeaeae transparent transparent transparent;
+            border-color: var(--tip-brd) transparent transparent transparent;
+        }
+    }
+    &.error{
+        background-color: var(--tip-bg-error);
+        color: var(--tip-txt-error);
+        border: 1px solid var(--tip-brd-error);
+        &:before {
+            border-color: transparent var(--tip-brd-error) transparent transparent;
+        }
+        &.L{
+            &:before{
+                border-color: transparent transparent transparent var(--tip-brd-error);
+            }
+        }
+        &.B{
+            &:before{
+                border-color: transparent transparent var(--tip-brd-error) transparent;
+            }
+        }
+        &.T{
+            &:before{
+                border-color: var(--tip-brd-error) transparent transparent transparent;
+            }
         }
     }
 }

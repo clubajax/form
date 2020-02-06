@@ -87,7 +87,7 @@ class UIList extends BaseComponent {
 
     getItem(value) {
         return this.items
-            ? this.items.find(item => item.value === value)
+            ? this.items.find(item => item.value === value || `${item.value}` === `${value}`)
             : null;
     }
 

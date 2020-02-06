@@ -25,6 +25,22 @@ class UiPopup extends BaseComponent {
                 'ui-tooltip must be associated with a parent via the parnetid'
             );
         }
+
+        this.connectEvents();
+        if (!this.parentNode) {
+            document.body.appendChild(this);
+        }
+
+        this.mq = window.matchMedia('(max-width: 415px)');
+        this.mq.addListener(this.handleMediaQuery);
+        this.handleMediaQuery(this.mq);
+    }
+
+    renderMobileButtons() {
+        if (this['use-hover']) {
+            // this is a tooltip, not a dropdown
+            return;
+        }
         // mobile label for dropdowns
         if (this.label) {
             this.labelNode = dom('label', {
@@ -51,14 +67,30 @@ class UiPopup extends BaseComponent {
             },
             this
         );
-        this.connectEvents();
-        if (!this.parentNode) {
-            document.body.appendChild(this);
-        }
+        dom.queryAll(this, '.ui-button-row .ui-button').forEach((button, i) => {
+            this.mobileEvents = this.on(button, 'click', () => {
+                if (i === 1) {
+                    if (this.component.emitEvent) {
+                        this.component.blockEvent = false;
+                        this.component.emitEvent();
+                        this.component.blockEvent = true;
+                    }
+                } else if (this.component.reset) {
+                    this.component.reset();
+                }
+                this.hide();
+            });
+        });
+    }
 
-        this.mq = window.matchMedia('(max-width: 415px)');
-        this.mq.addListener(this.handleMediaQuery);
-        this.handleMediaQuery(this.mq);
+    removeMobileButtons() {
+        dom.queryAll(this, '.ui-button-row .ui-button').forEach(button => {
+            dom.destroy(button);
+        });
+        dom.destroy(this.labelNode);
+        if (this.mobileEvents) {
+            this.mobileEvents.remove();
+        }
     }
 
     connectEvents() {
@@ -75,20 +107,6 @@ class UiPopup extends BaseComponent {
                 });
             }
         }
-        dom.queryAll(this, '.ui-button-row .ui-button').forEach((button, i) => {
-            this.on(button, 'click', () => {
-                if (i === 1) {
-                    if (this.component.emitEvent) {
-                        this.component.blockEvent = false;
-                        this.component.emitEvent();
-                        this.component.blockEvent = true;
-                    }
-                } else if (this.component.reset) {
-                    this.component.reset();
-                }
-                this.hide();
-            });
-        });
     }
 
     connectHoverEvents() {
@@ -115,18 +133,19 @@ class UiPopup extends BaseComponent {
             this.isMobile = true;
             clearPosition(this);
             this.classList.add('is-mobile');
+            this.renderMobileButtons();
         } else {
             this.component.blockEvent = false;
             this.isMobile = false;
             this.classList.remove('is-mobile');
             position(this, this.button);
+            this.removeMobileButtons();
         }
     }
 
     show() {
         this.classList.add('open');
         if (!this.isMobile) {
-            console.log('ALIGN', this.align);
             position(this, this.button, this.align);
         }
     }
@@ -145,19 +164,24 @@ class UiPopup extends BaseComponent {
     }
 }
 
-function clearPosition(popup) {
+function clearPosition(popup, tooltip) {
+    if (tooltip) {
+        dom.classList.remove(tooltip, 'T R B L');
+    }
     dom.style(popup, {
         left: '',
         right: '',
         top: '',
         bottom: '',
         height: '',
+        width: '',
         overflow: '',
     });
 }
 
 function positionTooltip(popup, button, align) {
-    clearPosition(popup);
+    const tooltip = dom.query(popup, '.ui-tooltip');
+    clearPosition(popup, tooltip);
     const win = {
         w: window.innerWidth,
         h: window.innerHeight,
@@ -167,63 +191,104 @@ function positionTooltip(popup, button, align) {
     const GAP = 15;
     const style = {};
 
+    // console.log('btn, popup, win, pop, btn');
+    // console.log(
+    //     align,
+    //     '\n',
+    //     button,
+    //     '\n',
+    //     popup,
+    //     '\n',
+    //     win,
+    //     '\n',
+    //     pop,
+    //     '\n',
+    //     btn
+    // );
+
+    function addClass(cls) {
+        if (tooltip) {
+            tooltip.classList.add(cls);
+        }
+    }
+
     function midY() {
         if (btn.h > pop.h) {
-            return btn.y + ((btn.h - pop.h) / 2);
+            return btn.y + (btn.h - pop.h) / 2;
         }
-        return btn.y - ((pop.h - btn.h) / 2);
+        return btn.y - (pop.h - btn.h) / 2;
     }
     function midX() {
         if (btn.w > pop.w) {
-            return btn.x + ((btn.w - pop.w) / 2);
+            return btn.x + (btn.w - pop.w) / 2;
         }
-        return btn.x - ((pop.w - btn.w) / 2);
+        return btn.x - (pop.w - btn.w) / 2;
     }
     function right() {
         style.top = midY();
         style.left = btn.x + btn.w + GAP;
-
+        addClass('R');
     }
     function left() {
         style.top = midY();
         style.right = win.w - btn.x + GAP;
+        addClass('L');
     }
     function bottom() {
         style.left = midX();
         style.top = btn.y + btn.h + GAP;
+        addClass('B');
     }
     function top() {
         style.left = midX();
         style.top = btn.y - pop.h - GAP;
+        addClass('T');
     }
+
+    const fitR = () => btn.x + btn.w + pop.w + GAP < win.w;
+    const fitL = () => btn.x - pop.w - GAP > 0;
+    const fitT = () => btn.y - pop.h - GAP > 0;
+    const fitB = () => btn.y + btn.h + pop.h + GAP < win.h;
 
     switch (align) {
         case 'R':
-            if (btn.x + btn.w + pop.w + GAP > win.w) {
+            if (fitR()) {
+                right();
+            } else if (fitL()) {
                 left();
             } else {
-                right();
+                console.warn('Button is too wide to fit a tooltip next to it');
             }
             break;
         case 'L':
-            if (btn.x - pop.w - GAP < 0) {
+            if (fitL()) {
+                left();
+            } else if (fitR()) {
                 right();
             } else {
-                left();
+                console.warn('Button is too wide to fit a tooltip next to it');
             }
             break;
         case 'T':
-            if (btn.y - pop.h - GAP < 0) {
+            if (fitT()) {
+                top();
+            } else if (fitB()) {
                 bottom();
             } else {
-                top();
+                console.warn(
+                    'Button is too tall to fit a tooltip above or below it'
+                );
             }
             break;
         default:
-            if (btn.y + btn.h + pop.h + GAP > win.h) {
+            if (fitB()) {
+                bottom();
+            } else if (fitT()) {
                 top();
             } else {
-                bottom();
+                console.warn(
+                    'Button is too tall to fit a tooltip above or below it'
+                );
             }
     }
 
@@ -232,35 +297,51 @@ function positionTooltip(popup, button, align) {
 
 function position(popup, button, align) {
     if (align && align.length === 1) {
+        // TODO: may want to use TRBL for dropdowns
+        // consider checking for a tooltip node instead
         positionTooltip(popup, button, align);
         return;
     }
     clearPosition(popup);
+
+    const GAP = 5;
+    const MIN_BOT_SPACE = 200;
+    
+    const style = {};
+    const bodyPad = dom.style(document.body, 'padding-left');
     const win = {
         w: window.innerWidth,
         h: window.innerHeight,
     };
-    const pop = dom.box(popup);
     const btn = dom.box(button);
-    const GAP = 5;
-    const MIN_BOT_SPACE = 200;
-    const style = {};
-    const leftAligned = btn.x + pop.w;
-    const rightAligned = btn.x + btn.w - pop.w;
-
+    const pop = dom.box(popup);
     const topSpace = btn.top;
     const botSpace = win.h - (btn.top + btn.h + GAP);
+    const rightSpace = win.w - btn.x;
+    const leftSpace = btn.x + btn.w;
 
-    if (align === 'right' || (leftAligned > win.w && rightAligned > 0)) {
-        // right
+    // position left/right & width
+    if (align === 'right' || (rightSpace > pop.w && rightSpace > leftSpace)) {
+        // left-side
         style.top = btn.y + btn.h;
         style.right = win.w - (btn.x + btn.w);
-    } else if (leftAligned < win.w) {
-        // left
+    } else if (rightSpace > pop.w) {
+        // right-side
         style.top = btn.y + btn.h;
         style.left = btn.x;
+    } else if (rightSpace > leftSpace) {
+        // right-side, resize popup
+        style.top = btn.y + btn.h;
+        style.left = btn.x;
+        style.width = rightSpace - bodyPad;
+    } else {
+        // left-side, resize popup
+        style.top = btn.y + btn.h;
+        style.right = win.w - (btn.x + btn.w);
+        style.width = leftSpace - bodyPad;
     }
 
+    // position top/bottom & height
     if (pop.h > topSpace && pop.h > botSpace) {
         if (botSpace < MIN_BOT_SPACE || topSpace > botSpace * 1.5) {
             // force top
@@ -274,7 +355,7 @@ function position(popup, button, align) {
             style.overflow = 'auto';
         }
     } else if (botSpace < pop.h) {
-        // bottom
+        // top
         style.top = '';
         style.bottom = win.h - btn.y;
     }

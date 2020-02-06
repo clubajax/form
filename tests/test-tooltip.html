@@ -19,7 +19,7 @@
             font-family: sans-serif;
         }
 
-        ui-icon[type="chess"] {
+        ui-icon[type="error"] {
             position: absolute;
             right: 50px;
             top: 100px;
@@ -60,10 +60,10 @@
     <div id="mocha"></div>
     <div id="tests">
         <ui-icon type="search">
-            <ui-tooltip value="This icon has search functionality" />
+            <ui-tooltip value="This icon has search functionality" align="L"/>
         </ui-icon>
-        <ui-icon type="chess">
-            <ui-tooltip value="Click here to play chess" align='L' />
+        <ui-icon type="error" color="red" colour="blue">
+            <ui-tooltip value="Click here to play chess" align='L' class="error" />
         </ui-icon>
         <ui-icon type="books">
             <ui-tooltip value="Easy Reader™" align='B' />
@@ -74,7 +74,7 @@
         <ui-icon type="file-powerpoint">
             <ui-tooltip
                 value="We can combine the two by making the React state be the “single source of truth”. Then the React component that renders a form also controls what happens in that form on subsequent user input. An input form element whose value is controlled by React in this way is called a “controlled component”."
-                tip-class="large-tooltip" align='L' />
+                class="large-tooltip" align='L' />
         </ui-icon>
         <ui-icon type="folder">
             <ui-tooltip align='B'>

@@ -5,7 +5,8 @@
     <title>Test Dropdown</title>
     <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
-        integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous"><script src="src/test-files.js"></script>
+        integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+    <script src="src/test-files.js"></script>
     <style>
         html,
         body {
@@ -16,6 +17,22 @@
             padding: 20px 20px 100px 20px;
             margin-bottom: 100px;
             font-family: sans-serif;
+        }
+
+        ui-dropdown {
+            margin-bottom: 20px;
+        }
+
+        .abs-mid {
+            position: absolute;
+            top: 300px;
+            left: 300px;
+        }
+        .abs-bot {
+            position: absolute;
+            bottom: 100px;
+            right: 100px;
+            width: 300px;
         }
     </style>
 </head>
@@ -31,7 +48,7 @@
         describe('UiDropdown', function () {
 
             this.timeout(3000);
-            
+
             const
                 describe = window.describe,
                 test = window.test,
@@ -45,32 +62,121 @@
                     {label: 'Red', value: 'red'},
                     {label: 'Blue', value: 'blue'},
                     {label: 'Green', value: 'green'}
+                ],
+                data4 = [
+                    {label: '<span>&spades;</span> Spades', value: 'spades', class: 'spades'},
+                    {label: '<span>&clubs;</span> Clubs', value: 'clubs', selected: true, class: 'clubs'},
+                    {label: '<span>&diams;</span> Diamonds', value: 'diamonds', class: 'diamonds'},
+                    {label: 'Joker', value: 'joker', class: 'joker'},
+                    {label: '<span>&hearts;</span> Hearts', value: 'hearts', class: 'hearts'}
+                ],
+                dataQnA = [
+                    {
+                        value: 1,
+                        label: 'What is a potential pitfall with using typeof bar === "object" to determine if bar is an object? How can this pitfall be avoided?'
+                    }, {
+                        value: 2,
+                        label: 'What is the significance of, and reason for, wrapping the entire content of a JavaScript source file in a function block?'
+                    }, {
+                        value: 3,
+                        label: 'What is the significance, and what are the benefits, of including \'use strict\' at the beginning of a JavaScript source file?'
+                    }, {
+                        value: 4,
+                        label: 'Consider the two functions below. Will they both return the same thing? Why or why not?'
+                    }, {
+                        value: 5,
+                        label: 'Write a simple function (less than 160 characters) that returns a boolean indicating whether or not a string is a palindrome.'
+                    }
+                ],
+                dataAlias = [
+                    {
+                        value: 1,
+                        alias: 'Q1',
+                        label: 'What is a potential pitfall with using typeof bar === "object" to determine if bar is an object? How can this pitfall be avoided?'
+                    }, {
+                        value: 2,
+                        alias: 'Q2',
+                        label: 'What is the significance of, and reason for, wrapping the entire content of a JavaScript source file in a function block?'
+                    }, {
+                        value: 3,
+                        alias: 'Q3',
+                        label: 'What is the significance, and what are the benefits, of including \'use strict\' at the beginning of a JavaScript source file?'
+                    }, {
+                        value: 4,
+                        alias: 'Q4',
+                        label: 'Consider the two functions below. Will they both return the same thing? Why or why not?'
+                    }, {
+                        value: 5,
+                        alias: 'Q5',
+                        label: 'Write a simple function (less than 160 characters) that returns a boolean indicating whether or not a string is a palindrome.'
+                    }
                 ];
-            
+
+            const alpha = 'abcdefghijklmnopqrstuvwxyz'.toUpperCase().split('');
+
+            function makeLongList() {
+                const list = [];
+                alpha.forEach(function (a) {
+                    alpha.forEach(function (b) {
+                        list.push(a + b);
+                    });
+                });
+                return list.splice(0, 100);
+            }
+
+            const data6 = makeLongList();
+
 
             describe('ui-dropdown', function () {
                 let node, btn;
-                
+
                 function ready(cb) {
                     onDomReady(node, cb);
                 }
 
-                function click(){
+                function click() {
                     on.emit(btn, 'click');
                 }
 
                 function clickoff(cb) {
-                    setTimeout(function() {
+                    setTimeout(function () {
                         on.emit(document.body, 'click');
                         cb();
                     }, 110);
                 }
 
-
-                it('should render a dropdown', function (done) {
-                    node = dom('ui-dropdown', {data: data, label: 'Simple drop'}, body);
-                    done();
+                describe('render', function () {
+                    it('should render a dropdown', function (done) {
+                        node = dom('ui-dropdown', {data: data, label: 'Simple drop'}, body);
+                        done();
+                    });
+                    it('should render emojis', function (done) {
+                        node = dom('ui-dropdown', {data: data4, label: 'Emojis'}, body);
+                        done();
+                    });
+                    it('should handle very long options', function (done) {
+                        node = dom('ui-dropdown', {data: dataQnA, label: 'Long Options'}, body);
+                        done();
+                    });
+                    it('should use an alias', function (done) {
+                        node = dom('ui-dropdown', {data: dataAlias, label: 'Alias'}, body);
+                        done();
+                    });
                 });
+                describe('positioning', function () {
+                    it('should handle very long options, middle button', function (done) {
+                        node = dom('ui-dropdown', {data: dataQnA, label: 'Long Options Middle', class: 'abs-mid'}, body);
+                        done();
+                    });
+                    it('should truncate display, right-bottom button', function (done) {
+                        const container = dom('section', {class: 'abs-bot'}, body);
+                        node = dom('ui-dropdown', {data: dataQnA, label: 'Long Options Bottom Right'}, container);
+                        done();
+                    });
+                });
+
+
+
 
             });
         });

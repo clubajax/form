@@ -1,38 +1,38 @@
 ui-popup {
-    display: none;
+    display: block;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 200ms ease;
     box-sizing: border-box;
     position: absolute;
     z-index: 10;
-    &.open {
-        display: block;
-        .ui-label,
-        .ui-button-row{
-            display: none;
+    &.is-mobile {
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: white;
+        display: flex;
+        flex-direction: column;
+        .ui-label {
+            display: block;
+            flex: 0 0 20px;
+            padding: 10px;
+            background-color: #eee;
         }
-        &.is-mobile {
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: white;
+        .ui-button-row {
             display: flex;
-            flex-direction: column;
-            .ui-label {
-                display: block;
-                flex: 0 0 20px;
-                padding: 10px;
-                background-color: #eee;
-            }
-            .ui-button-row {
-                display: flex;
-                flex: 0 0 50px;
-            }
-            & > *:nth-child(2) {
-                flex: 1;
-            }
-            ui-list ul {
-                border: 0;
-            }
+            flex: 0 0 50px;
         }
+        & > *:nth-child(2) {
+            flex: 1;
+        }
+        ui-list ul {
+            border: 0;
+        }
+    }
+    &.open {
+        pointer-events: auto;
+        opacity: 1;
     }
 }

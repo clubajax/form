@@ -2953,6 +2953,8 @@ const map = {
     plus: 'fas fa-plus',
     books: 'fas fa-book-reader',
     chess: 'fas fa-chess-rook',
+    error: 'fas fa-exclamation-circle',
+    warning: 'fas fa-exclamation-triangle',
     caretDown: 'fas fa-caret-down',
     search: 'fas fa-search',
     spinner: 'fas fa-sync-alt',
@@ -3198,27 +3200,35 @@ const BaseComponent = require('@clubajax/base-component');
 const dom = require('@clubajax/dom');
 const iconMap = require('./lib/icon-map');
 
-class Icon extends BaseComponent {
+class UiIcon extends BaseComponent {
     onType(type) { 
-        // if (!iconMap[type]) {
-        //     console.warn('icon type missing:', type);
-        // }
+        // if (!iconMap[type]) console.warn('icon type missing:', type);
         if (!missingStylesheet()) {
             console.warn('Icon stylesheet missing');
         }
         this.className = iconMap[type] || type;
     }
-}
+    onColor(value) {
+        // why doesn't this work?
+        console.log('COLOR', value);
+    }
 
-module.exports = BaseComponent.define('ui-icon', Icon, {
-    props: ['type']
-});
+    connected() {
+        if (this.color) {
+            this.style.color = this.color;
+        }
+    }
+}
 
 let missing;
 function missingStylesheet() {
     missing = missing !== undefined ? missing : Boolean(dom.queryAll('link').find(link => /fontawesome/.test(link.href)));
     return missing;
 }
+
+module.exports = BaseComponent.define('ui-icon', UiIcon, {
+    props: ['type', 'color']
+});
 
 },{"./lib/icon-map":15,"@clubajax/base-component":4,"@clubajax/dom":8}],20:[function(require,module,exports){
 const BaseComponent = require('@clubajax/base-component');
@@ -3765,6 +3775,22 @@ class UiPopup extends BaseComponent {
                 'ui-tooltip must be associated with a parent via the parnetid'
             );
         }
+
+        this.connectEvents();
+        if (!this.parentNode) {
+            document.body.appendChild(this);
+        }
+
+        this.mq = window.matchMedia('(max-width: 415px)');
+        this.mq.addListener(this.handleMediaQuery);
+        this.handleMediaQuery(this.mq);
+    }
+
+    renderMobileButtons() {
+        if (this['use-hover']) {
+            // this is a tooltip, not a dropdown
+            return;
+        }
         // mobile label for dropdowns
         if (this.label) {
             this.labelNode = dom('label', {
@@ -3791,14 +3817,30 @@ class UiPopup extends BaseComponent {
             },
             this
         );
-        this.connectEvents();
-        if (!this.parentNode) {
-            document.body.appendChild(this);
-        }
+        dom.queryAll(this, '.ui-button-row .ui-button').forEach((button, i) => {
+            this.mobileEvents = this.on(button, 'click', () => {
+                if (i === 1) {
+                    if (this.component.emitEvent) {
+                        this.component.blockEvent = false;
+                        this.component.emitEvent();
+                        this.component.blockEvent = true;
+                    }
+                } else if (this.component.reset) {
+                    this.component.reset();
+                }
+                this.hide();
+            });
+        });
+    }
 
-        this.mq = window.matchMedia('(max-width: 415px)');
-        this.mq.addListener(this.handleMediaQuery);
-        this.handleMediaQuery(this.mq);
+    removeMobileButtons() {
+        dom.queryAll(this, '.ui-button-row .ui-button').forEach(button => {
+            dom.destroy(button);
+        });
+        dom.destroy(this.labelNode);
+        if (this.mobileEvents) {
+            this.mobileEvents.remove();
+        }
     }
 
     connectEvents() {
@@ -3815,20 +3857,6 @@ class UiPopup extends BaseComponent {
                 });
             }
         }
-        dom.queryAll(this, '.ui-button-row .ui-button').forEach((button, i) => {
-            this.on(button, 'click', () => {
-                if (i === 1) {
-                    if (this.component.emitEvent) {
-                        this.component.blockEvent = false;
-                        this.component.emitEvent();
-                        this.component.blockEvent = true;
-                    }
-                } else if (this.component.reset) {
-                    this.component.reset();
-                }
-                this.hide();
-            });
-        });
     }
 
     connectHoverEvents() {
@@ -3855,18 +3883,19 @@ class UiPopup extends BaseComponent {
             this.isMobile = true;
             clearPosition(this);
             this.classList.add('is-mobile');
+            this.renderMobileButtons();
         } else {
             this.component.blockEvent = false;
             this.isMobile = false;
             this.classList.remove('is-mobile');
             position(this, this.button);
+            this.removeMobileButtons();
         }
     }
 
     show() {
         this.classList.add('open');
         if (!this.isMobile) {
-            console.log('ALIGN', this.align);
             position(this, this.button, this.align);
         }
     }
@@ -3885,7 +3914,10 @@ class UiPopup extends BaseComponent {
     }
 }
 
-function clearPosition(popup) {
+function clearPosition(popup, tooltip) {
+    if (tooltip) {
+        dom.classList.remove(tooltip, 'T R B L');
+    }
     dom.style(popup, {
         left: '',
         right: '',
@@ -3897,7 +3929,8 @@ function clearPosition(popup) {
 }
 
 function positionTooltip(popup, button, align) {
-    clearPosition(popup);
+    const tooltip = dom.query(popup, '.ui-tooltip');
+    clearPosition(popup, tooltip);
     const win = {
         w: window.innerWidth,
         h: window.innerHeight,
@@ -3907,63 +3940,104 @@ function positionTooltip(popup, button, align) {
     const GAP = 15;
     const style = {};
 
+    // console.log('btn, popup, win, pop, btn');
+    // console.log(
+    //     align,
+    //     '\n',
+    //     button,
+    //     '\n',
+    //     popup,
+    //     '\n',
+    //     win,
+    //     '\n',
+    //     pop,
+    //     '\n',
+    //     btn
+    // );
+
+    function addClass(cls) {
+        if (tooltip) {
+            tooltip.classList.add(cls);
+        }
+    }
+
     function midY() {
         if (btn.h > pop.h) {
-            return btn.y + ((btn.h - pop.h) / 2);
+            return btn.y + (btn.h - pop.h) / 2;
         }
-        return btn.y - ((pop.h - btn.h) / 2);
+        return btn.y - (pop.h - btn.h) / 2;
     }
     function midX() {
         if (btn.w > pop.w) {
-            return btn.x + ((btn.w - pop.w) / 2);
+            return btn.x + (btn.w - pop.w) / 2;
         }
-        return btn.x - ((pop.w - btn.w) / 2);
+        return btn.x - (pop.w - btn.w) / 2;
     }
     function right() {
         style.top = midY();
         style.left = btn.x + btn.w + GAP;
-
+        addClass('R');
     }
     function left() {
         style.top = midY();
         style.right = win.w - btn.x + GAP;
+        addClass('L');
     }
     function bottom() {
         style.left = midX();
         style.top = btn.y + btn.h + GAP;
+        addClass('B');
     }
     function top() {
         style.left = midX();
         style.top = btn.y - pop.h - GAP;
+        addClass('T');
     }
+
+    const fitR = () => btn.x + btn.w + pop.w + GAP < win.w;
+    const fitL = () => btn.x - pop.w - GAP > 0;
+    const fitT = () => btn.y - pop.h - GAP > 0;
+    const fitB = () => btn.y + btn.h + pop.h + GAP < win.h;
 
     switch (align) {
         case 'R':
-            if (btn.x + btn.w + pop.w + GAP > win.w) {
+            if (fitR()) {
+                right();
+            } else if (fitL()) {
                 left();
             } else {
-                right();
+                console.warn('Button is too wide to fit a tooltip next to it');
             }
             break;
         case 'L':
-            if (btn.x - pop.w - GAP < 0) {
+            if (fitL()) {
+                left();
+            } else if (fitR()) {
                 right();
             } else {
-                left();
+                console.warn('Button is too wide to fit a tooltip next to it');
             }
             break;
         case 'T':
-            if (btn.y - pop.h - GAP < 0) {
+            if (fitT()) {
+                top();
+            } else if (fitB()) {
                 bottom();
             } else {
-                top();
+                console.warn(
+                    'Button is too tall to fit a tooltip above or below it'
+                );
             }
             break;
         default:
-            if (btn.y + btn.h + pop.h + GAP > win.h) {
+            if (fitB()) {
+                bottom();
+            } else if (fitT()) {
                 top();
             } else {
-                bottom();
+                console.warn(
+                    'Button is too tall to fit a tooltip above or below it'
+                );
             }
     }
 
@@ -4534,20 +4608,20 @@ class UiTooltip extends BaseComponent {
         const align = this.align || 'R';
         dom('ui-popup', {
             html: dom('div', {
-                class: `ui-tooltip ${align} ${this['tip-class']}`,
+                class: `ui-tooltip ${this.className}`,
                 html: this.value
             }),
             buttonid: this.parentNode,
             'use-hover': true,
             align,
             'hide-timer': this['hide-timer'],
-            open: true //this.open
+            open: this.open
         }, document.body);
     }
 }
 
 module.exports = BaseComponent.define('ui-tooltip', UiTooltip, {
-    props: ['align', 'tip-class', 'hide-timer'],
+    props: ['align', 'hide-timer'],
     attrs: ['value', 'open']
 });
 

@@ -1,5 +1,18 @@
 ui-dropdown {
     display: block;
+    button.ui-button {
+        background-color: var(--btn-drop-bg);
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        max-width: 100%;
+        ui-icon{
+            width: 20px;
+        }
+        &:hover {
+            background-color: var(--btn-drop-bg-hvr);
+        }
+    }
     ui-icon {
         margin-left: 10px;
     }

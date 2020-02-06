@@ -1,3 +1,26 @@
+:root {
+  --btn-brd: 1px solid #d8d8d8;
+  --btn-bg: rgb(204, 246, 255);
+  --btn-bg-hvr: rgb(232, 251, 255);
+  --btn-txt: black;
+  --btn-txt-size: 14px;
+  --btn-pad: 10px;
+  --btn-rad: 2px;
+  --btn-drop-bg: white;
+  --btn-drop-bg-hvr: #ddd;
+  --btn-brd-focus: #6c9fd8;
+  --tip-bg: white;
+  --tip-txt: black;
+  --tip-brd: rgb(92, 92, 92);
+  --tip-brd-rad: 3px;
+  --tip-txt-size: 13px;
+  --tip-pad: 6px;
+  --tip-arrow-size: 6px;
+  --tip-shadow: 3px 3px 7px rgba(0,0,0,0.3);
+  --tip-bg-error: rgb(226, 0, 0);
+  --tip-txt-error: rgb(255, 255, 255);
+  --tip-brd-error: rgb(226, 0, 0); }
+
 * {
   box-sizing: border-box; }
 
@@ -16,28 +39,25 @@ ui-icon {
 
 .ui-button {
   display: block;
-  padding: 10px;
-  font-size: 14px;
-  background-color: #ccf6ff;
-  border: 1px solid #ccc;
-  border-radius: 2px;
+  padding: var(--btn-pad);
+  font-size: var(--btn-txt-size);
+  color: var(--btn-txt);
+  background-color: var(--btn-bg);
+  border: var(--btn-brd);
+  border-radius: var(--btn-rad);
   outline: 0;
   cursor: pointer; }
   .ui-button:hover {
-    background-color: #e8fbff; }
-  .ui-button:active {
-    background-color: #f8feff; }
+    background-color: var(--btn-bg-hvr); }
   .ui-button:focus {
-    border-color: #6c9fd8; }
+    border-color: var(--btn-brd-focus); }
   .ui-button.tertiary {
     background-color: transparent;
     border-color: transparent; }
     .ui-button.tertiary:hover {
-      background-color: #e8fbff; }
-    .ui-button.tertiary:active {
-      background-color: #f8feff; }
+      background-color: var(--btn-bg-hvr); }
     .ui-button.tertiary:focus {
-      border-color: #6c9fd8; }
+      border-color: var(--btn-brd-focus); }
 
 .ui-button-row {
   display: flex;
@@ -197,6 +217,29 @@ ui-radio-buttons {
     ui-radio-buttons button.btn:hover {
       background-color: #f2f2f2; }
 
+:root {
+  --btn-brd: 1px solid #d8d8d8;
+  --btn-bg: rgb(204, 246, 255);
+  --btn-bg-hvr: rgb(232, 251, 255);
+  --btn-txt: black;
+  --btn-txt-size: 14px;
+  --btn-pad: 10px;
+  --btn-rad: 2px;
+  --btn-drop-bg: white;
+  --btn-drop-bg-hvr: #ddd;
+  --btn-brd-focus: #6c9fd8;
+  --tip-bg: white;
+  --tip-txt: black;
+  --tip-brd: rgb(92, 92, 92);
+  --tip-brd-rad: 3px;
+  --tip-txt-size: 13px;
+  --tip-pad: 6px;
+  --tip-arrow-size: 6px;
+  --tip-shadow: 3px 3px 7px rgba(0,0,0,0.3);
+  --tip-bg-error: rgb(226, 0, 0);
+  --tip-txt-error: rgb(255, 255, 255);
+  --tip-brd-error: rgb(226, 0, 0); }
+
 ui-input {
   display: block;
   position: relative;
@@ -279,47 +322,60 @@ ui-list {
           margin-bottom: 10px; }
 
 ui-popup {
-  display: none;
+  display: block;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 200ms ease;
   box-sizing: border-box;
   position: absolute;
   z-index: 10; }
-  ui-popup.open {
-    display: block; }
-    ui-popup.open .ui-label,
-    ui-popup.open .ui-button-row {
-      display: none; }
-    ui-popup.open.is-mobile {
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: white;
+  ui-popup.is-mobile {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    display: flex;
+    flex-direction: column; }
+    ui-popup.is-mobile .ui-label {
+      display: block;
+      flex: 0 0 20px;
+      padding: 10px;
+      background-color: #eee; }
+    ui-popup.is-mobile .ui-button-row {
       display: flex;
-      flex-direction: column; }
-      ui-popup.open.is-mobile .ui-label {
-        display: block;
-        flex: 0 0 20px;
-        padding: 10px;
-        background-color: #eee; }
-      ui-popup.open.is-mobile .ui-button-row {
-        display: flex;
-        flex: 0 0 50px; }
-      ui-popup.open.is-mobile > *:nth-child(2) {
-        flex: 1; }
-      ui-popup.open.is-mobile ui-list ul {
-        border: 0; }
+      flex: 0 0 50px; }
+    ui-popup.is-mobile > *:nth-child(2) {
+      flex: 1; }
+    ui-popup.is-mobile ui-list ul {
+      border: 0; }
+  ui-popup.open {
+    pointer-events: auto;
+    opacity: 1; }
 
 ui-dropdown {
   display: block; }
+  ui-dropdown button.ui-button {
+    background-color: var(--btn-drop-bg);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 100%; }
+    ui-dropdown button.ui-button ui-icon {
+      width: 20px; }
+    ui-dropdown button.ui-button:hover {
+      background-color: var(--btn-drop-bg-hvr); }
   ui-dropdown ui-icon {
     margin-left: 10px; }
 
 .ui-tooltip {
-  background-color: white;
-  box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.3);
-  padding: 10px;
-  border-radius: 3px;
-  border: 1px solid #CCCCCC; }
+  background-color: var(--tip-bg);
+  color: var(--tip-txt);
+  box-shadow: var(--tip-shadow);
+  padding: var(--tip-pad);
+  font-size: var(--tip-txt-size);
+  border-radius: var(--tip-brd-rad);
+  border: 1px solid var(--tip-brd); }
   .ui-tooltip:before {
     content: ' ';
     width: 0;
@@ -328,23 +384,35 @@ ui-dropdown {
     top: 50%;
     transform: translateY(-50%);
     right: 100%;
-    border-width: 8px;
+    border-width: var(--tip-arrow-size);
     border-style: solid;
-    border-color: transparent #aeaeae transparent transparent; }
+    border-color: transparent var(--tip-brd) transparent transparent; }
   .ui-tooltip.L:before {
     right: 0;
     transform: translate(100%, -50%);
-    border-color: transparent transparent transparent #aeaeae; }
+    border-color: transparent transparent transparent var(--tip-brd); }
   .ui-tooltip.B:before {
     right: auto;
     left: 50%;
     top: 0;
     transform: translate(-50%, -100%);
-    border-color: transparent transparent #aeaeae transparent; }
+    border-color: transparent transparent var(--tip-brd) transparent; }
   .ui-tooltip.T:before {
     top: auto;
     right: auto;
     left: 50%;
     bottom: 0;
     transform: translate(-50%, 100%);
-    border-color: #aeaeae transparent transparent transparent; }
+    border-color: var(--tip-brd) transparent transparent transparent; }
+  .ui-tooltip.error {
+    background-color: var(--tip-bg-error);
+    color: var(--tip-txt-error);
+    border: 1px solid var(--tip-brd-error); }
+    .ui-tooltip.error:before {
+      border-color: transparent var(--tip-brd-error) transparent transparent; }
+    .ui-tooltip.error.L:before {
+      border-color: transparent transparent transparent var(--tip-brd-error); }
+    .ui-tooltip.error.B:before {
+      border-color: transparent transparent var(--tip-brd-error) transparent; }
+    .ui-tooltip.error.T:before {
+      border-color: var(--tip-brd-error) transparent transparent transparent; }

@@ -54,3 +54,28 @@ $btn-bk-hvr: $primary-hvr;
 $btn-bk-act: $primary-act;
 $btn-dsbl: #ccc;
 $btn-dsbl-clr: #999;
+
+:root {
+    --btn-brd: 1px solid #d8d8d8;
+    --btn-bg: rgb(204, 246, 255);
+    --btn-bg-hvr: rgb(232, 251, 255);
+    --btn-txt: black;
+    --btn-txt-size: 14px;
+    --btn-pad: 10px;
+    --btn-rad: 2px;
+    --btn-drop-bg: white;
+    --btn-drop-bg-hvr: #ddd;
+    --btn-brd-focus: #6c9fd8;
+    //
+    --tip-bg: white;
+    --tip-txt: black;
+    --tip-brd: rgb(92, 92, 92);
+    --tip-brd-rad: 3px;
+    --tip-txt-size: 13px;
+    --tip-pad: 6px; 
+    --tip-arrow-size: 6px;
+    --tip-shadow: 3px 3px 7px rgba(0,0,0,0.3);
+    --tip-bg-error: rgb(226, 0, 0);
+    --tip-txt-error: rgb(255, 255, 255);
+    --tip-brd-error: rgb(226, 0, 0);
+}

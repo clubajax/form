@@ -19,21 +19,19 @@ ui-icon {
 
 .ui-button {
     display: block;
-    padding: 10px;
-    font-size: 14px;
-    background-color: $btn-bk;
-    border: $brd;
-    border-radius: 2px;
+    padding: var(--btn-pad);
+    font-size: var(--btn-txt-size);
+    color: var(--btn-txt);
+    background-color: var(--btn-bg);
+    border: var(--btn-brd);
+    border-radius: var(--btn-rad);
     outline: 0;
     cursor: pointer;
     &:hover {
-        background-color: $btn-bk-hvr;
-    }
-    &:active {
-        background-color: $btn-bk-act;
+        background-color: var(--btn-bg-hvr);
     }
     &:focus {
-        border-color: $focus-brd;
+        border-color: var(--btn-brd-focus);
     }
     &.secondary {
     }
@@ -41,13 +39,10 @@ ui-icon {
         background-color: transparent;
         border-color: transparent;
         &:hover {
-            background-color: $btn-bk-hvr;
-        }
-        &:active {
-            background-color: $btn-bk-act;
+            background-color: var(--btn-bg-hvr);
         }
         &:focus {
-            border-color: $focus-brd;
+            border-color: var(--btn-brd-focus);
         }
     }
     &.link {

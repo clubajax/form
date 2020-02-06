@@ -5,6 +5,8 @@ const map = {
     plus: 'fas fa-plus',
     books: 'fas fa-book-reader',
     chess: 'fas fa-chess-rook',
+    error: 'fas fa-exclamation-circle',
+    warning: 'fas fa-exclamation-triangle',
     caretDown: 'fas fa-caret-down',
     search: 'fas fa-search',
     spinner: 'fas fa-sync-alt',

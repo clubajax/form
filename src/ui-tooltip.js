@@ -15,20 +15,20 @@ class UiTooltip extends BaseComponent {
         const align = this.align || 'R';
         dom('ui-popup', {
             html: dom('div', {
-                class: `ui-tooltip ${align} ${this['tip-class']}`,
+                class: `ui-tooltip ${this.className}`,
                 html: this.value
             }),
             buttonid: this.parentNode,
             'use-hover': true,
             align,
             'hide-timer': this['hide-timer'],
-            open: true //this.open
+            open: this.open
         }, document.body);
     }
 }
 
 module.exports = BaseComponent.define('ui-tooltip', UiTooltip, {
-    props: ['align', 'tip-class', 'hide-timer'],
+    props: ['align', 'hide-timer'],
     attrs: ['value', 'open']
 });
 
