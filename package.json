@@ -1,6 +1,6 @@
 {
   "name": "@clubajax/form",
-  "version": "0.7.20",
+  "version": "0.7.26",
   "description": "Web Components for Forms",
   "main": "build/index.js",
   "repository": "https://github.com/clubajax/form.git",
@@ -11,6 +11,13 @@
     "start": "grunt dev",
     "build": "grunt deploy",
     "vers": "grunt version"
+  },
+  "dependencies": {
+    "@clubajax/base-component": "2.3.2",
+    "@clubajax/dom": "2.8.5",
+    "@clubajax/key-nav": "2.5.5",
+    "@clubajax/no-dash": "0.6.1",
+    "@clubajax/on": "2.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
@@ -31,12 +38,5 @@
     "node-sass": "^4.13.1",
     "serve-index": "^1.9.1",
     "uglifyify": "^5.0.2"
-  },
-  "dependencies": {
-    "@clubajax/base-component": "2.3.2",
-    "@clubajax/dom": "2.8.5",
-    "@clubajax/key-nav": "2.4.0",
-    "@clubajax/no-dash": "0.6.1",
-    "@clubajax/on": "2.2.0"
   }
 }

@@ -6,9 +6,10 @@
   --btn-txt-size: 14px;
   --btn-pad: 10px;
   --btn-rad: 2px;
-  --btn-drop-bg: white;
-  --btn-drop-bg-hvr: #ddd;
   --btn-brd-focus: #6c9fd8;
+  --drop-btn-pad: 5px 10px 8px 10px;
+  --drop-btn-bg: white;
+  --drop-btn-bg-hvr: #ddd;
   --tip-bg: white;
   --tip-txt: black;
   --tip-brd: rgb(92, 92, 92);
@@ -19,7 +20,27 @@
   --tip-shadow: 3px 3px 7px rgba(0,0,0,0.3);
   --tip-bg-error: rgb(226, 0, 0);
   --tip-txt-error: rgb(255, 255, 255);
-  --tip-brd-error: rgb(226, 0, 0); }
+  --tip-brd-error: rgb(226, 0, 0);
+  --list-bg: white;
+  --list-brd: 1px solid #ccc;
+  --list-brd-focus: black;
+  --list-item-txt-size: 13px;
+  --list-item-txt: #333;
+  --list-item-pad: 5px 10px;
+  --list-item-bg: transparent;
+  --list-item-hvr: #eee;
+  --list-item-current: #eee;
+  --list-item-selected: #333;
+  --list-item-focus: #83bffc;
+  --list-item-bg-disabled: #ccc;
+  --list-item-txt-disabled: #666;
+  --list-item-label-bg: transparent;
+  --list-item-label-pad: 10px 5px 5px 5px;
+  --list-item-label-txt: rgb(176, 176, 176);
+  --list-item-group-txt: rgb(176, 176, 176);
+  --list-item-group-brd: #e0e0e0;
+  --list-item-divider: #ccc;
+  --list-item-divider-pad: 5px; }
 
 * {
   box-sizing: border-box; }
@@ -225,9 +246,10 @@ ui-radio-buttons {
   --btn-txt-size: 14px;
   --btn-pad: 10px;
   --btn-rad: 2px;
-  --btn-drop-bg: white;
-  --btn-drop-bg-hvr: #ddd;
   --btn-brd-focus: #6c9fd8;
+  --drop-btn-pad: 5px 10px 8px 10px;
+  --drop-btn-bg: white;
+  --drop-btn-bg-hvr: #ddd;
   --tip-bg: white;
   --tip-txt: black;
   --tip-brd: rgb(92, 92, 92);
@@ -238,7 +260,27 @@ ui-radio-buttons {
   --tip-shadow: 3px 3px 7px rgba(0,0,0,0.3);
   --tip-bg-error: rgb(226, 0, 0);
   --tip-txt-error: rgb(255, 255, 255);
-  --tip-brd-error: rgb(226, 0, 0); }
+  --tip-brd-error: rgb(226, 0, 0);
+  --list-bg: white;
+  --list-brd: 1px solid #ccc;
+  --list-brd-focus: black;
+  --list-item-txt-size: 13px;
+  --list-item-txt: #333;
+  --list-item-pad: 5px 10px;
+  --list-item-bg: transparent;
+  --list-item-hvr: #eee;
+  --list-item-current: #eee;
+  --list-item-selected: #333;
+  --list-item-focus: #83bffc;
+  --list-item-bg-disabled: #ccc;
+  --list-item-txt-disabled: #666;
+  --list-item-label-bg: transparent;
+  --list-item-label-pad: 10px 5px 5px 5px;
+  --list-item-label-txt: rgb(176, 176, 176);
+  --list-item-group-txt: rgb(176, 176, 176);
+  --list-item-group-brd: #e0e0e0;
+  --list-item-divider: #ccc;
+  --list-item-divider-pad: 5px; }
 
 ui-input {
   display: block;
@@ -266,60 +308,67 @@ ui-input {
 
 ui-list {
   display: block; }
-  ui-list:focus {
-    border-color: black; }
   ui-list[readonly] li, ui-list[disabled] li {
     cursor: default; }
     ui-list[readonly] li:hover:not(.group):not(.label):not([readonly]):not([aria-selected="true"]), ui-list[disabled] li:hover:not(.group):not(.label):not([readonly]):not([aria-selected="true"]) {
       background-color: transparent; }
   ui-list ul {
-    border: 1px solid #ccc;
-    background-color: white;
+    border: var(--list-brd);
+    background-color: var(--list-bg);
     list-style: none;
     margin: 0;
     padding: 0;
     outline: none; }
     ui-list ul:focus {
-      border-color: #6c9fd8; }
+      border-color: var(--list-brd-focus); }
     ui-list ul li {
-      padding: 10px;
+      padding: var(--list-item-pad);
+      font-size: var(--list-item-txt-size);
+      color: var(--list-item-txt);
       cursor: pointer;
       border: 0;
       outline: 0; }
-      ui-list ul li:hover:not(.group):not(.label):not([readonly]):not([aria-selected="true"]) {
-        background-color: #eee; }
+      ui-list ul li:hover:not(.group):not(.label):not(.divider):not([readonly]):not([aria-selected="true"]) {
+        background-color: var(--list-item-hvr); }
       ui-list ul li:focus {
         outline: 0;
-        box-shadow: 0 0 2px 2px #83bffc inset; }
+        box-shadow: 0 0 2px 2px var(--list-item-focus) inset; }
       ui-list ul li[aria-current] {
-        background-color: #ccc; }
+        background-color: var(--list-item-current); }
         ui-list ul li[aria-current]:focus {
-          box-shadow: 0 0 10px #83bffc inset; }
+          box-shadow: 0 0 10px var(--list-item-focus) inset; }
       ui-list ul li[aria-selected] {
-        background-color: #333;
+        background-color: var(--list-item-selected);
         color: white; }
         ui-list ul li[aria-selected]:focus {
-          box-shadow: 0 0 10px #83bffc inset; }
+          box-shadow: 0 0 10px var(--list-item-focus) inset; }
       ui-list ul li[disabled] {
-        background-color: #ccc;
-        color: #666;
+        background-color: var(--list-item-bg-disabled);
+        color: var(--list-item-txt-disabled);
         font-style: italic;
         cursor: not-allowed;
         pointer-events: none; }
       ui-list ul li.label {
-        background-color: #cecece;
+        font: bold 12px sans-serif;
+        padding: var(--list-item-label-pad);
+        color: var(--list-item-label-txt);
+        background-color: var(--list-item-label-bg);
         pointer-events: none; }
       ui-list ul li.group {
         padding: 0 20px;
-        color: rgba(0, 0, 0, 0.322);
+        color: var(--list-item-group-txt);
         text-align: right;
         font-weight: bold;
         pointer-events: none; }
         ui-list ul li.group:before {
           content: "";
           display: block;
-          border-top: 1px solid #e0e0e0;
+          border-top: 1px solid var(--list-item-group-brd);
           margin-bottom: 10px; }
+      ui-list ul li.divider {
+        padding: 0;
+        margin: var(--list-item-divider-pad);
+        border-bottom: 1px solid var(--list-item-divider); }
 
 ui-popup {
   display: block;
@@ -356,17 +405,29 @@ ui-popup {
 ui-dropdown {
   display: block; }
   ui-dropdown button.ui-button {
-    background-color: var(--btn-drop-bg);
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    background-color: var(--drop-btn-bg);
+    padding: var(--drop-btn-pad);
     max-width: 100%; }
-    ui-dropdown button.ui-button ui-icon {
-      width: 20px; }
+    ui-dropdown button.ui-button > ui-icon {
+      display: inline-block;
+      vertical-align: middle;
+      width: 10px; }
+    ui-dropdown button.ui-button > span {
+      vertical-align: middle;
+      display: inline-block;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      width: calc(100% - 20px); }
     ui-dropdown button.ui-button:hover {
-      background-color: var(--btn-drop-bg-hvr); }
+      background-color: var(--drop-btn-bg-hvr); }
   ui-dropdown ui-icon {
     margin-left: 10px; }
+
+ui-popup.dropdown {
+  border: var(--list-brd); }
+  ui-popup.dropdown ul {
+    border: 0; }
 
 .ui-tooltip {
   background-color: var(--tip-bg);

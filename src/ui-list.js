@@ -15,18 +15,10 @@ const ATTR = {
 };
 
 // TODO
-// divider
-// group
-// label
-// disabled items
 // a11y
-// mobile
+
 
 class UIList extends BaseComponent {
-    constructor() {
-        super();
-    }
-
     attributeChanged(prop, value) {
         if (prop === 'value') {
             this.value = value;
@@ -34,22 +26,8 @@ class UIList extends BaseComponent {
     }
 
     set value(value) {
-        this.onConnected(() => {
-            if (this.list) {
-                if (Array.isArray(value)) {
-                    if (!this.multiple) {
-                        throw new Error(
-                            'trying to set multiple values without the `multiple` attribute'
-                        );
-                    }
-                    const selector = value.map(getSelector).join(',');
-                    this.controller.setSelected(dom.queryAll(this, selector));
-                } else {
-                    this.controller.setSelected(
-                        dom.query(this, getSelector(value))
-                    );
-                }
-            }
+        this.onDomReady(() => {
+            this.setControllerValue(value);
         });
         this.__value = value;
     }
@@ -85,6 +63,23 @@ class UIList extends BaseComponent {
         return this.items;
     }
 
+    setControllerValue(value) {
+        if (this.controller) {
+            if (Array.isArray(value)) {
+                if (!this.multiple) {
+                    throw new Error(
+                        'Trying to set multiple values without the `multiple` attribute'
+                    );
+                }
+                const selector = value.map(getSelector).join(',');
+                this.controller.setSelected(dom.queryAll(this, selector));
+            } else {
+                this.controller.setSelected(
+                    dom.query(this, getSelector(value))
+                );
+            }
+        }
+    }
     getItem(value) {
         return this.items
             ? this.items.find(item => item.value === value || `${item.value}` === `${value}`)
@@ -95,6 +90,9 @@ class UIList extends BaseComponent {
         if (this.items || this.lazyDataFN) {
             this.connectEvents();
         }
+        this.onDomReady(() => {
+            this.setTabIndicies();
+        });
     }
 
     onReadonly() {
@@ -108,7 +106,7 @@ class UIList extends BaseComponent {
         if (!item) {
             return;
         }
-        this.emitEvent(value);
+        this.emitEvent();
     }
 
     setLazyData() {
@@ -168,7 +166,15 @@ class UIList extends BaseComponent {
         const parentValue = this.value;
         const list = this.list;
         let node;
-        this.items.forEach(function(item) {
+        this.items.forEach(function (item) {
+            if (item.type === 'divider') {
+                dom('li', {class: 'divider'}, list);
+                return;
+            }
+            if (item.type === 'label') {
+                dom('li', {class: 'label', html: item.label}, list);
+                return;
+            }
             const label = item.alias
                 ? `${item.alias}: ${item.label}`
                 : item.label;
@@ -310,16 +316,11 @@ class UIList extends BaseComponent {
         // called after items insertion, before list insertion
     }
 
-    connect() {
-        this.connectEvents();
-        this.connect = function() {};
-    }
-
-    setTabIndicies(enabled) {
+    setTabIndicies() {
         if (!this.list) {
             return;
         }
-        if (enabled) {
+        if (!this.disabled) {
             this.setAttribute(ATTR.TABINDEX, '-1');
             this.list.setAttribute(ATTR.TABINDEX, '0');
         } else {
@@ -328,12 +329,46 @@ class UIList extends BaseComponent {
         }
     }
 
+    connect() {
+        // called after data is set
+        this.connectController();
+        this.connectEvents();
+        this.connect = function() {};
+    }
+
+    connectController() {
+        const options = {
+            canSelectNone: this.getAttribute('can-select-none'),
+            multiple: this.multiple,
+            searchTime: this.getAttribute('search-time'),
+            externalSearch: this['external-search'],
+            buttonId: this.buttonid,
+        };
+        
+        this.connectHandles = on.makeMultiHandle([
+            this.on('click', () => {
+                this.list.focus();
+            }),
+            this.on('focus', () => {
+                this.list.focus();
+            }),
+            this.on('key-select', () => {
+                this.emitEvent();
+            }),
+        ]);
+
+        this.controller = keys(this.list, options);
+        if (this.value) {
+            this.setControllerValue(this.value);
+        }
+    }
+
     connectEvents() {
         if (this.lazyDataFN) {
             return;
         }
         const enabled = !this.readonly && !this.disabled;
-        this.setTabIndicies(enabled);
+        this.setTabIndicies();
         if (!enabled && !this.controller) {
             return;
         }
@@ -343,28 +378,6 @@ class UIList extends BaseComponent {
         } else if (enabled && this.controller) {
             this.controller.resume();
             this.connectHandles.resume();
-        } else {
-            const options = {
-                canSelectNone: this.getAttribute('can-select-none'),
-                multiple: this.multiple,
-                searchTime: this.getAttribute('search-time'),
-                externalSearch: this['external-search'],
-                buttonId: this.buttonid,
-            };
-            this.controller = keys(this.list, options);
-            // this.controller.log = true;
-
-            this.connectHandles = on.makeMultiHandle([
-                this.on('click', () => {
-                    this.list.focus();
-                }),
-                this.on('focus', () => {
-                    this.list.focus();
-                }),
-                this.on('key-select', () => {
-                    this.emitEvent();
-                }),
-            ]);
         }
     }
 

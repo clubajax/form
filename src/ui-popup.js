@@ -4,6 +4,7 @@ const dom = require('@clubajax/dom');
 class UiPopup extends BaseComponent {
     constructor() {
         super();
+        this.showing = false;
         this.handleMediaQuery = this.handleMediaQuery.bind(this);
     }
 
@@ -101,9 +102,18 @@ class UiPopup extends BaseComponent {
                 this.removeClickOff = this.on(this, 'clickoff', () => {
                     this.hide();
                 });
-                this.on(this.button, 'click', () => {
-                    this.removeClickOff.resume();
+                this.on(this.button, 'click', (e) => {
                     this.show();
+                });
+                this.on(this.button, 'keydown', (e) => {
+                    if (e.key === 'Enter' && !this.showing) {
+                        // prevent key-nav from detecting Enter when not open
+                        e.preventDefault();
+                        this.show();
+                    }
+                });
+                this.on(this.button, 'blur', () => {
+                    this.hide();
                 });
             }
         }
@@ -144,17 +154,28 @@ class UiPopup extends BaseComponent {
     }
 
     show() {
+        if (this.showing) {
+            return;
+        }
+        this.showing = true;
         this.classList.add('open');
+        this.removeClickOff.resume();
         if (!this.isMobile) {
             position(this, this.button, this.align);
         }
+        this.fire('popup-open');
     }
 
     hide() {
+        if (!this.showing) {
+            return;
+        }
+        this.showing = false;
         this.classList.remove('open');
         if (this.removeClickOff) {
             this.removeClickOff.pause();
         }
+        this.fire('popup-close');
     }
 
     destroy() {

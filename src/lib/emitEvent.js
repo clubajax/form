@@ -8,5 +8,5 @@ module.exports = function (instance, value) {
     const eventName = instance['event-name'] || EVENT_NAME;
     const emitType = eventName === EVENT_NAME ? 'emit' : 'fire';
     instance[emitType](eventName, value, true);
-    instance.__value = value.value;
+    instance.__value = value !== null ? value.value : null;
 };

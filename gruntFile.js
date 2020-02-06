@@ -376,6 +376,8 @@ module.exports = function (grunt) {
             console.log('package.version changed to:', mainPackage.version);
         }
         buildPackage.version = mainPackage.version;
+        // copy over updated dependencies
+        buildPackage.dependencies = mainPackage.dependencies;
         fs.writeFileSync('./src/package.json', JSON.stringify(buildPackage, null, 2));
         fs.writeFileSync('./package.json', JSON.stringify(mainPackage, null, 2));
     });

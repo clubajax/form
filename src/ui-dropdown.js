@@ -14,7 +14,6 @@ class UiDropdown extends BaseComponent {
     set value(value) {
         this.onDomReady(() => {
             this.list.value = value;
-            this.setDisplay();
         });
         this.__value = value;
     }
@@ -28,6 +27,10 @@ class UiDropdown extends BaseComponent {
 
     set data(data) {
         this.onDomReady(() => {
+            if (this.value !== null) {
+                const item = data.find(m => m.value === this.value);
+                item.selected = true;
+            }
             this.list.data = data;
         });
         this.__data = data;
@@ -45,11 +48,14 @@ class UiDropdown extends BaseComponent {
         dom('span', {html: isNull(this.value) ? this.placeholder || DEFAULT_PLACEHOLDER : (item.alias || item.label)}, this.button);
         dom('ui-icon', {type: 'caretDown'}, this.button);
 
-        if (this.popup) {
-            dom.style(this.popup, {
-                'min-width': dom.box(this.button).w
-            });
-        }
+        setTimeout(() => {
+            // don't resize the popup right away - wait until it closes, or it jumps
+            if (this.popup) {
+                dom.style(this.popup, {
+                    'min-width': dom.box(this.button).w
+                });
+            }
+        }, 500);
     }
 
     reset() {
@@ -69,6 +75,15 @@ class UiDropdown extends BaseComponent {
                 this.popup.hide();
             }, 300);
         });
+        this.popup.on('popup-open', () => {
+            this.list.controller.scrollTo();
+            this.list.disabled = false;
+            // this.list.setTabIndicies(true);
+        });
+        this.popup.on('popup-close', () => {
+            this.list.disabled = true;
+            // this.list.setTabIndicies(false);
+        });
     }
 
     renderButton(buttonid) {
@@ -81,12 +96,14 @@ class UiDropdown extends BaseComponent {
         const buttonid = uid('drop-button');
         this.renderButton(buttonid);
         this.list = dom('ui-list', {
+            buttonid,
             'event-name': 'list-change'
         });
         this.popup = dom('ui-popup', {
             buttonid,
             label: this.label,
-            html: this.list
+            html: this.list,
+            class: 'dropdown'
         }, document.body);
         this.setDisplay();
     }

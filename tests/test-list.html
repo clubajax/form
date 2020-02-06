@@ -99,6 +99,27 @@
                         ]
                     })
                 ],
+                dataL = [
+                    {label: 'Fruit', type: 'label'},
+                    {label: 'Oranges', value: 'oranges'},
+                    {label: 'Apples', value: 'apples'},
+                    {type:'divider'},
+                    {label: 'Grapes', value: 'grapes'},
+                    {label: 'Prunes', value: 'prunes'},
+                    {label: 'Veggies', type: 'label'},
+                    {label: 'Corn', value: 'corn'},
+                    {label: 'Peas', value: 'peas'}
+                ],
+                dataD = [
+                    {label: 'Fruit', type: 'label'},
+                    {label: 'Oranges', value: 'oranges'},
+                    {label: 'Apples', value: 'apples', disabled: true},
+                    {label: 'Grapes', value: 'grapes'},
+                    {label: 'Prunes', value: 'prunes', selected: true},
+                    {label: 'Veggies', type: 'label'},
+                    {label: 'Corn', value: 'corn'},
+                    {label: 'Peas', value: 'peas', disabled: true}
+                ],
                 dataF = [
                     dom('li', {
                         value: 'Boston',
@@ -298,7 +319,7 @@
                     });
                 });
 
-                it.only('should render complex custom items', function (done) {
+                it('should render complex custom items', function (done) {
                     setup({data: data4, label: 'Complex Custom Items'});
                     onDomReady(node, function () {
                         node.list.focus();
@@ -354,7 +375,15 @@
                     });
                 });
             
-                it('should skip disabled items', function(done) {
+                it.only('should skip disabled items', function(done) {
+                    setup({data: dataD, label: 'Disabled Items'});
+                    done();
+                });
+            });
+
+            describe('groups dividers labels', function(){
+                it('should have dividers and labels', function(done){
+                    setup({data: dataL, label: 'Dividers & Labels'});
                     done();
                 });
             });

@@ -63,9 +63,11 @@ $btn-dsbl-clr: #999;
     --btn-txt-size: 14px;
     --btn-pad: 10px;
     --btn-rad: 2px;
-    --btn-drop-bg: white;
-    --btn-drop-bg-hvr: #ddd;
     --btn-brd-focus: #6c9fd8;
+    //
+    --drop-btn-pad: 5px 10px 8px 10px;
+    --drop-btn-bg: white;
+    --drop-btn-bg-hvr: #ddd;
     //
     --tip-bg: white;
     --tip-txt: black;
@@ -78,4 +80,29 @@ $btn-dsbl-clr: #999;
     --tip-bg-error: rgb(226, 0, 0);
     --tip-txt-error: rgb(255, 255, 255);
     --tip-brd-error: rgb(226, 0, 0);
+    //
+    --list-bg: white;
+    --list-brd: 1px solid #ccc;
+    --list-brd-focus: black;
+    //
+    --list-item-txt-size: 13px;
+    --list-item-txt: #333;
+    --list-item-pad: 5px 10px;
+    --list-item-bg: transparent;
+    --list-item-hvr: #eee;
+    --list-item-current: #eee;
+    --list-item-selected: #333;
+    --list-item-focus: #83bffc;
+    --list-item-bg-disabled: #ccc;
+    --list-item-txt-disabled: #666;
+    // --list-item-label-font: 
+    --list-item-label-bg: transparent;
+    --list-item-label-pad: 10px 5px 5px 5px;
+    --list-item-label-txt: rgb(176, 176, 176);
+    --list-item-group-txt: rgb(176, 176, 176);
+    --list-item-group-brd: #e0e0e0;
+    --list-item-divider: #ccc;
+    --list-item-divider-pad: 5px;
+    
+    
 }

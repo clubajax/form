@@ -34,13 +34,20 @@
             right: 100px;
             width: 300px;
         }
+        .top-right{
+            position: absolute;
+            top: 150px;
+            right: 100px;
+        }
     </style>
 </head>
 
 <body>
     <h1>Test Dropdown</h1>
     <div id="mocha"></div>
-    <div id="tests"></div>
+    <div id="tests">
+        <input autofocus />
+    </div>
     <script>
 
         mocha.setup('bdd');
@@ -61,6 +68,12 @@
                     {label: 'Orange', value: 'orange'},
                     {label: 'Red', value: 'red'},
                     {label: 'Blue', value: 'blue'},
+                    {label: 'Green', value: 'green'}
+                ],
+                dataS = [
+                    {label: 'Orange', value: 'orange'},
+                    {label: 'Red', value: 'red'},
+                    {label: 'Blue', value: 'blue', selected: true},
                     {label: 'Green', value: 'green'}
                 ],
                 data4 = [
@@ -112,7 +125,7 @@
                     }
                 ];
 
-            const alpha = 'abcdefghijklmnopqrstuvwxyz'.toUpperCase().split('');
+            const alpha = 'abcdefgh'.toUpperCase().split('');
 
             function makeLongList() {
                 const list = [];
@@ -124,7 +137,7 @@
                 return list.splice(0, 100);
             }
 
-            const data6 = makeLongList();
+            const dataLongList = makeLongList();
 
 
             describe('ui-dropdown', function () {
@@ -147,19 +160,31 @@
 
                 describe('render', function () {
                     it('should render a dropdown', function (done) {
-                        node = dom('ui-dropdown', {data: data, label: 'Simple drop'}, body);
+                        node = dom('ui-dropdown', {data: data, label: 'Simple drop', placeholder: 'Select'}, body);
                         done();
                     });
                     it('should render emojis', function (done) {
-                        node = dom('ui-dropdown', {data: data4, label: 'Emojis'}, body);
+                        node = dom('ui-dropdown', {data: data4, label: 'Emojis', placeholder: 'Select an option'}, body);
                         done();
                     });
                     it('should handle very long options', function (done) {
-                        node = dom('ui-dropdown', {data: dataQnA, label: 'Long Options'}, body);
+                        node = dom('ui-dropdown', {data: dataQnA, label: 'Long Options', placeholder: 'Select a long option..'}, body);
                         done();
                     });
                     it('should use an alias', function (done) {
-                        node = dom('ui-dropdown', {data: dataAlias, label: 'Alias'}, body);
+                        node = dom('ui-dropdown', {data: dataAlias, label: 'Alias', placeholder: 'Doit'}, body);
+                        done();
+                    });
+                    it('should handle long lists', function (done) {
+                        node = dom('ui-dropdown', {data: dataLongList, label: 'Long List', placeholder: 'Pick...', class: 'top-right'}, body);
+                        done();
+                    });
+                    it('should initialize selection from data', function (done) {
+                        node = dom('ui-dropdown', {data: dataS, label: 'Initial Data Selection', placeholder: 'Select'}, body);
+                        done();
+                    });
+                    it('should initialize selection from parent value', function (done) {
+                        node = dom('ui-dropdown', {data: data, value: 'blue', label: 'Initial Parent Value', placeholder: 'Select'}, body);
                         done();
                     });
                 });
@@ -173,6 +198,13 @@
                         node = dom('ui-dropdown', {data: dataQnA, label: 'Long Options Bottom Right'}, container);
                         done();
                     });
+                });
+
+                describe('lazy loading', function () {
+                    it('should lazy load options', function(done){
+                        node = dom('ui-dropdown', {data: dataQnA, label: 'Long Options Middle', class: 'abs-mid'}, body);
+                        done();
+                    })
                 });
 
 
