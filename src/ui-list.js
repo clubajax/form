@@ -127,8 +127,8 @@ class UIList extends BaseComponent {
             this.__value = undefined;
         }
         this.selectedNode = null;
+        this.items = sort([...value], this.sortdesc, this.sortasc);
         this.update();
-        this.items = [...value];
         if (/domready|connected/.test(this.DOMSTATE)) {
             this.setItemsFromData();
         }
@@ -408,6 +408,16 @@ function valueify(text) {
     return text.replace(/\s/g, '-').toLowerCase();
 }
 
+function sort(items, desc, asc) {
+    if (desc) {
+        items.sort((a, b) => a[desc] > b[desc] ? 1 : -1);
+    }
+    if (asc) {
+        items.sort((a, b) => a[asc] < b[asc] ? 1 : -1);
+    }
+    return items;
+}
+
 module.exports = BaseComponent.define('ui-list', UIList, {
     props: [
         'label',
@@ -417,6 +427,8 @@ module.exports = BaseComponent.define('ui-list', UIList, {
         'align',
         'buttonid',
         'external-search',
+        'sortdesc',
+        'sortasc'
     ],
     bools: ['disabled', 'readonly', 'multiple'],
     attrs: ['value'],

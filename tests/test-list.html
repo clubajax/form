@@ -184,10 +184,14 @@
 
             let value;
             let items;
+            let values;
             function setup(options) {
                 node = dom('ui-list', options, body);
                 node.onDomReady(function () {
                     items = dom.queryAll(node, 'li');
+                    values = items.map(function(n){
+                        return n.getAttribute('value');
+                    })
                 });
                 on(node, 'dom-update', () => {
                     items = dom.queryAll(node, 'li');
@@ -234,6 +238,21 @@
                         key('Enter');
                         expect(items[1].getAttribute('aria-selected')).to.equal('true');
                         expect(value).to.equal('red');
+                        done();
+                    });
+                });
+
+                it.only('should sort by a property', function (done) {
+                    setup({data: data, label: 'Sort Default', sortdesc: 'label'});
+                    onDomReady(node, function () {
+                        expect(JSON.stringify(values)).to.equal('["blue","green","orange","red"]')
+                        done();
+                    });
+                });
+                it.only('should sort asc by a property', function (done) {
+                    setup({data: data, label: 'Sort Ascending', sortasc: 'label'});
+                    onDomReady(node, function () {
+                        expect(JSON.stringify(values)).to.equal('["red","orange","green","blue"]')
                         done();
                     });
                 });
@@ -375,7 +394,7 @@
                     });
                 });
             
-                it.only('should skip disabled items', function(done) {
+                it('should skip disabled items', function(done) {
                     setup({data: dataD, label: 'Disabled Items'});
                     done();
                 });

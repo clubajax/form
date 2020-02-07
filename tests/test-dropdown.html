@@ -141,10 +141,18 @@
 
 
             describe('ui-dropdown', function () {
-                let node, btn;
+                let node, btn, items;
 
                 function ready(cb) {
-                    onDomReady(node, cb);
+                    onDomReady(node, function () {
+                        items = dom.queryAll(node.popup, 'li').map(function(n){
+                            return {
+                                value: n.getAttribute('value'),
+                                label: n.textContent
+                            }
+                        });
+                        cb();
+                    });
                 }
 
                 function click() {
@@ -162,6 +170,26 @@
                     it('should render a dropdown', function (done) {
                         node = dom('ui-dropdown', {data: data, label: 'Simple drop', placeholder: 'Select'}, body);
                         done();
+                    });
+                    it('should sort items', function (done) {
+                        node = dom('ui-dropdown', {data: data, label: 'Sorted', sortdesc: 'value'}, body);
+                        ready(function(){
+                            expect(items[0].value).to.equal('blue');
+                            expect(items[1].value).to.equal('green');
+                            expect(items[2].value).to.equal('orange');
+                            expect(items[3].value).to.equal('red');
+                            done();
+                        });
+                    });
+                    it.only('should sort items asc', function (done) {
+                        node = dom('ui-dropdown', {data: data, label: 'Sorted Ascending', sortasc: 'value'}, body);
+                        ready(function(){
+                            expect(items[0].value).to.equal('red');
+                            expect(items[1].value).to.equal('orange');
+                            expect(items[2].value).to.equal('green');
+                            expect(items[3].value).to.equal('blue');
+                            done();
+                        });
                     });
                     it('should render emojis', function (done) {
                         node = dom('ui-dropdown', {data: data4, label: 'Emojis', placeholder: 'Select an option'}, body);

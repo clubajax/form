@@ -27,10 +27,6 @@ class UiDropdown extends BaseComponent {
 
     set data(data) {
         this.onDomReady(() => {
-            if (this.value !== null) {
-                const item = data.find(m => m.value === this.value);
-                item.selected = true;
-            }
             this.list.data = data;
         });
         this.__data = data;
@@ -97,7 +93,9 @@ class UiDropdown extends BaseComponent {
         this.renderButton(buttonid);
         this.list = dom('ui-list', {
             buttonid,
-            'event-name': 'list-change'
+            'event-name': 'list-change',
+            sortdesc: this.sortdesc,
+            sortasc: this.sortasc
         });
         this.popup = dom('ui-popup', {
             buttonid,
@@ -114,7 +112,7 @@ function isNull(value) {
 }
 
 module.exports = BaseComponent.define('ui-dropdown', UiDropdown, {
-    props: ['placeholder', 'label', 'limit', 'name', 'event-name', 'align', 'btn-class'],
+    props: ['placeholder', 'label', 'limit', 'name', 'event-name', 'align', 'btn-class', 'sortdesc', 'sortasc'],
     bools: ['disabled', 'open-when-blank', 'allow-new', 'required', 'case-sensitive', 'autofocus', 'busy'],
     attrs: ['value']
 });
