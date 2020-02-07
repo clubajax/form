@@ -202,6 +202,12 @@
                 });
             }
 
+            function ready(cb) {
+                onDomReady(node, function () {
+                    setTimeout(cb, 30);
+                });
+            }
+
             function update() {
                 items = dom.queryAll(node, 'li');
             }
@@ -230,7 +236,7 @@
             describe('Single select', () => {
                 it('should render a simple, selectable list', function (done) {
                     setup({data: data, label: 'Simple List'});
-                    onDomReady(node, function () {
+                    ready(function () {
                         node.list.focus();
                         key('ArrowDown');
                         expect(items[0].getAttribute('aria-current')).to.equal('true');
@@ -242,16 +248,16 @@
                     });
                 });
 
-                it.only('should sort by a property', function (done) {
+                it('should sort by a property', function (done) {
                     setup({data: data, label: 'Sort Default', sortdesc: 'label'});
-                    onDomReady(node, function () {
+                    ready(function () {
                         expect(JSON.stringify(values)).to.equal('["blue","green","orange","red"]')
                         done();
                     });
                 });
-                it.only('should sort asc by a property', function (done) {
+                it('should sort asc by a property', function (done) {
                     setup({data: data, label: 'Sort Ascending', sortasc: 'label'});
-                    onDomReady(node, function () {
+                    ready(function () {
                         expect(JSON.stringify(values)).to.equal('["red","orange","green","blue"]')
                         done();
                     });
@@ -259,7 +265,7 @@
 
                 it('should clear the selection', function (done) {
                     setup({data: data, label: 'clear selection'});
-                    onDomReady(node, function () {
+                    ready(function () {
                         node.list.focus();
                         key('ArrowDown');
                         expect(items[0].getAttribute('aria-current')).to.equal('true');
@@ -278,7 +284,7 @@
                 it('should programmatically set a value', function (done) {
                     setup({data: data, label: 'Programmatic Value'});
                     node.value = 'blue';
-                    onDomReady(node, function () {
+                    ready(function () {
                         expect(items[2].getAttribute('aria-selected')).to.equal('true');
                         node.value = 'red';
                         expect(items[1].getAttribute('aria-selected')).to.equal('true');
@@ -288,7 +294,7 @@
 
                 it('should render readonly and with a label', function (done) {
                     setup({data: data, readonly: true, label: 'Read Only List'});
-                    onDomReady(node, function () {
+                    ready(function () {
 
                         node.list.focus();
                         // expect(document.activeElement).to.equal(document.body);
@@ -306,7 +312,7 @@
 
                 it('should render disabled and with a label', function (done) {
                     setup({data: data, disabled: true, label: 'Disabled List'});
-                    onDomReady(node, function () {
+                    ready(function () {
                         const items = dom.queryAll(node, 'li');
                         node.list.focus();
                         // expect(document.activeElement).to.equal(document.body);
@@ -324,7 +330,7 @@
 
                 it('should render simple custom items', function (done) {
                     setup({data: data3, label: 'Simple Custom Items'});
-                    onDomReady(node, function () {
+                    ready(function () {
                         node.list.focus();
                         key('ArrowDown');
                         expect(items[0].getAttribute('aria-current')).to.equal('true');
@@ -340,7 +346,7 @@
 
                 it('should render complex custom items', function (done) {
                     setup({data: data4, label: 'Complex Custom Items'});
-                    onDomReady(node, function () {
+                    ready(function () {
                         node.list.focus();
                         key('ArrowDown');
                         expect(items[0].getAttribute('aria-current')).to.equal('true');
@@ -359,17 +365,8 @@
                     setup({data: frag, label: 'Document Fragment'});
                     // node = dom('ui-list', {data: frag, label: 'Document Fragment'}, body);
 
-                    onDomReady(node, function () {
+                    ready(function () {
                         expect(items[1].textContent).to.equal('DetroitMichigan');
-                        expect(items.length).to.equal(4);
-                        done();
-                    });
-                });
-
-                it('should render with lazy data', function (done) {
-                    setup({data: data5, label: 'Lazy data'});
-                    onDomReady(node, function () {
-                        node.setLazyData();
                         expect(items.length).to.equal(4);
                         done();
                     });
@@ -380,7 +377,7 @@
                     const clone = template.content.cloneNode(true);
                     dom.byId('tests').appendChild(clone);
                     node = dom.byId('declarative');
-                    onDomReady(node, function () {
+                    ready(function () {
                         expect(node.data.length).to.equal(3);
                         items = dom.queryAll(node, 'li');
                         node.list.focus();
@@ -397,6 +394,17 @@
                 it('should skip disabled items', function(done) {
                     setup({data: dataD, label: 'Disabled Items'});
                     done();
+                });
+            });
+
+            describe('Lazy Data', function(){
+                it('should render with lazy data', function (done) {
+                    setup({data: data5, label: 'Lazy data'});
+                    ready(function () {
+                        node.setLazyData();
+                        expect(items.length).to.equal(4);
+                        done();
+                    });
                 });
             });
 
@@ -429,14 +437,14 @@
                 });
                 it('should have initial multiple values', function (done) {
                     setup({data: data6, label: 'initial multiple values', multiple: true});
-                    onDomReady(node, function () {
+                    ready(function () {
                         expectMultiValue(['red', 'blue']);
                         done();
                     });
                 });
                 it('should programmatically set multiple values', function (done) {
                     setup({data: data, label: 'select multiple items', multiple: true});
-                    onDomReady(node, function () {
+                    ready(function () {
                         node.value = ['red', 'blue'];
                         expect(items[1].getAttribute('aria-selected')).to.equal('true');
                         expect(items[2].getAttribute('aria-selected')).to.equal('true');
@@ -445,7 +453,7 @@
                 });
                 it('should clear a multiple selection', function (done) {
                     setup({data: data6, label: 'initial multiple values', multiple: true});
-                    onDomReady(node, function () {
+                    ready(function () {
                         expectMultiValue(['red', 'blue']);
                         node.value = null;
                         expectMultiValue([]);
@@ -459,7 +467,7 @@
 
                 it('should replace the data', function (done) {
                     setup({data: data, label: 'replace data'});
-                    onDomReady(node, function () {
+                    ready(function () {
                         expectMultiValue(getListValues(), ["orange", "red", "blue", "green"]);
                         node.data = data2;
                         update();
@@ -469,7 +477,7 @@
                 });
                 it('should add an item', function (done) {
                     setup({data: data, label: 'add an item'});
-                    onDomReady(node, function () {
+                    ready(function () {
                         expectMultiValue(getListValues(), ["orange", "red", "blue", "green"]);
                         node.addData({
                             value: 'purple',
@@ -482,7 +490,7 @@
                 });
                 it('should add multiple items', function (done) {
                     setup({data: data, label: 'add multiple items'});
-                    onDomReady(node, function () {
+                    ready(function () {
                         expectMultiValue(getListValues(), ["orange", "red", "blue", "green"]);
                         node.addData([{
                             value: 'purple',
@@ -498,7 +506,7 @@
                 });
                 it('should remove an item', function (done) {
                     setup({data: data, label: 'remove an item'});
-                    onDomReady(node, function () {
+                    ready(function () {
                         expectMultiValue(getListValues(), ["orange", "red", "blue", "green"]);
                         node.removeData('red');
                         update();
@@ -508,7 +516,7 @@
                 });
                 it('should remove items', function (done) {
                     setup({data: data, label: 'remove items'});
-                    onDomReady(node, function () {
+                    ready(function () {
                         expectMultiValue(getListValues(), ["orange", "red", "blue", "green"]);
                         node.removeData(['red', 'orange']);
                         update();

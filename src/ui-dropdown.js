@@ -73,12 +73,6 @@ class UiDropdown extends BaseComponent {
         });
         this.popup.on('popup-open', () => {
             this.list.controller.scrollTo();
-            this.list.disabled = false;
-            // this.list.setTabIndicies(true);
-        });
-        this.popup.on('popup-close', () => {
-            this.list.disabled = true;
-            // this.list.setTabIndicies(false);
         });
     }
 

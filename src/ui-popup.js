@@ -342,7 +342,7 @@ function position(popup, button, align) {
     const leftSpace = btn.x + btn.w;
 
     // position left/right & width
-    if (align === 'right' || (rightSpace > pop.w && rightSpace > leftSpace)) {
+    if (align === 'right' || (leftSpace > pop.w && leftSpace > rightSpace)) {
         // left-side
         style.top = btn.y + btn.h;
         style.right = win.w - (btn.x + btn.w);

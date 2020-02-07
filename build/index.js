@@ -1428,6 +1428,22 @@ BaseComponent.addPlugin({
             }
         }
 
+        function onDocKeyDown(e) {
+            if (e.defaultPrevented) {
+                return;
+            }
+            switch (e.key) {
+                case 'Meta':
+                case 'Control':
+                case 'Command':
+                    meta = true;
+                    break;
+                case 'Shift':
+                    shift = true;
+                    break;
+            }
+        }
+
         function onKeyDown(e) {
             if (e.defaultPrevented) {
                 return;
@@ -1547,6 +1563,7 @@ BaseComponent.addPlugin({
                 shift = Boolean(e.shiftKey);
                 meta = false;
             }),
+            on(document, 'keydown', onDocKeyDown),
             on(listNode, 'keydown', onKeyDown),
             on(listNode, 'keydown', onListSearch),
             on(listNode, 'blur', unhighlight),
@@ -1605,6 +1622,7 @@ BaseComponent.addPlugin({
         // need to wait until the controller is returned before
         // selecting, or component cannot get initial value
         setTimeout(function () {
+            
             selected = select(getSelected(children, options));
             highlighted = highlight(fromArray(selected), options.defaultToFirst);
             scrollTo();
@@ -1639,16 +1657,17 @@ BaseComponent.addPlugin({
     }
 
     function getNext(children, index) {
-        if (index === -1) {
-            index = 0;
-        }
+        // why did I think I needed to do this?
+        // if (index === -1) {
+        //     index = 0;
+        // }
         let norecurse = children.length + 2;
         let node = children[index];
         while (node) {
             index++;
             if (index > children.length - 1) {
                 index = -1;
-            } else if (isElligible(children, index)) {
+            } else if (isElligible(children[index])) {
                 node = children[index];
                 break;
             }
@@ -1667,7 +1686,7 @@ BaseComponent.addPlugin({
             index--;
             if (index < 0) {
                 index = children.length;
-            } else if (isElligible(children, index)) {
+            } else if (isElligible(children[index])) {
                 node = children[index];
                 break;
             }
@@ -1681,7 +1700,7 @@ BaseComponent.addPlugin({
 
     function getFirstElligible(children) {
         for (let i = 0; i < children.length; i++) {
-            if (isElligible(children, i)) {
+            if (isElligible(children[i])) {
                 return children[i];
             }
         }
@@ -1690,7 +1709,7 @@ BaseComponent.addPlugin({
 
     function getLastElligible(children) {
         for (let i = children.length - 1; i >= 0; i--) {
-            if (isElligible(children, i)) {
+            if (isElligible(children[i])) {
                 return children[i];
             }
         }
@@ -1708,8 +1727,7 @@ BaseComponent.addPlugin({
         return node.parentNode.disabled || node.disabled || node.hasAttribute('disabled'); 
     }
 
-    function isElligible(children, index) {
-        const child = children[index];
+    function isElligible(child) {
         return child && !isDisabled(child) && isVisible(child);
     }
 
@@ -2782,10 +2800,6 @@ class UiDropdown extends BaseComponent {
 
     set data(data) {
         this.onDomReady(() => {
-            if (this.value !== null) {
-                const item = data.find(m => m.value === this.value);
-                item.selected = true;
-            }
             this.list.data = data;
         });
         this.__data = data;
@@ -2832,12 +2846,6 @@ class UiDropdown extends BaseComponent {
         });
         this.popup.on('popup-open', () => {
             this.list.controller.scrollTo();
-            this.list.disabled = false;
-            // this.list.setTabIndicies(true);
-        });
-        this.popup.on('popup-close', () => {
-            this.list.disabled = true;
-            // this.list.setTabIndicies(false);
         });
     }
 
@@ -2852,7 +2860,9 @@ class UiDropdown extends BaseComponent {
         this.renderButton(buttonid);
         this.list = dom('ui-list', {
             buttonid,
-            'event-name': 'list-change'
+            'event-name': 'list-change',
+            sortdesc: this.sortdesc,
+            sortasc: this.sortasc
         });
         this.popup = dom('ui-popup', {
             buttonid,
@@ -2869,7 +2879,7 @@ function isNull(value) {
 }
 
 module.exports = BaseComponent.define('ui-dropdown', UiDropdown, {
-    props: ['placeholder', 'label', 'limit', 'name', 'event-name', 'align', 'btn-class'],
+    props: ['placeholder', 'label', 'limit', 'name', 'event-name', 'align', 'btn-class', 'sortdesc', 'sortasc'],
     bools: ['disabled', 'open-when-blank', 'allow-new', 'required', 'case-sensitive', 'autofocus', 'busy'],
     attrs: ['value']
 });
@@ -3031,7 +3041,7 @@ const ATTR = {
     VALUE: 'value',
 };
 
-// TODO
+// TODO!!!!
 // a11y
 
 
@@ -3069,6 +3079,7 @@ class UIList extends BaseComponent {
         if (typeof value === 'function') {
             this.lazyDataFN = value;
             this.onConnected(() => {
+                this.render();
                 this.connect();
             });
             return;
@@ -3078,29 +3089,6 @@ class UIList extends BaseComponent {
 
     get data() {
         return this.items;
-    }
-
-    setControllerValue(value) {
-        if (this.controller) {
-            if (Array.isArray(value)) {
-                if (!this.multiple) {
-                    throw new Error(
-                        'Trying to set multiple values without the `multiple` attribute'
-                    );
-                }
-                const selector = value.map(getSelector).join(',');
-                this.controller.setSelected(dom.queryAll(this, selector));
-            } else {
-                this.controller.setSelected(
-                    dom.query(this, getSelector(value))
-                );
-            }
-        }
-    }
-    getItem(value) {
-        return this.items
-            ? this.items.find(item => item.value === value || `${item.value}` === `${value}`)
-            : null;
     }
 
     onDisabled() {
@@ -3115,7 +3103,7 @@ class UIList extends BaseComponent {
     onReadonly() {
         this.connectEvents();
     }
-
+    
     setLazyValue(value) {
         // emits a value, in spite of the list not yet being rendered
         const data = this.lazyDataFN();
@@ -3144,8 +3132,8 @@ class UIList extends BaseComponent {
             this.__value = undefined;
         }
         this.selectedNode = null;
+        this.items = sort([...value], this.sortdesc, this.sortasc);
         this.update();
-        this.items = [...value];
         if (/domready|connected/.test(this.DOMSTATE)) {
             this.setItemsFromData();
         }
@@ -3303,6 +3291,30 @@ class UIList extends BaseComponent {
         });
     }
 
+    setControllerValue(value) {
+        if (this.controller) {
+            if (Array.isArray(value)) {
+                if (!this.multiple) {
+                    throw new Error(
+                        'Trying to set multiple values without the `multiple` attribute'
+                    );
+                }
+                const selector = value.map(getSelector).join(',');
+                this.controller.setSelected(dom.queryAll(this, selector));
+            } else {
+                this.controller.setSelected(
+                    dom.query(this, getSelector(value))
+                );
+            }
+        }
+    }
+
+    getItem(value) {
+        return this.items
+            ? this.items.find(item => item.value === value || `${item.value}` === `${value}`)
+            : null;
+    }
+
     connected() {
         if (this.lazyDataFN) {
             this.update();
@@ -3314,7 +3326,7 @@ class UIList extends BaseComponent {
     }
 
     domReady() {
-        if (!this.disabled && !this.readyonly) {
+        if (!this.disabled && !this.readonly) {
             this.onDisabled();
         }
         if (this.items || this.lazyDataFN) {
@@ -3360,6 +3372,7 @@ class UIList extends BaseComponent {
             searchTime: this.getAttribute('search-time'),
             externalSearch: this['external-search'],
             buttonId: this.buttonid,
+            value: this.value
         };
         
         this.connectHandles = on.makeMultiHandle([
@@ -3375,9 +3388,9 @@ class UIList extends BaseComponent {
         ]);
 
         this.controller = keys(this.list, options);
-        if (this.value) {
-            this.setControllerValue(this.value);
-        }
+        // if (this.value) {
+        //     this.setControllerValue(this.value);
+        // }
     }
 
     connectEvents() {
@@ -3425,6 +3438,16 @@ function valueify(text) {
     return text.replace(/\s/g, '-').toLowerCase();
 }
 
+function sort(items, desc, asc) {
+    if (desc) {
+        items.sort((a, b) => a[desc] > b[desc] ? 1 : -1);
+    }
+    if (asc) {
+        items.sort((a, b) => a[asc] < b[asc] ? 1 : -1);
+    }
+    return items;
+}
+
 module.exports = BaseComponent.define('ui-list', UIList, {
     props: [
         'label',
@@ -3434,6 +3457,8 @@ module.exports = BaseComponent.define('ui-list', UIList, {
         'align',
         'buttonid',
         'external-search',
+        'sortdesc',
+        'sortasc'
     ],
     bools: ['disabled', 'readonly', 'multiple'],
     attrs: ['value'],

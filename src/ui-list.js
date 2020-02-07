@@ -14,7 +14,7 @@ const ATTR = {
     VALUE: 'value',
 };
 
-// TODO
+// TODO!!!!
 // a11y
 
 
@@ -52,6 +52,7 @@ class UIList extends BaseComponent {
         if (typeof value === 'function') {
             this.lazyDataFN = value;
             this.onConnected(() => {
+                this.render();
                 this.connect();
             });
             return;
@@ -61,29 +62,6 @@ class UIList extends BaseComponent {
 
     get data() {
         return this.items;
-    }
-
-    setControllerValue(value) {
-        if (this.controller) {
-            if (Array.isArray(value)) {
-                if (!this.multiple) {
-                    throw new Error(
-                        'Trying to set multiple values without the `multiple` attribute'
-                    );
-                }
-                const selector = value.map(getSelector).join(',');
-                this.controller.setSelected(dom.queryAll(this, selector));
-            } else {
-                this.controller.setSelected(
-                    dom.query(this, getSelector(value))
-                );
-            }
-        }
-    }
-    getItem(value) {
-        return this.items
-            ? this.items.find(item => item.value === value || `${item.value}` === `${value}`)
-            : null;
     }
 
     onDisabled() {
@@ -98,7 +76,7 @@ class UIList extends BaseComponent {
     onReadonly() {
         this.connectEvents();
     }
-
+    
     setLazyValue(value) {
         // emits a value, in spite of the list not yet being rendered
         const data = this.lazyDataFN();
@@ -286,6 +264,30 @@ class UIList extends BaseComponent {
         });
     }
 
+    setControllerValue(value) {
+        if (this.controller) {
+            if (Array.isArray(value)) {
+                if (!this.multiple) {
+                    throw new Error(
+                        'Trying to set multiple values without the `multiple` attribute'
+                    );
+                }
+                const selector = value.map(getSelector).join(',');
+                this.controller.setSelected(dom.queryAll(this, selector));
+            } else {
+                this.controller.setSelected(
+                    dom.query(this, getSelector(value))
+                );
+            }
+        }
+    }
+
+    getItem(value) {
+        return this.items
+            ? this.items.find(item => item.value === value || `${item.value}` === `${value}`)
+            : null;
+    }
+
     connected() {
         if (this.lazyDataFN) {
             this.update();
@@ -297,7 +299,7 @@ class UIList extends BaseComponent {
     }
 
     domReady() {
-        if (!this.disabled && !this.readyonly) {
+        if (!this.disabled && !this.readonly) {
             this.onDisabled();
         }
         if (this.items || this.lazyDataFN) {
@@ -343,6 +345,7 @@ class UIList extends BaseComponent {
             searchTime: this.getAttribute('search-time'),
             externalSearch: this['external-search'],
             buttonId: this.buttonid,
+            value: this.value
         };
         
         this.connectHandles = on.makeMultiHandle([
@@ -358,9 +361,9 @@ class UIList extends BaseComponent {
         ]);
 
         this.controller = keys(this.list, options);
-        if (this.value) {
-            this.setControllerValue(this.value);
-        }
+        // if (this.value) {
+        //     this.setControllerValue(this.value);
+        // }
     }
 
     connectEvents() {

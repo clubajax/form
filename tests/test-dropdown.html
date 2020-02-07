@@ -181,7 +181,7 @@
                             done();
                         });
                     });
-                    it.only('should sort items asc', function (done) {
+                    it('should sort items asc', function (done) {
                         node = dom('ui-dropdown', {data: data, label: 'Sorted Ascending', sortasc: 'value'}, body);
                         ready(function(){
                             expect(items[0].value).to.equal('red');
