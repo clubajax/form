@@ -2568,6 +2568,7 @@ BaseComponent.addPlugin({
 
 },{}],12:[function(require,module,exports){
 const BaseComponent = require('@clubajax/base-component');
+const dom = require('@clubajax/dom');
 const emitEvent = require('./emitEvent');
 
 class FormElement extends BaseComponent {
@@ -2610,7 +2611,7 @@ module.exports = BaseComponent.define('ui-form-element', FormElement, {
     attrs: ['value']
 });
 
-},{"./emitEvent":13,"@clubajax/base-component":4}],13:[function(require,module,exports){
+},{"./emitEvent":13,"@clubajax/base-component":4,"@clubajax/dom":8}],13:[function(require,module,exports){
 const EVENT_NAME = 'change';
 module.exports = function (instance, value) {
     if (instance.blockEvent) {
@@ -2767,7 +2768,7 @@ class CheckBox extends FormElement {
 }
 
 module.exports = BaseComponent.define('ui-checkbox', CheckBox, {
-    bools: ['checked', 'standards', 'check-after', 'indeterminate']
+    bools: ['checked', 'check-after', 'indeterminate']
 });
 
 },{"./lib/BaseField":12,"./lib/uid":15,"./ui-icon":18,"@clubajax/base-component":4,"@clubajax/dom":8}],17:[function(require,module,exports){
@@ -3467,6 +3468,7 @@ module.exports = BaseComponent.define('ui-list', UIList, {
 },{"./lib/emitEvent":13,"@clubajax/base-component":4,"@clubajax/dom":8,"@clubajax/key-nav":9,"@clubajax/on":11}],21:[function(require,module,exports){
 const BaseComponent = require('@clubajax/base-component');
 const dom = require('@clubajax/dom');
+const on = require('@clubajax/on');
 
 class UiPopup extends BaseComponent {
     constructor() {
@@ -3566,9 +3568,12 @@ class UiPopup extends BaseComponent {
             if (this['use-hover']) {
                 this.connectHoverEvents();
             } else {
-                this.removeClickOff = this.on(this, 'clickoff', () => {
-                    this.hide();
-                });
+                this.clickoff = on.makeMultiHandle([
+                    on('clickoff', () => {
+                        this.hide();
+                    }),
+                    onScroll(this.hide)
+                ]);
                 this.on(this.button, 'click', (e) => {
                     this.show();
                 });
@@ -3593,7 +3598,11 @@ class UiPopup extends BaseComponent {
             clearTimeout(timer);
             this.show();
         };
-        const hide = () => {
+        const hide = (immediate) => {
+            if (immediate === true) {
+                this.hide();
+                return;
+            }
             timer = setTimeout(() => {
                 this.hide();
             }, HIDE_TIMEOUT);
@@ -3602,6 +3611,8 @@ class UiPopup extends BaseComponent {
         this.on(this.button, 'mouseleave', hide);
         this.on('mouseenter', show);
         this.on('mouseleave', hide);
+        this.clickOff = onScroll(hide);
+        this.clickOff.resume();
     }
 
     handleMediaQuery(event) {
@@ -3621,12 +3632,15 @@ class UiPopup extends BaseComponent {
     }
 
     show() {
+        console.log('this.clickoff', this.clickoff);
         if (this.showing) {
             return;
         }
         this.showing = true;
         this.classList.add('open');
-        this.removeClickOff.resume();
+        if (this.clickoff) {
+            this.clickoff.resume();
+        }
         if (!this.isMobile) {
             position(this, this.button, this.align);
         }
@@ -3634,19 +3648,19 @@ class UiPopup extends BaseComponent {
     }
 
     hide() {
-        if (!this.showing) {
+        if (!this.showing || window.keepPopupsOpen) {
             return;
         }
         this.showing = false;
         this.classList.remove('open');
-        if (this.removeClickOff) {
-            this.removeClickOff.pause();
+        if (this.clickoff) {
+            this.clickoff.pause();
         }
         this.fire('popup-close');
     }
 
     destroy() {
-        this.removeClickOff.remove();
+        this.clickoff.remove();
         this.mq.removeListener(this.handleMediaQuery);
         super.destroy();
     }
@@ -3668,6 +3682,7 @@ function clearPosition(popup, tooltip) {
 }
 
 function positionTooltip(popup, button, align) {
+    const LOG = window.debugPopups;
     const tooltip = dom.query(popup, '.ui-tooltip');
     clearPosition(popup, tooltip);
     const win = {
@@ -3679,20 +3694,14 @@ function positionTooltip(popup, button, align) {
     const GAP = 15;
     const style = {};
 
-    // console.log('btn, popup, win, pop, btn');
-    // console.log(
-    //     align,
-    //     '\n',
-    //     button,
-    //     '\n',
-    //     popup,
-    //     '\n',
-    //     win,
-    //     '\n',
-    //     pop,
-    //     '\n',
-    //     btn
-    // );
+    LOG && console.log(
+        'align:', align,
+        '\nbutton:', button,
+        '\npopup:', popup,
+        '\nwin', win,
+        '\npop', pop,
+        '\nbtn', btn
+    );
 
     function addClass(cls) {
         if (tooltip) {
@@ -3791,6 +3800,7 @@ function position(popup, button, align) {
         return;
     }
     clearPosition(popup);
+    const LOG = window.debugPopups;
 
     const GAP = 5;
     const MIN_BOT_SPACE = 200;
@@ -3808,8 +3818,20 @@ function position(popup, button, align) {
     const rightSpace = win.w - btn.x;
     const leftSpace = btn.x + btn.w;
 
+    LOG && console.log(
+        '\nbutton:', button,
+        '\npopup:', popup,
+        '\nwin', win,
+        '\npop', pop,
+        '\nbtn', btn,
+        '\ntopSpace', topSpace,
+        '\nbotSpace', botSpace,
+        '\nleftSpace', leftSpace,
+        '\nrightSpace', rightSpace
+    );
+
     // position left/right & width
-    if (align === 'right' || (rightSpace > pop.w && rightSpace > leftSpace)) {
+    if (align === 'right' || (leftSpace > pop.w && leftSpace > rightSpace)) {
         // left-side
         style.top = btn.y + btn.h;
         style.right = win.w - (btn.x + btn.w);
@@ -3851,12 +3873,27 @@ function position(popup, button, align) {
     dom.style(popup, style);
 }
 
+function onScroll(hide) {
+    return {
+        resume: () => {
+            window.addEventListener('scroll', () => {
+                hide(true);
+            }, true)
+        },
+        pause: () => {
+            window.removeEventListener('scroll', hide)
+        },
+        remove: () => {
+            window.removeEventListener('scroll', hide)
+        }
+    }
+}
 module.exports = BaseComponent.define('ui-popup', UiPopup, {
     props: ['buttonid', 'label', 'align', 'use-hover'],
     bools: ['open'],
 });
 
-},{"@clubajax/base-component":4,"@clubajax/dom":8}],22:[function(require,module,exports){
+},{"@clubajax/base-component":4,"@clubajax/dom":8,"@clubajax/on":11}],22:[function(require,module,exports){
 const BaseComponent = require('@clubajax/base-component');
 const dom = require('@clubajax/dom');
 const nodash = require('@clubajax/no-dash');
@@ -4197,6 +4234,8 @@ require('./ui-icon');
 require('./ui-input');
 
 // https://blog.mobiscroll.com/how-to-do-multiple-selection-on-mobile/
+// https://adamsilver.io/articles/building-an-accessible-autocomplete-control/
+// data-alt
 
 const DEFAULT_PLACEHOLDER = 'Begin typing...';
 

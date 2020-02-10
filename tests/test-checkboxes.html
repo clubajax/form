@@ -89,7 +89,7 @@
 
 		suite('ui-checkbox', function () {
 
-			test('it should have an indeterminate setting', function (done) {
+			test.only('it should have an indeterminate setting', function (done) {
 				const node = dom('ui-checkbox', { label: 'Set Check', name: 'check-1', indeterminate: true }, body);
 				onDomReady(node, function () {
 					expect(iconIs(node)).to.equal('minus');

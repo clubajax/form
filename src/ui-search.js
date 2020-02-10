@@ -7,6 +7,8 @@ require('./ui-icon');
 require('./ui-input');
 
 // https://blog.mobiscroll.com/how-to-do-multiple-selection-on-mobile/
+// https://adamsilver.io/articles/building-an-accessible-autocomplete-control/
+// data-alt
 
 const DEFAULT_PLACEHOLDER = 'Begin typing...';
 
