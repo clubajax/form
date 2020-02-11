@@ -2775,6 +2775,7 @@ module.exports = BaseComponent.define('ui-checkbox', CheckBox, {
 const BaseComponent = require('@clubajax/base-component');
 const dom = require('@clubajax/dom');
 const uid = require('./lib/uid');
+const emitEvent = require('./lib/emitEvent');
 require('./ui-popup');
 require('./ui-list');
 require('./ui-icon');
@@ -2841,12 +2842,18 @@ class UiDropdown extends BaseComponent {
     connectEvents() {
         this.list.on('list-change', (e) => {
             this.setDisplay();
+            emitEvent(this);
             setTimeout(() => {
                 this.popup.hide();
             }, 300);
         });
         this.popup.on('popup-open', () => {
             this.list.controller.scrollTo();
+            this.fire('open');
+        });
+        this.popup.on('popup-close', () => {
+            this.list.controller.scrollTo();
+            this.fire('close');
         });
     }
 
@@ -2885,7 +2892,7 @@ module.exports = BaseComponent.define('ui-dropdown', UiDropdown, {
     attrs: ['value']
 });
 
-},{"./lib/uid":15,"./ui-icon":18,"./ui-list":20,"./ui-popup":21,"@clubajax/base-component":4,"@clubajax/dom":8}],18:[function(require,module,exports){
+},{"./lib/emitEvent":13,"./lib/uid":15,"./ui-icon":18,"./ui-list":20,"./ui-popup":21,"@clubajax/base-component":4,"@clubajax/dom":8}],18:[function(require,module,exports){
 const BaseComponent = require('@clubajax/base-component');
 const dom = require('@clubajax/dom');
 const iconMap = require('./lib/icon-map');
@@ -3076,16 +3083,17 @@ class UIList extends BaseComponent {
         return this.__value || null;
     }
 
-    set data(value) {
-        if (typeof value === 'function') {
-            this.lazyDataFN = value;
+    set data(data) {
+        this.initialValue = this.value;
+        if (typeof data === 'function') {
+            this.lazyDataFN = data;
             this.onConnected(() => {
                 this.render();
                 this.connect();
             });
             return;
         }
-        this.setData(value);
+        this.setData(data);
     }
 
     get data() {
@@ -3384,6 +3392,10 @@ class UIList extends BaseComponent {
                 this.list.focus();
             }),
             this.on('key-select', () => {
+                if (this.value === this.initialValue) {
+                    return;
+                }
+                this.initialValue = null;
                 this.emitEvent();
             }),
         ]);
@@ -3569,7 +3581,7 @@ class UiPopup extends BaseComponent {
                 this.connectHoverEvents();
             } else {
                 this.clickoff = on.makeMultiHandle([
-                    on('clickoff', () => {
+                    on(this, 'clickoff', () => {
                         this.hide();
                     }),
                     onScroll(this.hide)
@@ -3632,7 +3644,6 @@ class UiPopup extends BaseComponent {
     }
 
     show() {
-        console.log('this.clickoff', this.clickoff);
         if (this.showing) {
             return;
         }

@@ -27,6 +27,7 @@ class UIList extends BaseComponent {
 
     set value(value) {
         this.onDomReady(() => {
+            console.log('list.value', value);
             this.setControllerValue(value);
         });
         this.__value = value;
@@ -48,16 +49,16 @@ class UIList extends BaseComponent {
         return this.__value || null;
     }
 
-    set data(value) {
-        if (typeof value === 'function') {
-            this.lazyDataFN = value;
+    set data(data) {
+        if (typeof data === 'function') {
+            this.lazyDataFN = data;
             this.onConnected(() => {
                 this.render();
                 this.connect();
             });
             return;
         }
-        this.setData(value);
+        this.setData(data);
     }
 
     get data() {
@@ -96,31 +97,31 @@ class UIList extends BaseComponent {
         this.fire('dom-update');
     }
 
-    setData(value) {
-        value = Array.isArray(value) ? value : [value];
-        if (value.length && typeof value[0] !== 'object') {
-            value = value.map(item => ({ label: item, value: item }));
+    setData(data) {
+        data = toArray(data);
+        if (data.length && typeof data[0] !== 'object') {
+            data = data.map(item => ({ label: item, data: item }));
         }
         if (!this.lazyDataFN) {
             this.__value = undefined;
         }
         this.selectedNode = null;
-        this.items = sort([...value], this.sortdesc, this.sortasc);
+        this.items = sort([...data], this.sortdesc, this.sortasc);
         this.update();
-        if (/domready|connected/.test(this.DOMSTATE)) {
+        this.onConnected(() => {
             this.setItemsFromData();
-        }
+        });
     }
 
-    addData(items) {
-        items = Array.isArray(items) ? items : [items];
-        this.items = [...(this.items || []), ...items];
+    addData(data) {
+        data = toArray(data);
+        this.items = [...(this.items || []), ...data];
         this.setItemsFromData();
     }
 
-    removeData(value) {
-        value = Array.isArray(value) ? value : [value];
-        value.forEach(value => {
+    removeData(values) {
+        values = toArray(values);
+        values.forEach(value => {
             const index = this.items.findIndex(item => item.value === value);
             if (index === -1) {
                 console.warn('remove value, not found', value);
@@ -131,6 +132,7 @@ class UIList extends BaseComponent {
     }
 
     setItemsFromData() {
+        console.log('setItemsFromData');
         // uses an array of objects as the list items
         this.render();
         this.list.innerHTML = '';
@@ -168,6 +170,7 @@ class UIList extends BaseComponent {
             }
             const options = { html: label, value: item.value };
             const isSelected = item.selected || item.value === parentValue;
+            console.log('isSelected', isSelected, parentValue);
             if (isSelected) {
                 options['aria-selected'] = true;
             }
@@ -275,10 +278,13 @@ class UIList extends BaseComponent {
                 const selector = value.map(getSelector).join(',');
                 this.controller.setSelected(dom.queryAll(this, selector));
             } else {
+                console.log('SEL', dom.query(this, getSelector(value)));
                 this.controller.setSelected(
                     dom.query(this, getSelector(value))
                 );
             }
+        } else {
+            console.log('NO COMTROLLER');
         }
     }
 
@@ -347,7 +353,7 @@ class UIList extends BaseComponent {
             buttonId: this.buttonid,
             value: this.value
         };
-        
+        console.log('connect contr');
         this.connectHandles = on.makeMultiHandle([
             this.on('click', () => {
                 this.list.focus();
@@ -356,6 +362,11 @@ class UIList extends BaseComponent {
                 this.list.focus();
             }),
             this.on('key-select', () => {
+                if (this.value === this.lastValue) {
+                    console.log('SAME');
+                    return;
+                }
+                this.lastValue = this.value;
                 this.emitEvent();
             }),
         ]);
@@ -401,6 +412,10 @@ class UIList extends BaseComponent {
     destroy() {
         super.destroy();
     }
+}
+
+function toArray(data) {
+    return Array.isArray(data) ? data : [data];
 }
 
 function getSelector(val) {

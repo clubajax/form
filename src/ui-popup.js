@@ -101,10 +101,10 @@ class UiPopup extends BaseComponent {
                 this.connectHoverEvents();
             } else {
                 this.clickoff = on.makeMultiHandle([
-                    on('clickoff', () => {
+                    on(this, 'clickoff', () => {
                         this.hide();
                     }),
-                    onScroll(this.hide)
+                    onScroll(this.hide.bind(this))
                 ]);
                 this.on(this.button, 'click', (e) => {
                     this.show();

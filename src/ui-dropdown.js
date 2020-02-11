@@ -1,6 +1,7 @@
 const BaseComponent = require('@clubajax/base-component');
 const dom = require('@clubajax/dom');
 const uid = require('./lib/uid');
+const emitEvent = require('./lib/emitEvent');
 require('./ui-popup');
 require('./ui-list');
 require('./ui-icon');
@@ -13,6 +14,7 @@ class UiDropdown extends BaseComponent {
 
     set value(value) {
         this.onDomReady(() => {
+            console.log('set value', value);
             this.list.value = value;
         });
         this.__value = value;
@@ -27,6 +29,8 @@ class UiDropdown extends BaseComponent {
 
     set data(data) {
         this.onDomReady(() => {
+            console.log('drop.set data');
+            this.lastValue = this.value;
             this.list.data = data;
         });
         this.__data = data;
@@ -67,12 +71,21 @@ class UiDropdown extends BaseComponent {
     connectEvents() {
         this.list.on('list-change', (e) => {
             this.setDisplay();
+            if (this.lastValue !== this.value) {
+                emitEvent(this);
+                this.lastValue = this.value;
+            }
             setTimeout(() => {
                 this.popup.hide();
             }, 300);
         });
         this.popup.on('popup-open', () => {
             this.list.controller.scrollTo();
+            this.fire('open');
+        });
+        this.popup.on('popup-close', () => {
+            this.list.controller.scrollTo();
+            this.fire('close');
         });
     }
 
