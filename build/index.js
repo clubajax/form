@@ -2612,6 +2612,8 @@ module.exports = BaseComponent.define('ui-form-element', FormElement, {
 });
 
 },{"./emitEvent":13,"@clubajax/base-component":4,"@clubajax/dom":8}],13:[function(require,module,exports){
+const dom = require('@clubajax/dom');
+
 const EVENT_NAME = 'change';
 module.exports = function (instance, value) {
     if (instance.blockEvent) {
@@ -2619,13 +2621,16 @@ module.exports = function (instance, value) {
     }
     value = value === undefined ? instance.value : value;
     value = typeof value === 'object' ? value : {value};
+    if (value) {
+        value.value = dom.normalize(value.value);
+    }
     const eventName = instance['event-name'] || EVENT_NAME;
     const emitType = eventName === EVENT_NAME ? 'emit' : 'fire';
     instance[emitType](eventName, value, true);
     instance.__value = value !== null ? value.value : null;
 };
 
-},{}],14:[function(require,module,exports){
+},{"@clubajax/dom":8}],14:[function(require,module,exports){
 // https://fontawesome.com/icons?d=gallery&c=interfaces&m=free
 const map = {
     check: 'fas fa-check',
@@ -2802,6 +2807,11 @@ class UiDropdown extends BaseComponent {
 
     set data(data) {
         this.onDomReady(() => {
+            const value = getValueFromList(data);
+            if (value) {
+                this.value = value;
+            }
+            this.lastValue = this.value;
             this.list.data = data;
         });
         this.__data = data;
@@ -2842,7 +2852,10 @@ class UiDropdown extends BaseComponent {
     connectEvents() {
         this.list.on('list-change', (e) => {
             this.setDisplay();
-            emitEvent(this);
+            if (this.lastValue !== this.value) {
+                emitEvent(this);
+                this.lastValue = this.value;
+            }
             setTimeout(() => {
                 this.popup.hide();
             }, 300);
@@ -2884,6 +2897,11 @@ class UiDropdown extends BaseComponent {
 
 function isNull(value) {
     return value === null || value === undefined;
+}
+
+function getValueFromList(data) {
+    const item = data.find(m => m.selected);
+    return item ? item.value : null;
 }
 
 module.exports = BaseComponent.define('ui-dropdown', UiDropdown, {
@@ -3084,7 +3102,9 @@ class UIList extends BaseComponent {
     }
 
     set data(data) {
-        this.initialValue = this.value;
+        if (noValues(data)) {
+            throw new Error('data does not contain any values');
+        }
         if (typeof data === 'function') {
             this.lazyDataFN = data;
             this.onConnected(() => {
@@ -3132,31 +3152,36 @@ class UIList extends BaseComponent {
         this.fire('dom-update');
     }
 
-    setData(value) {
-        value = Array.isArray(value) ? value : [value];
-        if (value.length && typeof value[0] !== 'object') {
-            value = value.map(item => ({ label: item, value: item }));
+    setData(data) {
+        if (isEqual(this.orgData, data)) {
+            return;
+        }
+
+        data = toArray(data);
+        if (data.length && typeof data[0] !== 'object') {
+            data = data.map(item => ({ label: item, data: item }));
         }
         if (!this.lazyDataFN) {
             this.__value = undefined;
         }
         this.selectedNode = null;
-        this.items = sort([...value], this.sortdesc, this.sortasc);
+        this.orgData = data;
+        this.items = sort([...data], this.sortdesc, this.sortasc);
         this.update();
-        if (/domready|connected/.test(this.DOMSTATE)) {
+        this.onConnected(() => {
             this.setItemsFromData();
-        }
+        });
     }
 
-    addData(items) {
-        items = Array.isArray(items) ? items : [items];
-        this.items = [...(this.items || []), ...items];
+    addData(data) {
+        data = toArray(data);
+        this.items = [...(this.items || []), ...data];
         this.setItemsFromData();
     }
 
-    removeData(value) {
-        value = Array.isArray(value) ? value : [value];
-        value.forEach(value => {
+    removeData(values) {
+        values = toArray(values);
+        values.forEach(value => {
             const index = this.items.findIndex(item => item.value === value);
             if (index === -1) {
                 console.warn('remove value, not found', value);
@@ -3315,6 +3340,8 @@ class UIList extends BaseComponent {
                     dom.query(this, getSelector(value))
                 );
             }
+        } else {
+            console.warn('UIList.setControllerValue: No controller');
         }
     }
 
@@ -3383,7 +3410,6 @@ class UIList extends BaseComponent {
             buttonId: this.buttonid,
             value: this.value
         };
-        
         this.connectHandles = on.makeMultiHandle([
             this.on('click', () => {
                 this.list.focus();
@@ -3392,18 +3418,15 @@ class UIList extends BaseComponent {
                 this.list.focus();
             }),
             this.on('key-select', () => {
-                if (this.value === this.initialValue) {
+                if (this.value === this.lastValue) {
                     return;
                 }
-                this.initialValue = null;
+                this.lastValue = this.value;
                 this.emitEvent();
             }),
         ]);
 
         this.controller = keys(this.list, options);
-        // if (this.value) {
-        //     this.setControllerValue(this.value);
-        // }
     }
 
     connectEvents() {
@@ -3443,6 +3466,10 @@ class UIList extends BaseComponent {
     }
 }
 
+function toArray(data) {
+    return Array.isArray(data) ? data : [data];
+}
+
 function getSelector(val) {
     return `[value="${val}"]`;
 }
@@ -3459,6 +3486,25 @@ function sort(items, desc, asc) {
         items.sort((a, b) => a[asc] < b[asc] ? 1 : -1);
     }
     return items;
+}
+
+function isEqual(a, b) {
+    if (a === b) {
+        return true;
+    }
+    if (!a || !b || !Array.isArray(a) || !Array.isArray(b)) {
+        return false;
+    }
+    return a.map(m => m.value).join(',') === b.map(m => m.value).join(',')
+}
+
+function noValues(data) {
+    // no data is okay
+    if (!data.length) {
+        return false;
+    }
+    // custom app expects IDs
+    return !data.find(d => !!d.value || !!d.id); 
 }
 
 module.exports = BaseComponent.define('ui-list', UIList, {
@@ -3584,7 +3630,7 @@ class UiPopup extends BaseComponent {
                     on(this, 'clickoff', () => {
                         this.hide();
                     }),
-                    onScroll(this.hide)
+                    onScroll(this.hide.bind(this))
                 ]);
                 this.on(this.button, 'click', (e) => {
                     this.show();

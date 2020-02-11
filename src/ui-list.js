@@ -27,7 +27,6 @@ class UIList extends BaseComponent {
 
     set value(value) {
         this.onDomReady(() => {
-            console.log('list.value', value);
             this.setControllerValue(value);
         });
         this.__value = value;
@@ -50,6 +49,9 @@ class UIList extends BaseComponent {
     }
 
     set data(data) {
+        if (noValues(data)) {
+            throw new Error('data does not contain any values');
+        }
         if (typeof data === 'function') {
             this.lazyDataFN = data;
             this.onConnected(() => {
@@ -98,6 +100,10 @@ class UIList extends BaseComponent {
     }
 
     setData(data) {
+        if (isEqual(this.orgData, data)) {
+            return;
+        }
+
         data = toArray(data);
         if (data.length && typeof data[0] !== 'object') {
             data = data.map(item => ({ label: item, data: item }));
@@ -106,6 +112,7 @@ class UIList extends BaseComponent {
             this.__value = undefined;
         }
         this.selectedNode = null;
+        this.orgData = data;
         this.items = sort([...data], this.sortdesc, this.sortasc);
         this.update();
         this.onConnected(() => {
@@ -132,7 +139,6 @@ class UIList extends BaseComponent {
     }
 
     setItemsFromData() {
-        console.log('setItemsFromData');
         // uses an array of objects as the list items
         this.render();
         this.list.innerHTML = '';
@@ -170,7 +176,6 @@ class UIList extends BaseComponent {
             }
             const options = { html: label, value: item.value };
             const isSelected = item.selected || item.value === parentValue;
-            console.log('isSelected', isSelected, parentValue);
             if (isSelected) {
                 options['aria-selected'] = true;
             }
@@ -278,13 +283,12 @@ class UIList extends BaseComponent {
                 const selector = value.map(getSelector).join(',');
                 this.controller.setSelected(dom.queryAll(this, selector));
             } else {
-                console.log('SEL', dom.query(this, getSelector(value)));
                 this.controller.setSelected(
                     dom.query(this, getSelector(value))
                 );
             }
         } else {
-            console.log('NO COMTROLLER');
+            console.warn('UIList.setControllerValue: No controller');
         }
     }
 
@@ -353,7 +357,6 @@ class UIList extends BaseComponent {
             buttonId: this.buttonid,
             value: this.value
         };
-        console.log('connect contr');
         this.connectHandles = on.makeMultiHandle([
             this.on('click', () => {
                 this.list.focus();
@@ -363,7 +366,6 @@ class UIList extends BaseComponent {
             }),
             this.on('key-select', () => {
                 if (this.value === this.lastValue) {
-                    console.log('SAME');
                     return;
                 }
                 this.lastValue = this.value;
@@ -372,9 +374,6 @@ class UIList extends BaseComponent {
         ]);
 
         this.controller = keys(this.list, options);
-        // if (this.value) {
-        //     this.setControllerValue(this.value);
-        // }
     }
 
     connectEvents() {
@@ -434,6 +433,25 @@ function sort(items, desc, asc) {
         items.sort((a, b) => a[asc] < b[asc] ? 1 : -1);
     }
     return items;
+}
+
+function isEqual(a, b) {
+    if (a === b) {
+        return true;
+    }
+    if (!a || !b || !Array.isArray(a) || !Array.isArray(b)) {
+        return false;
+    }
+    return a.map(m => m.value).join(',') === b.map(m => m.value).join(',')
+}
+
+function noValues(data) {
+    // no data is okay
+    if (!data.length) {
+        return false;
+    }
+    // custom app expects IDs
+    return !data.find(d => !!d.value || !!d.id); 
 }
 
 module.exports = BaseComponent.define('ui-list', UIList, {

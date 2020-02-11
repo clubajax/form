@@ -72,6 +72,12 @@
                     {label: 'Blue', value: 'blue'},
                     {label: 'Green', value: 'green'}
                 ],
+                dataNums = [
+                    {label: 'Uno', value: 1},
+                    {label: 'Dos', value: 2},
+                    {label: 'Tre', value: 3},
+                    {label: 'Qua', value: 4}
+                ],
                 dataS = [
                     {label: 'Orange', value: 'orange'},
                     {label: 'Red', value: 'red'},
@@ -133,7 +139,10 @@
                 const list = [];
                 alpha.forEach(function (a) {
                     alpha.forEach(function (b) {
-                        list.push(a + b);
+                        list.push({
+                            label: a + b,
+                            value: (a + b).toLowerCase()
+                        });
                     });
                 });
                 return list.splice(0, 100);
@@ -187,6 +196,10 @@
                         node = dom('ui-dropdown', {data: data, label: 'Simple drop', placeholder: 'Select'}, body);
                         done();
                     });
+                    it('should handle no data', function (done) {
+                        node = dom('ui-dropdown', {data: [], label: 'No Data'}, body);
+                        done();
+                    });
                     it('should sort items', function (done) {
                         node = dom('ui-dropdown', {data: data, label: 'Sorted', sortdesc: 'value'}, body);
                         ready(function () {
@@ -234,6 +247,20 @@
                 });
 
                 describe('events', function () {
+                    it('should emit numbers', (done) => {
+                        node = dom('ui-dropdown', {data: dataNums, label: 'Numeric Values'}, body);
+                        ready(async function () {
+                            const events = [];
+                            node.on('change', function (e) {
+                                events.push(e.value);
+                                console.log(events);
+                            });
+                            // await select(1);
+                            // expect(events.length).to.equal(1);
+                            // expect(events[0]).to.equal('red');
+                            done();
+                        });
+                    });
                     it('should emit one event when selecting', (done) => {
                         node = dom('ui-dropdown', {data: data, label: 'Events', placeholder: 'Select'}, body);
                         ready(async function () {
@@ -247,18 +274,16 @@
                             done();
                         });
                     });
-                    it('should emit one event even when starting with a  selection', (done) => {
-                        const dataSelected = [...data];
-                        dataSelected[1].selected = true;
-                        node = dom('ui-dropdown', {data: dataSelected, label: 'Event - Selected', placeholder: 'Select'}, body);
+                    it('should emit one event even when starting with a selection', (done) => {
+                        node = dom('ui-dropdown', {data: dataS, label: 'Event - Selected', placeholder: 'Select'}, body);
+                        const events = [];
+                        node.on('change', function (e) {
+                            events.push(e.value);
+                        });
                         ready(async function () {
-                            const events = [];
-                            node.on('change', function (e) {
-                                events.push(e.value);
-                            });
-                            await select(2);
+                            await select(1);
                             expect(events.length).to.equal(1);
-                            expect(events[0]).to.equal('blue');
+                            expect(events[0]).to.equal('red');
                             done();
                         });
                     });
@@ -280,15 +305,23 @@
                         node = dom('ui-dropdown', {data: data, label: 'Event - Value', value: 'orange'}, body);
                         const events = [];
                         node.on('change', function (e) {
-                            console.log('change', e.value);
                             events.push(e.value);
                         });
+                        console.log('node....', node);
                         ready(function () {
-
-                            console.log('ready');
-                            expect(events.length).to.equal(0);
-                            // expect(events[0]).to.equal('orange');
-                            done();
+                            console.log('READY');
+                            const TIME = 1;
+                            setTimeout(() => {
+                                node.data = data;
+                                setTimeout(() => {
+                                    node.data = data;
+                                    setTimeout(() => {
+                                        node.data = data;
+                                        expect(events.length).to.equal(0);
+                                        done();
+                                    }, TIME);
+                                }, TIME);
+                            }, TIME);
                         });
                     });
                 });

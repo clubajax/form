@@ -14,7 +14,6 @@ class UiDropdown extends BaseComponent {
 
     set value(value) {
         this.onDomReady(() => {
-            console.log('set value', value);
             this.list.value = value;
         });
         this.__value = value;
@@ -29,7 +28,10 @@ class UiDropdown extends BaseComponent {
 
     set data(data) {
         this.onDomReady(() => {
-            console.log('drop.set data');
+            const value = getValueFromList(data);
+            if (value) {
+                this.value = value;
+            }
             this.lastValue = this.value;
             this.list.data = data;
         });
@@ -116,6 +118,11 @@ class UiDropdown extends BaseComponent {
 
 function isNull(value) {
     return value === null || value === undefined;
+}
+
+function getValueFromList(data) {
+    const item = data.find(m => m.selected);
+    return item ? item.value : null;
 }
 
 module.exports = BaseComponent.define('ui-dropdown', UiDropdown, {
