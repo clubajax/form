@@ -3,6 +3,7 @@ const dom = require('@clubajax/dom');
 const popup = require('./ui-popup');
 
 class UiTooltip extends BaseComponent {
+    open;
     domReady() {
         if (!this.value && this.innerHTML.length) {
             this.value = this.innerHTML;
@@ -13,7 +14,7 @@ class UiTooltip extends BaseComponent {
 
     render() {
         const align = this.align || 'R';
-        dom('ui-popup', {
+        this.popup = dom('ui-popup', {
             html: dom('div', {
                 class: `ui-tooltip ${this.className}`,
                 html: this.value
@@ -24,6 +25,11 @@ class UiTooltip extends BaseComponent {
             'hide-timer': this['hide-timer'],
             open: this.open
         }, document.body);
+    }
+
+    destroy() {
+        super.destroy();
+        this.popup.destroy();
     }
 }
 

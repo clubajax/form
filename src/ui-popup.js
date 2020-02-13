@@ -3,6 +3,9 @@ const dom = require('@clubajax/dom');
 const on = require('@clubajax/on');
 
 class UiPopup extends BaseComponent {
+    align;
+    buttonid;
+    label;
     constructor() {
         super();
         this.showing = false;
@@ -104,12 +107,12 @@ class UiPopup extends BaseComponent {
                     on(this, 'clickoff', () => {
                         this.hide();
                     }),
-                    onScroll(this.hide.bind(this))
+                    onScroll(this.hide.bind(this)),
                 ]);
-                this.on(this.button, 'click', (e) => {
+                this.on(this.button, 'click', e => {
                     this.show();
                 });
-                this.on(this.button, 'keydown', (e) => {
+                this.on(this.button, 'keydown', e => {
                     if (e.key === 'Enter' && !this.showing) {
                         // prevent key-nav from detecting Enter when not open
                         e.preventDefault();
@@ -130,7 +133,7 @@ class UiPopup extends BaseComponent {
             clearTimeout(timer);
             this.show();
         };
-        const hide = (immediate) => {
+        const hide = immediate => {
             if (immediate === true) {
                 this.hide();
                 return;
@@ -191,8 +194,12 @@ class UiPopup extends BaseComponent {
     }
 
     destroy() {
-        this.clickoff.remove();
-        this.mq.removeListener(this.handleMediaQuery);
+        if (this.clickoff) {
+            this.clickoff.remove();
+        }
+        if (this.mq) {
+            this.mq.removeListener(this.handleMediaQuery);
+        }
         super.destroy();
     }
 }
@@ -225,14 +232,21 @@ function positionTooltip(popup, button, align) {
     const GAP = 15;
     const style = {};
 
-    LOG && console.log(
-        'align:', align,
-        '\nbutton:', button,
-        '\npopup:', popup,
-        '\nwin', win,
-        '\npop', pop,
-        '\nbtn', btn
-    );
+    LOG &&
+        console.log(
+            'align:',
+            align,
+            '\nbutton:',
+            button,
+            '\npopup:',
+            popup,
+            '\nwin',
+            win,
+            '\npop',
+            pop,
+            '\nbtn',
+            btn
+        );
 
     function addClass(cls) {
         if (tooltip) {
@@ -335,7 +349,7 @@ function position(popup, button, align) {
 
     const GAP = 5;
     const MIN_BOT_SPACE = 200;
-    
+
     const style = {};
     const bodyPad = dom.style(document.body, 'padding-left');
     const win = {
@@ -349,17 +363,27 @@ function position(popup, button, align) {
     const rightSpace = win.w - btn.x;
     const leftSpace = btn.x + btn.w;
 
-    LOG && console.log(
-        '\nbutton:', button,
-        '\npopup:', popup,
-        '\nwin', win,
-        '\npop', pop,
-        '\nbtn', btn,
-        '\ntopSpace', topSpace,
-        '\nbotSpace', botSpace,
-        '\nleftSpace', leftSpace,
-        '\nrightSpace', rightSpace
-    );
+    LOG &&
+        console.log(
+            '\nbutton:',
+            button,
+            '\npopup:',
+            popup,
+            '\nwin',
+            win,
+            '\npop',
+            pop,
+            '\nbtn',
+            btn,
+            '\ntopSpace',
+            topSpace,
+            '\nbotSpace',
+            botSpace,
+            '\nleftSpace',
+            leftSpace,
+            '\nrightSpace',
+            rightSpace
+        );
 
     // position left/right & width
     if (align === 'right' || (leftSpace > pop.w && leftSpace > rightSpace)) {
@@ -407,17 +431,21 @@ function position(popup, button, align) {
 function onScroll(hide) {
     return {
         resume: () => {
-            window.addEventListener('scroll', () => {
-                hide(true);
-            }, true)
+            window.addEventListener(
+                'scroll',
+                () => {
+                    hide(true);
+                },
+                true
+            );
         },
         pause: () => {
-            window.removeEventListener('scroll', hide)
+            window.removeEventListener('scroll', hide);
         },
         remove: () => {
-            window.removeEventListener('scroll', hide)
-        }
-    }
+            window.removeEventListener('scroll', hide);
+        },
+    };
 }
 module.exports = BaseComponent.define('ui-popup', UiPopup, {
     props: ['buttonid', 'label', 'align', 'use-hover'],

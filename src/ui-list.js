@@ -19,6 +19,12 @@ const ATTR = {
 
 
 class UIList extends BaseComponent {
+    sortdesc;
+    sortasc;
+    multiple;
+    readonly;
+    buttonid;
+    label;
     attributeChanged(prop, value) {
         if (prop === 'value') {
             this.value = value;
@@ -103,7 +109,6 @@ class UIList extends BaseComponent {
         if (isEqual(this.orgData, data)) {
             return;
         }
-
         data = toArray(data);
         if (data.length && typeof data[0] !== 'object') {
             data = data.map(item => ({ label: item, data: item }));
@@ -304,7 +309,7 @@ class UIList extends BaseComponent {
         }
         if (this.items) {
             this.initDomData = () => {};
-            this.setItemsFromData();
+            // this.setItemsFromData();
         }
     }
 
@@ -448,6 +453,9 @@ function isEqual(a, b) {
 function noValues(data) {
     // no data is okay
     if (!data.length) {
+        return false;
+    }
+    if (dom.isNode(data[0])) {
         return false;
     }
     // custom app expects IDs

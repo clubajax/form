@@ -152,11 +152,12 @@
 
 
             describe('ui-dropdown', function () {
-                let node, btn, items;
+                let node, btn, items, lis;
 
                 function ready(cb) {
                     onDomReady(node, function () {
-                        items = dom.queryAll(node.popup, 'li').map(function (n) {
+                        lis = dom.queryAll(node.popup, 'li');
+                        items = lis.map(function (n) {
                             return {
                                 value: n.getAttribute('value'),
                                 label: n.textContent
@@ -194,11 +195,17 @@
                 describe('render', function () {
                     it('should render a dropdown', function (done) {
                         node = dom('ui-dropdown', {data: data, label: 'Simple drop', placeholder: 'Select'}, body);
-                        done();
+                        ready(function () {
+                            expect(lis.length).to.equal(4);
+                            done();
+                        });
                     });
                     it('should handle no data', function (done) {
                         node = dom('ui-dropdown', {data: [], label: 'No Data'}, body);
-                        done();
+                        ready(function () {
+                            expect(lis.length).to.equal(0);
+                            done();
+                        });
                     });
                     it('should sort items', function (done) {
                         node = dom('ui-dropdown', {data: data, label: 'Sorted', sortdesc: 'value'}, body);
@@ -222,23 +229,38 @@
                     });
                     it('should render emojis', function (done) {
                         node = dom('ui-dropdown', {data: data4, label: 'Emojis', placeholder: 'Select an option'}, body);
-                        done();
+                        ready(function () {
+                            expect(lis.length).to.equal(5);
+                            done();
+                        });
                     });
                     it('should handle very long options', function (done) {
                         node = dom('ui-dropdown', {data: dataQnA, label: 'Long Options', placeholder: 'Select a long option..'}, body);
-                        done();
+                        ready(function () {
+                            expect(lis.length).to.equal(5);
+                            done();
+                        });
                     });
                     it('should use an alias', function (done) {
                         node = dom('ui-dropdown', {data: dataAlias, label: 'Alias', placeholder: 'Doit'}, body);
-                        done();
+                        ready(function () {
+                            expect(lis.length).to.equal(5);
+                            done();
+                        });
                     });
                     it('should handle long lists', function (done) {
                         node = dom('ui-dropdown', {data: dataLongList, label: 'Long List', placeholder: 'Pick...', class: 'top-right'}, body);
-                        done();
+                        ready(function () {
+                            expect(lis.length).to.equal(64);
+                            done();
+                        });
                     });
                     it('should initialize selection from data', function (done) {
                         node = dom('ui-dropdown', {data: dataS, label: 'Initial Data Selection', placeholder: 'Select'}, body);
-                        done();
+                        ready(function () {
+                            expect(lis.length).to.equal(4);
+                            done();
+                        });
                     });
                     it('should initialize selection from parent value', function (done) {
                         node = dom('ui-dropdown', {data: data, value: 'blue', label: 'Initial Parent Value', placeholder: 'Select'}, body);
@@ -253,11 +275,10 @@
                             const events = [];
                             node.on('change', function (e) {
                                 events.push(e.value);
-                                console.log(events);
                             });
-                            // await select(1);
-                            // expect(events.length).to.equal(1);
-                            // expect(events[0]).to.equal('red');
+                            await select(1);
+                            expect(events.length).to.equal(1);
+                            expect(events[0]).to.equal(2);
                             done();
                         });
                     });
@@ -302,14 +323,12 @@
                     });
 
                     it('should emit one event even when re-setting data', (done) => {
-                        node = dom('ui-dropdown', {data: data, label: 'Event - Value', value: 'orange'}, body);
+                        node = dom('ui-dropdown', {data: data, label: 'Event - Value Reset', value: 'orange'}, body);
                         const events = [];
                         node.on('change', function (e) {
                             events.push(e.value);
                         });
-                        console.log('node....', node);
                         ready(function () {
-                            console.log('READY');
                             const TIME = 1;
                             setTimeout(() => {
                                 node.data = data;

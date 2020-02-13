@@ -38,6 +38,7 @@ module.exports = function (grunt) {
         serverPort = 9003,
         babelTransform = [['babelify', {
             'presets': ['@babel/preset-env'],
+            plugins:['@babel/plugin-proposal-class-properties'],
             global: true,
             //only: vendorsToBabelize()
         }]],
@@ -112,7 +113,7 @@ module.exports = function (grunt) {
                 //     return module + ':';
                 // }),
                 // transform not using babel.
-                transform: false,
+                transform: babelTransform,
                 postBundleCB: function (err, src, next) {
                     console.timeEnd('dev-build');
                     next(err, src);

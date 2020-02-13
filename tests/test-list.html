@@ -60,10 +60,10 @@
                     {label: 'Snakey', value: 'snakey'}
                 ],
                 data3 = [
-                    dom('li', {html: 'Mike Wilcox'}),
-                    dom('li', {html: 'Lance Cox'}),
-                    dom('li', {html: 'Bob Byron'}),
-                    dom('li', {html: 'Ben Jones'})
+                    dom('li', {html: 'Mike Wilcox', id:1}),
+                    dom('li', {html: 'Lance Cox', id:2}),
+                    dom('li', {html: 'Bob Byron', id:3}),
+                    dom('li', {html: 'Ben Jones', id:4})
                 ],
                 data4 = [
                     dom('li', {
@@ -255,6 +255,7 @@
                         done();
                     });
                 });
+                
                 it('should sort asc by a property', function (done) {
                     setup({data: data, label: 'Sort Ascending', sortasc: 'label'});
                     ready(function () {
