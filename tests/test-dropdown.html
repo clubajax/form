@@ -364,6 +364,22 @@
                     })
                 });
 
+                describe('destroying', function () {
+                    it.only('should should destroy ropdowns without errors', function (done) {
+                        [
+                            dom('ui-dropdown', {data: data, label: 'Destroy'}, body),
+                            // dom('ui-dropdown', {data: data, label: 'Destroy'}, body),
+                            // dom('ui-dropdown', {data: data, label: 'Destroy'}, body),
+                            // dom('ui-dropdown', {data: data, label: 'Destroy'}, body),
+                            // dom('ui-dropdown', {data: data, label: 'Destroy'}, body)
+                        ].forEach((node) => {
+                            dom.destroy(node);
+                        })
+
+                        done();
+                    })
+                });
+
 
 
 

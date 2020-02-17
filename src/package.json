@@ -1,7 +1,7 @@
 {
   "name": "@clubajax/form",
   "description": "Web Component Form Library",
-  "version": "0.7.57",
+  "version": "0.7.60",
   "main": "index.js",
   "module": "index.js",
   "files": [
@@ -11,7 +11,7 @@
   "dependencies": {
     "@clubajax/base-component": "2.3.2",
     "@clubajax/dom": "2.8.5",
-    "@clubajax/key-nav": "2.5.7",
+    "@clubajax/key-nav": "2.6.1",
     "@clubajax/no-dash": "0.6.1",
     "@clubajax/on": "2.2.0"
   }

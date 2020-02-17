@@ -6,7 +6,15 @@ require('./ui-popup');
 require('./ui-list');
 require('./ui-icon');
 
+// ref
 // https://blog.mobiscroll.com/how-to-do-multiple-selection-on-mobile/
+
+
+// TODO remove and append popup
+//  disconnected is faster than destroy
+//  kill popup
+//  update ReactWebComponent
+//
 
 const DEFAULT_PLACEHOLDER = 'Select One...';
 
@@ -116,6 +124,10 @@ class UiDropdown extends BaseComponent {
             class: 'dropdown'
         }, document.body);
         this.setDisplay();
+    }
+
+    disconnected() {
+        this.popup.destroy();
     }
 }
 

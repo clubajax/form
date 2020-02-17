@@ -55,9 +55,9 @@ class UIList extends BaseComponent {
     }
 
     set data(data) {
-        if (noValues(data)) {
-            throw new Error('data does not contain any values');
-        }
+        // if (noValues(data)) {
+        //     throw new Error('data does not contain any values');
+        // }
         if (typeof data === 'function') {
             this.lazyDataFN = data;
             this.onConnected(() => {
@@ -169,11 +169,11 @@ class UIList extends BaseComponent {
             const label = item.alias
                 ? `${item.alias}: ${item.label}`
                 : item.label;
-            if (item.value === undefined && label === undefined) {
-                throw new Error(
-                    '[ERROR] each items must have a value or a label'
-                );
-            }
+            // if (item.value === undefined && label === undefined) {
+            //     throw new Error(
+            //         '[ERROR] each items must have a value or a label'
+            //     );
+            // }
             if (item.value === undefined) {
                 node = dom('div', { class: 'label', html: label }, list);
                 node.unselectable = true;

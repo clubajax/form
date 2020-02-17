@@ -13,6 +13,9 @@ require('./ui-input');
 const DEFAULT_PLACEHOLDER = 'Begin typing...';
 
 class UiSearch extends BaseComponent {
+    placeholder;
+    busy;
+    label;
     set value(value) {
         this.onDomReady(() => {
             this.list.value = value;
@@ -85,6 +88,7 @@ class UiSearch extends BaseComponent {
         this.input.on('focus', () => {
             this.classList.add('is-focused');
         });
+        
         this.input.on('focus', () => {
             this.classList.remove('is-focused');
         });

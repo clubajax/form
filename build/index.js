@@ -49,7 +49,7 @@ function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -501,7 +501,7 @@ require('@clubajax/base-component/src/refs');
 },{"@clubajax/base-component/src/BaseComponent":3,"@clubajax/base-component/src/properties":5,"@clubajax/base-component/src/refs":6,"@clubajax/base-component/src/template":7}],5:[function(require,module,exports){
 "use strict";
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 var BaseComponent = require('./BaseComponent');
 
@@ -879,7 +879,7 @@ BaseComponent.addPlugin({
 },{"./BaseComponent":3}],8:[function(require,module,exports){
 "use strict";
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 /* UMD.define */
 (function (root, factory) {
@@ -1502,7 +1502,7 @@ function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 /* eslint-disable max-lines-per-function, object-shorthand, sort-vars, no-nested-ternary, indent, indent-legacy, complexity, no-plusplus, prefer-reflect*/
 (function (root, factory) {
@@ -1529,6 +1529,10 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       },
       getSelected: function getSelected() {
         return selected;
+      },
+      setMobileMode: function setMobileMode(enable) {
+        isMobile = !!enable;
+        meta = !!enable;
       },
       remove: function remove() {
         this.destroy();
@@ -1561,6 +1565,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         searchString = '',
         searchStringTimer,
         pivotNode,
+        isMobile = false,
         selected,
         highlighted;
     var nodeType = (getNext(children, 0) || {}).localName || 'li';
@@ -1595,6 +1600,12 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       return highlighted;
     }
 
+    function unselect(node) {
+      node.removeAttribute('aria-selected');
+      var index = findIndex(node, selected);
+      selected.splice(index, 1);
+    }
+
     function select(node) {
       var clearSelection = !shift && !meta;
 
@@ -1611,10 +1622,14 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         if (shift && !Array.isArray(node)) {
           selected = findShiftNodes(children, node, pivotNode);
         } else if (meta || shift) {
-          selected = [].concat(_toConsumableArray(selected), _toConsumableArray(toArray(node)));
-          selected.forEach(function (sel) {
-            sel.setAttribute('aria-selected', 'true');
-          });
+          if (meta && !shift && isSelected(node)) {
+            unselect(node);
+          } else {
+            selected = [].concat(_toConsumableArray(selected), _toConsumableArray(toArray(node)));
+            selected.forEach(function (sel) {
+              sel.setAttribute('aria-selected', 'true');
+            });
+          }
         } else if (Array.isArray(node)) {
           selected = [];
           node.forEach(function (n) {
@@ -1797,7 +1812,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         var searchNode = searchHtmlContent(children, searchString);
 
         if (searchNode) {
-          highlight(searchNode);
+          select(highlight(searchNode));
           scrollTo();
         }
 
@@ -1823,7 +1838,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       }
 
       shift = Boolean(e.shiftKey);
-      meta = false;
+      meta = isMobile;
     }), on(document, 'keydown', onDocKeyDown), on(listNode, 'keydown', onKeyDown), on(listNode, 'keydown', onListSearch), on(listNode, 'blur', unhighlight), {
       pause: function pause() {
         if (controller.log) {
@@ -1888,14 +1903,22 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       controller._resume();
     };
 
-    controller.scrollTo = scrollTo; // need to wait until the controller is returned before
-    // selecting, or component cannot get initial value
+    controller.scrollTo = scrollTo;
 
-    setTimeout(function () {
+    function init() {
       selected = select(getSelected(children, options));
       highlighted = highlight(fromArray(selected), options.defaultToFirst);
       scrollTo();
-    }, 1);
+    }
+
+    if (options.noInitDelay) {
+      init();
+    } else {
+      // need to wait until the controller is returned before
+      // selecting, or component cannot get initial value
+      setTimeout(init, 1);
+    }
+
     return controller;
   } //
   // ---- helpers
@@ -2030,9 +2053,9 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
   }
 
   function getCell(children, highlighted, dir) {
-    var cellIndex = getIndex(highlighted),
+    var cellIndex = getChildIndex(highlighted),
         row = highlighted.parentNode,
-        rowIndex = getIndex(row),
+        rowIndex = getChildIndex(row),
         rowAmount = row.parentNode.rows.length;
 
     if (dir === 'up') {
@@ -2050,7 +2073,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
     return row.parentNode.rows[0].cells[cellIndex];
   }
 
-  function getIndex(el) {
+  function getChildIndex(el) {
     var i,
         p = el.parentNode;
 
@@ -2061,6 +2084,16 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
     }
 
     return null;
+  }
+
+  function findIndex(item, list) {
+    for (var i = 0; i < list.length; i++) {
+      if (list[i] === item) {
+        return i;
+      }
+    }
+
+    return -1;
   }
 
   function getListContainer(listNode) {
@@ -2111,8 +2144,8 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
       return selection;
     }
 
-    var pivotIndex = getIndex(pivotNode);
-    var newIndex = getIndex(node);
+    var pivotIndex = getChildIndex(pivotNode);
+    var newIndex = getChildIndex(node);
     var beg, end;
 
     if (newIndex < pivotIndex) {
@@ -2175,7 +2208,7 @@ function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 (function (root, factory) {
   if (typeof customLoader === 'function') {
@@ -2512,7 +2545,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 },{}],11:[function(require,module,exports){
 "use strict";
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 (function (root, factory) {
   if (typeof customLoader === 'function') {
@@ -2920,7 +2953,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 },{}],12:[function(require,module,exports){
 "use strict";
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -3005,7 +3038,7 @@ module.exports = BaseComponent.define('ui-form-element', FormElement, {
 },{"./emitEvent":13,"@clubajax/base-component":4,"@clubajax/dom":8}],13:[function(require,module,exports){
 "use strict";
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 var dom = require('@clubajax/dom');
 
@@ -3077,7 +3110,7 @@ module.exports = uid;
 },{}],16:[function(require,module,exports){
 "use strict";
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -3246,7 +3279,7 @@ module.exports = BaseComponent.define('ui-checkbox', CheckBox, {
 },{"./lib/BaseField":12,"./lib/uid":15,"./ui-icon":18,"@clubajax/base-component":4,"@clubajax/dom":8}],17:[function(require,module,exports){
 "use strict";
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -3278,7 +3311,13 @@ require('./ui-popup');
 
 require('./ui-list');
 
-require('./ui-icon'); // https://blog.mobiscroll.com/how-to-do-multiple-selection-on-mobile/
+require('./ui-icon'); // ref
+// https://blog.mobiscroll.com/how-to-do-multiple-selection-on-mobile/
+// TODO remove and append popup
+//  disconnected is faster than destroy
+//  kill popup
+//  update ReactWebComponent
+//
 
 
 var DEFAULT_PLACEHOLDER = 'Select One...';
@@ -3409,6 +3448,11 @@ function (_BaseComponent) {
       this.setDisplay();
     }
   }, {
+    key: "disconnected",
+    value: function disconnected() {
+      this.popup.destroy();
+    }
+  }, {
     key: "value",
     set: function set(value) {
       var _this4 = this;
@@ -3470,7 +3514,7 @@ module.exports = BaseComponent.define('ui-dropdown', UiDropdown, {
 },{"./lib/emitEvent":13,"./lib/uid":15,"./ui-icon":18,"./ui-list":20,"./ui-popup":21,"@clubajax/base-component":4,"@clubajax/dom":8}],18:[function(require,module,exports){
 "use strict";
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -3549,7 +3593,7 @@ module.exports = BaseComponent.define('ui-icon', UiIcon, {
 },{"./lib/icon-map":14,"@clubajax/base-component":4,"@clubajax/dom":8}],19:[function(require,module,exports){
 "use strict";
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -3739,7 +3783,7 @@ function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -3760,6 +3804,8 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var BaseComponent = require('@clubajax/base-component');
 
@@ -3788,9 +3834,31 @@ function (_BaseComponent) {
   _inherits(UIList, _BaseComponent);
 
   function UIList() {
+    var _getPrototypeOf2;
+
+    var _this;
+
     _classCallCheck(this, UIList);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(UIList).apply(this, arguments));
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(UIList)).call.apply(_getPrototypeOf2, [this].concat(args)));
+
+    _defineProperty(_assertThisInitialized(_this), "sortdesc", void 0);
+
+    _defineProperty(_assertThisInitialized(_this), "sortasc", void 0);
+
+    _defineProperty(_assertThisInitialized(_this), "multiple", void 0);
+
+    _defineProperty(_assertThisInitialized(_this), "readonly", void 0);
+
+    _defineProperty(_assertThisInitialized(_this), "buttonid", void 0);
+
+    _defineProperty(_assertThisInitialized(_this), "label", void 0);
+
+    return _this;
   }
 
   _createClass(UIList, [{
@@ -3803,14 +3871,14 @@ function (_BaseComponent) {
   }, {
     key: "onDisabled",
     value: function onDisabled() {
-      var _this = this;
+      var _this2 = this;
 
       if (this.items || this.lazyDataFN) {
         this.connectEvents();
       }
 
       this.onDomReady(function () {
-        _this.setTabIndicies();
+        _this2.setTabIndicies();
       });
     }
   }, {
@@ -3846,7 +3914,7 @@ function (_BaseComponent) {
   }, {
     key: "setData",
     value: function setData(data) {
-      var _this2 = this;
+      var _this3 = this;
 
       if (isEqual(this.orgData, data)) {
         return;
@@ -3872,7 +3940,7 @@ function (_BaseComponent) {
       this.items = sort(_toConsumableArray(data), this.sortdesc, this.sortasc);
       this.update();
       this.onConnected(function () {
-        _this2.setItemsFromData();
+        _this3.setItemsFromData();
       });
     }
   }, {
@@ -3885,11 +3953,11 @@ function (_BaseComponent) {
   }, {
     key: "removeData",
     value: function removeData(values) {
-      var _this3 = this;
+      var _this4 = this;
 
       values = toArray(values);
       values.forEach(function (value) {
-        var index = _this3.items.findIndex(function (item) {
+        var index = _this4.items.findIndex(function (item) {
           return item.value === value;
         });
 
@@ -3897,7 +3965,7 @@ function (_BaseComponent) {
           console.warn('remove value, not found', value);
         }
 
-        _this3.items.splice(index, 1);
+        _this4.items.splice(index, 1);
       });
       this.setItemsFromData();
     }
@@ -3936,11 +4004,11 @@ function (_BaseComponent) {
           return;
         }
 
-        var label = item.alias ? "".concat(item.alias, ": ").concat(item.label) : item.label;
-
-        if (item.value === undefined && label === undefined) {
-          throw new Error('[ERROR] each items must have a value or a label');
-        }
+        var label = item.alias ? "".concat(item.alias, ": ").concat(item.label) : item.label; // if (item.value === undefined && label === undefined) {
+        //     throw new Error(
+        //         '[ERROR] each items must have a value or a label'
+        //     );
+        // }
 
         if (item.value === undefined) {
           node = dom('div', {
@@ -4050,7 +4118,7 @@ function (_BaseComponent) {
   }, {
     key: "setItemsFromDom",
     value: function setItemsFromDom() {
-      var _this4 = this;
+      var _this5 = this;
 
       // derives items list from dom 
       this.items = [];
@@ -4060,7 +4128,7 @@ function (_BaseComponent) {
           console.warn("ui-list children should use LI's");
         }
 
-        _this4.items.push({
+        _this5.items.push({
           label: child.getAttribute(ATTR.LABEL) || child.textContent,
           value: child.getAttribute(ATTR.VALUE),
           alias: child.getAttribute(ATTR.ALIAS),
@@ -4101,9 +4169,8 @@ function (_BaseComponent) {
       }
 
       if (this.items) {
-        this.initDomData = function () {};
+        this.initDomData = function () {}; // this.setItemsFromData();
 
-        this.setItemsFromData();
       }
     }
   }, {
@@ -4157,7 +4224,7 @@ function (_BaseComponent) {
   }, {
     key: "connectController",
     value: function connectController() {
-      var _this5 = this;
+      var _this6 = this;
 
       var options = {
         canSelectNone: this.getAttribute('can-select-none'),
@@ -4168,17 +4235,17 @@ function (_BaseComponent) {
         value: this.value
       };
       this.connectHandles = on.makeMultiHandle([this.on('click', function () {
-        _this5.list.focus();
+        _this6.list.focus();
       }), this.on('focus', function () {
-        _this5.list.focus();
+        _this6.list.focus();
       }), this.on('key-select', function () {
-        if (_this5.value === _this5.lastValue) {
+        if (_this6.value === _this6.lastValue) {
           return;
         }
 
-        _this5.lastValue = _this5.value;
+        _this6.lastValue = _this6.value;
 
-        _this5.emitEvent();
+        _this6.emitEvent();
       })]);
       this.controller = keys(this.list, options);
     }
@@ -4231,10 +4298,10 @@ function (_BaseComponent) {
   }, {
     key: "value",
     set: function set(value) {
-      var _this6 = this;
+      var _this7 = this;
 
       this.onDomReady(function () {
-        _this6.setControllerValue(value);
+        _this7.setControllerValue(value);
       });
       this.__value = value;
     },
@@ -4260,18 +4327,17 @@ function (_BaseComponent) {
   }, {
     key: "data",
     set: function set(data) {
-      var _this7 = this;
+      var _this8 = this;
 
-      if (noValues(data)) {
-        throw new Error('data does not contain any values');
-      }
-
+      // if (noValues(data)) {
+      //     throw new Error('data does not contain any values');
+      // }
       if (typeof data === 'function') {
         this.lazyDataFN = data;
         this.onConnected(function () {
-          _this7.render();
+          _this8.render();
 
-          _this7.connect();
+          _this8.connect();
         });
         return;
       }
@@ -4334,6 +4400,10 @@ function noValues(data) {
   // no data is okay
   if (!data.length) {
     return false;
+  }
+
+  if (dom.isNode(data[0])) {
+    return false;
   } // custom app expects IDs
 
 
@@ -4351,7 +4421,7 @@ module.exports = BaseComponent.define('ui-list', UIList, {
 },{"./lib/emitEvent":13,"@clubajax/base-component":4,"@clubajax/dom":8,"@clubajax/key-nav":9,"@clubajax/on":11}],21:[function(require,module,exports){
 "use strict";
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -4862,7 +4932,7 @@ module.exports = BaseComponent.define('ui-popup', UiPopup, {
 },{"@clubajax/base-component":4,"@clubajax/dom":8,"@clubajax/on":11}],22:[function(require,module,exports){
 "use strict";
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
 
@@ -5203,7 +5273,7 @@ module.exports = BaseComponent.define('ui-radio-buttons', RadioButtons, {
 },{"./lib/BaseField":12,"./lib/emitEvent":13,"./ui-radio":23,"@clubajax/base-component":4,"@clubajax/dom":8,"@clubajax/no-dash":10}],23:[function(require,module,exports){
 "use strict";
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -5346,7 +5416,7 @@ module.exports = BaseComponent.define('ui-radio', Radio, {
 },{"./lib/BaseField":12,"./lib/uid":15,"@clubajax/base-component":4,"@clubajax/dom":8}],24:[function(require,module,exports){
 "use strict";
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -5356,13 +5426,15 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var BaseComponent = require('@clubajax/base-component');
 
@@ -5389,9 +5461,25 @@ function (_BaseComponent) {
   _inherits(UiSearch, _BaseComponent);
 
   function UiSearch() {
+    var _getPrototypeOf2;
+
+    var _this;
+
     _classCallCheck(this, UiSearch);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(UiSearch).apply(this, arguments));
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(UiSearch)).call.apply(_getPrototypeOf2, [this].concat(args)));
+
+    _defineProperty(_assertThisInitialized(_this), "placeholder", void 0);
+
+    _defineProperty(_assertThisInitialized(_this), "busy", void 0);
+
+    _defineProperty(_assertThisInitialized(_this), "label", void 0);
+
+    return _this;
   }
 
   _createClass(UiSearch, [{
@@ -5428,29 +5516,29 @@ function (_BaseComponent) {
   }, {
     key: "connectEvents",
     value: function connectEvents() {
-      var _this = this;
+      var _this2 = this;
 
       this.list.on('list-change', function () {
-        _this.setDisplay();
+        _this2.setDisplay();
 
-        _this.emit('change', {
-          value: _this.value
+        _this2.emit('change', {
+          value: _this2.value
         });
 
         setTimeout(function () {
-          _this.popup.hide();
+          _this2.popup.hide();
         }, 300);
       });
       this.input.on('key-search', function (e) {
-        _this.fire('search', {
+        _this2.fire('search', {
           value: e.detail.value
         });
       });
       this.input.on('focus', function () {
-        _this.classList.add('is-focused');
+        _this2.classList.add('is-focused');
       });
       this.input.on('focus', function () {
-        _this.classList.remove('is-focused');
+        _this2.classList.remove('is-focused');
       });
     }
   }, {
@@ -5489,12 +5577,12 @@ function (_BaseComponent) {
   }, {
     key: "value",
     set: function set(value) {
-      var _this2 = this;
+      var _this3 = this;
 
       this.onDomReady(function () {
-        _this2.list.value = value;
+        _this3.list.value = value;
 
-        _this2.setDisplay();
+        _this3.setDisplay();
       });
       this.__value = value;
     },
@@ -5508,13 +5596,13 @@ function (_BaseComponent) {
   }, {
     key: "data",
     set: function set(data) {
-      var _this3 = this;
+      var _this4 = this;
 
       this.onDomReady(function () {
-        _this3.list.data = data;
+        _this4.list.data = data;
 
-        if (_this3.input.focused) {
-          _this3.popup.show();
+        if (_this4.input.focused) {
+          _this4.popup.show();
         }
       });
       this.__data = data;
@@ -5540,7 +5628,7 @@ module.exports = BaseComponent.define('ui-search', UiSearch, {
 },{"./lib/uid":15,"./ui-icon":18,"./ui-input":19,"./ui-list":20,"./ui-popup":21,"@clubajax/base-component":4,"@clubajax/dom":8}],25:[function(require,module,exports){
 "use strict";
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
