@@ -427,7 +427,7 @@ function is (value) {
 	}
 }
 
-module.exports = {
+const util = {
 	is,
 	addTimeToDate,
 	isTimeValid,
@@ -464,3 +464,8 @@ module.exports = {
 	charCount,
 	mergeTime
 };
+
+window.getDatePickerUtil = () => {
+    return util;
+}
+module.exports = util;

@@ -45,20 +45,25 @@ class DatePicker extends BaseComponent {
     }
 
     onMin(value) {
-        this.minDate = util.getMinDate(value);
-        this.minDate.setDate(this.minDate.getDate() - 1);
-        if (this.timeInput) {
-            this.timeInput.min = value;
-        }
-        this.render();
+        this.onDomReady(() => {
+            this.minDate = util.getMinDate(value);
+            this.minDate.setDate(this.minDate.getDate() - 1);
+            if (this.timeInput) {
+                this.timeInput.min = value;
+            }
+            this.render();
+        });
+        
     }
 
     onMax(value) {
-        this.maxDate = util.getMaxDate(value);
-        if (this.timeInput) {
-            this.timeInput.max = value;
-        }
-        this.render();
+        this.onDomReady(() => {
+            this.maxDate = util.getMaxDate(value);
+            if (this.timeInput) {
+                this.timeInput.max = value;
+            }
+            this.render();
+        });
     }
 
     constructor() {

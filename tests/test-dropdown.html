@@ -277,7 +277,7 @@
                         node = dom('ui-dropdown', {data: data, value: 'blue', label: 'Initial Parent Value', placeholder: 'Select'}, body);
                         done();
                     });
-                    it.only('should size the input to the popup', function (done) {
+                    it('should size the input to the popup', function (done) {
                         node = dom('ui-dropdown', {data: [], label: 'Sized to Popup', 'size-to-popup': true}, body);
                         setTimeout(async () => {
                             node.data = dataV;

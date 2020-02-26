@@ -51,7 +51,7 @@ class DateInput extends BaseComponent {
 		value = dates.padded(value);
 
 		this.strDate = dates.isValid(value) ? value : '';
-		onDomReady(this, () => {
+		this.onDomReady(() => {
 			this.setValue(this.strDate, isInit);
 		});
 	}
@@ -68,14 +68,18 @@ class DateInput extends BaseComponent {
 		this.labelNode.innerHTML = value;
 	}
 
-	onMin (value) {
-		this.minDate = util.getMinDate(value === 'now' ? new Date() : dates.toDate(value));
-		this.picker.min = value;
+    onMin(value) {
+        this.onDomReady(() => {
+            this.minDate = util.getMinDate(value === 'now' ? new Date() : dates.toDate(value));
+            this.picker.min = value;
+        });
 	}
 
-	onMax (value) {
-		this.maxDate = util.getMaxDate(value === 'now' ? new Date() : dates.toDate(value));
-        this.picker.max = value;
+    onMax(value) {
+        this.onDomReady(() => {
+            this.maxDate = util.getMaxDate(value === 'now' ? new Date() : dates.toDate(value));
+            this.picker.max = value;
+        });
     }
     
     onValidation (e) {
