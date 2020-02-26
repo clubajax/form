@@ -3348,6 +3348,8 @@ function (_BaseComponent) {
 
     _defineProperty(_assertThisInitialized(_this), "placeholder", void 0);
 
+    _defineProperty(_assertThisInitialized(_this), "lastValue", null);
+
     return _this;
   }
 
@@ -3393,9 +3395,13 @@ function (_BaseComponent) {
       var _this3 = this;
 
       this.list.on('list-change', function (e) {
-        _this3.setDisplay();
+        // set display, regardless of elligible event
+        _this3.setDisplay(); // ensure value is not the same,
+        // do not emit events for initialization and 
+        // externally setting the value
 
-        if (_this3.lastValue !== _this3.value) {
+
+        if (_this3.lastValue + '' !== _this3.value + '') {
           emitEvent(_this3);
           _this3.lastValue = _this3.value;
         }
@@ -3457,9 +3463,16 @@ function (_BaseComponent) {
     set: function set(value) {
       var _this4 = this;
 
-      this.onDomReady(function () {
-        _this4.list.value = value;
-      });
+      this.lastValue = value;
+
+      if (this.list) {
+        this.list.value = value;
+      } else {
+        this.onDomReady(function () {
+          _this4.list.value = value;
+        });
+      }
+
       this.__value = value;
     },
     get: function get() {
@@ -3481,7 +3494,6 @@ function (_BaseComponent) {
           _this5.value = value;
         }
 
-        _this5.lastValue = _this5.value;
         _this5.list.data = data;
       });
       this.__data = data;
@@ -3857,6 +3869,8 @@ function (_BaseComponent) {
     _defineProperty(_assertThisInitialized(_this), "buttonid", void 0);
 
     _defineProperty(_assertThisInitialized(_this), "label", void 0);
+
+    _defineProperty(_assertThisInitialized(_this), "lastValue", null);
 
     return _this;
   }
@@ -4239,10 +4253,6 @@ function (_BaseComponent) {
       }), this.on('focus', function () {
         _this6.list.focus();
       }), this.on('key-select', function () {
-        if (_this6.value === _this6.lastValue) {
-          return;
-        }
-
         _this6.lastValue = _this6.value;
 
         _this6.emitEvent();
@@ -4300,6 +4310,7 @@ function (_BaseComponent) {
     set: function set(value) {
       var _this7 = this;
 
+      this.lastValue = value;
       this.onDomReady(function () {
         _this7.setControllerValue(value);
       });
@@ -4449,7 +4460,9 @@ var BaseComponent = require('@clubajax/base-component');
 
 var dom = require('@clubajax/dom');
 
-var on = require('@clubajax/on');
+var on = require('@clubajax/on'); // detach popup from body when not showing
+// - unless keepPopupsAttached
+
 
 var UiPopup =
 /*#__PURE__*/
@@ -4578,7 +4591,7 @@ function (_BaseComponent) {
         } else {
           this.clickoff = on.makeMultiHandle([on(this, 'clickoff', function () {
             _this4.hide();
-          }), onScroll(this.hide.bind(this))]);
+          }), onScroll(this.hide.bind(this), this)]);
           this.on(this.button, 'click', function (e) {
             _this4.show();
           });
@@ -4908,10 +4921,14 @@ function position(popup, button, align) {
   dom.style(popup, style);
 }
 
-function onScroll(hide) {
+function onScroll(hide, popup) {
   return {
     resume: function resume() {
-      window.addEventListener('scroll', function () {
+      window.addEventListener('scroll', function (e) {
+        if (e.target.closest && e.target.closest('ui-popup')) {
+          return;
+        }
+
         hide(true);
       }, true);
     },

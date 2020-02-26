@@ -2,6 +2,8 @@ const BaseComponent = require('@clubajax/base-component');
 const dom = require('@clubajax/dom');
 const on = require('@clubajax/on');
 
+// detach popup from body when not showing
+// - unless keepPopupsAttached
 class UiPopup extends BaseComponent {
     align;
     buttonid;
@@ -27,7 +29,7 @@ class UiPopup extends BaseComponent {
         this.button = dom.byId(this.buttonid);
         if (!this.button) {
             throw new Error(
-                'ui-tooltip must be associated with a parent via the parnetid'
+                'ui-tooltip must be associated with a parent via the parentid'
             );
         }
 
@@ -107,7 +109,7 @@ class UiPopup extends BaseComponent {
                     on(this, 'clickoff', () => {
                         this.hide();
                     }),
-                    onScroll(this.hide.bind(this)),
+                    onScroll(this.hide.bind(this), this),
                 ]);
                 this.on(this.button, 'click', e => {
                     this.show();
@@ -428,12 +430,15 @@ function position(popup, button, align) {
     dom.style(popup, style);
 }
 
-function onScroll(hide) {
+function onScroll(hide, popup) {
     return {
         resume: () => {
             window.addEventListener(
                 'scroll',
-                () => {
+                (e) => {
+                    if (e.target.closest && e.target.closest('ui-popup')) {
+                        return;
+                    }
                     hide(true);
                 },
                 true

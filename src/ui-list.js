@@ -25,6 +25,7 @@ class UIList extends BaseComponent {
     readonly;
     buttonid;
     label;
+    lastValue = null;
     attributeChanged(prop, value) {
         if (prop === 'value') {
             this.value = value;
@@ -32,6 +33,7 @@ class UIList extends BaseComponent {
     }
 
     set value(value) {
+        this.lastValue = value;
         this.onDomReady(() => {
             this.setControllerValue(value);
         });
@@ -370,9 +372,6 @@ class UIList extends BaseComponent {
                 this.list.focus();
             }),
             this.on('key-select', () => {
-                if (this.value === this.lastValue) {
-                    return;
-                }
                 this.lastValue = this.value;
                 this.emitEvent();
             }),

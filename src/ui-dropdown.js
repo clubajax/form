@@ -23,10 +23,17 @@ class UiDropdown extends BaseComponent {
     sortasc;
     label;
     placeholder;
+    lastValue = null;
+    
     set value(value) {
-        this.onDomReady(() => {
+        this.lastValue = value;
+        if (this.list) {
             this.list.value = value;
-        });
+        } else {
+            this.onDomReady(() => {
+                this.list.value = value;
+            });
+        }
         this.__value = value;
     }
 
@@ -43,8 +50,10 @@ class UiDropdown extends BaseComponent {
             if (value) {
                 this.value = value;
             }
-            this.lastValue = this.value;
             this.list.data = data;
+            if (this['size-to-popup']) {
+                this.sizeToPopup();
+            }
         });
         this.__data = data;
     }
@@ -59,8 +68,9 @@ class UiDropdown extends BaseComponent {
         const item = this.list ? this.list.getItem(this.value) : {};
         this.__value = item ? item.value : this.__value;
         dom('span', {html: isNull(this.value) ? this.placeholder || DEFAULT_PLACEHOLDER : (item.alias || item.label)}, this.button);
-        dom('ui-icon', {type: 'caretDown'}, this.button);
-
+        if (!this['no-arrow']) {
+            dom('ui-icon', {type: 'caretDown'}, this.button);
+        }
         setTimeout(() => {
             // don't resize the popup right away - wait until it closes, or it jumps
             if (this.popup) {
@@ -69,6 +79,12 @@ class UiDropdown extends BaseComponent {
                 });
             }
         }, 500);
+    }
+
+    sizeToPopup() {
+        dom.style(this.button, {
+            width: dom.box(this.popup).w + 20 // allow for dropdown arrow
+        });
     }
 
     reset() {
@@ -83,8 +99,12 @@ class UiDropdown extends BaseComponent {
 
     connectEvents() {
         this.list.on('list-change', (e) => {
+            // set display, regardless of elligible event
             this.setDisplay();
-            if (this.lastValue !== this.value) {
+            // ensure value is not the same,
+            // do not emit events for initialization and 
+            // externally setting the value
+            if (this.lastValue + '' !== this.value + '') {
                 emitEvent(this);
                 this.lastValue = this.value;
             }
@@ -142,6 +162,6 @@ function getValueFromList(data) {
 
 module.exports = BaseComponent.define('ui-dropdown', UiDropdown, {
     props: ['placeholder', 'label', 'limit', 'name', 'event-name', 'align', 'btn-class', 'sortdesc', 'sortasc'],
-    bools: ['disabled', 'open-when-blank', 'allow-new', 'required', 'case-sensitive', 'autofocus', 'busy'],
+    bools: ['disabled', 'open-when-blank', 'allow-new', 'required', 'case-sensitive', 'autofocus', 'busy', 'no-arrow', 'size-to-popup'],
     attrs: ['value']
 });

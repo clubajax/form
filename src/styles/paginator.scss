@@ -1,0 +1,21 @@
+ui-paginator{
+    display: flex;
+    flex-direction: row;
+    .ui-paginator-dropdown-label,
+    .ui-paginator-rows-label{
+        font-size: 10px;
+    }
+    ui-dropdown{
+
+    }
+    .ui-paginator-number{
+
+    }
+    .ui-paginator-button{
+        font-size: 18px;
+        border: 0;
+        background-color: #eee;
+        width: 20px;
+        height: 23px;
+    }
+}

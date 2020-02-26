@@ -7,6 +7,7 @@ require('./src/ui-popup');
 require('./src/ui-dropdown');
 require('./src/ui-search');
 require('./src/ui-tooltip');
+require('./src/ui-paginator');
 const iconMap = require('./src/lib/icon-map');
 
 module.exports = {

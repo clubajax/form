@@ -4,6 +4,7 @@ ui-dropdown {
         background-color: var(--drop-btn-bg);
         padding: var(--drop-btn-pad);
         max-width: 100%;
+        text-align: left;
         & > ui-icon {
             display: inline-block;
             vertical-align: middle;
@@ -24,11 +25,24 @@ ui-dropdown {
     ui-icon {
         margin-left: 10px;
     }
+    &.thin {
+        button.ui-button {
+            padding: var(--drop-btn-pad-thin);
+            font-size: 12px;
+        }
+    }
+    &[no-arrow] {
+        button.ui-button {
+            & > span {
+                width: 100%;
+            }
+        }
+    }
 }
 
-ui-popup.dropdown{
+ui-popup.dropdown {
     border: var(--list-brd);
-    ul{
+    ul {
         border: 0;
     }
 }

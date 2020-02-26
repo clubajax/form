@@ -8,6 +8,8 @@ const map = {
     error: 'fas fa-exclamation-circle',
     warning: 'fas fa-exclamation-triangle',
     caretDown: 'fas fa-caret-down',
+    angleLeft: 'fas fa-angle-left',
+    angleRight: 'fas fa-angle-right',
     search: 'fas fa-search',
     spinner: 'fas fa-sync-alt',
 

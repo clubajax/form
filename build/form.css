@@ -8,6 +8,7 @@
   --btn-rad: 2px;
   --btn-brd-focus: #6c9fd8;
   --drop-btn-pad: 5px 10px 8px 10px;
+  --drop-btn-pad-thin: 1px 4px 3px 4px;
   --drop-btn-bg: white;
   --drop-btn-bg-hvr: #ddd;
   --tip-bg: white;
@@ -24,7 +25,7 @@
   --list-bg: white;
   --list-brd: 1px solid #ccc;
   --list-brd-focus: black;
-  --list-item-txt-size: 13px;
+  --list-item-txt-size: 14px;
   --list-item-txt: #333;
   --list-item-pad: 5px 10px;
   --list-item-bg: transparent;
@@ -248,6 +249,7 @@ ui-radio-buttons {
   --btn-rad: 2px;
   --btn-brd-focus: #6c9fd8;
   --drop-btn-pad: 5px 10px 8px 10px;
+  --drop-btn-pad-thin: 1px 4px 3px 4px;
   --drop-btn-bg: white;
   --drop-btn-bg-hvr: #ddd;
   --tip-bg: white;
@@ -264,7 +266,7 @@ ui-radio-buttons {
   --list-bg: white;
   --list-brd: 1px solid #ccc;
   --list-brd-focus: black;
-  --list-item-txt-size: 13px;
+  --list-item-txt-size: 14px;
   --list-item-txt: #333;
   --list-item-pad: 5px 10px;
   --list-item-bg: transparent;
@@ -407,7 +409,8 @@ ui-dropdown {
   ui-dropdown button.ui-button {
     background-color: var(--drop-btn-bg);
     padding: var(--drop-btn-pad);
-    max-width: 100%; }
+    max-width: 100%;
+    text-align: left; }
     ui-dropdown button.ui-button > ui-icon {
       display: inline-block;
       vertical-align: middle;
@@ -423,6 +426,11 @@ ui-dropdown {
       background-color: var(--drop-btn-bg-hvr); }
   ui-dropdown ui-icon {
     margin-left: 10px; }
+  ui-dropdown.thin button.ui-button {
+    padding: var(--drop-btn-pad-thin);
+    font-size: 12px; }
+  ui-dropdown[no-arrow] button.ui-button > span {
+    width: 100%; }
 
 ui-popup.dropdown {
   border: var(--list-brd); }
@@ -477,3 +485,16 @@ ui-popup.dropdown {
       border-color: transparent transparent var(--tip-brd-error) transparent; }
     .ui-tooltip.error.T:before {
       border-color: var(--tip-brd-error) transparent transparent transparent; }
+
+ui-paginator {
+  display: flex;
+  flex-direction: row; }
+  ui-paginator .ui-paginator-dropdown-label,
+  ui-paginator .ui-paginator-rows-label {
+    font-size: 10px; }
+  ui-paginator .ui-paginator-button {
+    font-size: 18px;
+    border: 0;
+    background-color: #eee;
+    width: 20px;
+    height: 23px; }
