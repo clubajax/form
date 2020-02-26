@@ -27,10 +27,15 @@ module.exports = function (grunt) {
         vendorAliases = [
             '@clubajax/custom-elements-polyfill',
             '@clubajax/dom',
-            '@clubajax/base-component/src/BaseComponent',
-            '@clubajax/base-component/src/template',
-            '@clubajax/base-component/src/properties',
-            '@clubajax/base-component/src/refs',
+            '@clubajax/on',
+            '@clubajax/base-component',
+            '@clubajax/dates',
+            '@clubajax/key-nav',
+            '@clubajax/no-dash'
+            // '@clubajax/base-component/src/BaseComponent',
+            // '@clubajax/base-component/src/template',
+            // '@clubajax/base-component/src/properties',
+            // '@clubajax/base-component/src/refs',
         ],
         sourceMaps = true,
         watch = false,
@@ -104,7 +109,7 @@ module.exports = function (grunt) {
                 'build/index.js': [srcFileOptions[srcFiles]]
             },
             options: {
-                // external: vendorAliases,
+                external: vendorAliases,
                 browserifyOptions: {
                     // debug: sourceMaps
                 },
@@ -113,11 +118,11 @@ module.exports = function (grunt) {
                 //     return module + ':';
                 // }),
                 // transform not using babel.
-                transform: babelTransform,
-                postBundleCB: function (err, src, next) {
-                    console.timeEnd('dev-build');
-                    next(err, src);
-                }
+                // transform: babelTransform,
+                // postBundleCB: function (err, src, next) {
+                //     console.timeEnd('dev-build');
+                //     next(err, src);
+                // }
             }
         }
     };

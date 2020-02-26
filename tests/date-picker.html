@@ -67,8 +67,9 @@
 
     <div class="xspacing"></div>
     <div id="tests">
-        <!-- <input placeholder="focus start" autofocus class="focus-start" />
-        <date-input value="11/20/1965" /> -->
+        <!-- <input placeholder="focus start" autofocus class="focus-start" /> -->
+        <date-input min="12/12/2012" value="12/14/2012" />
+        <date-input value="11/20/1965" />
     </div>
     <div class="spacing"></div>
 
@@ -171,7 +172,7 @@
             //  time-input blur does not close calendar
 
             describe('tests', function () {
-
+                return
                 describe('utils', function () {
                     it('should validate date and time strings', function () {
                         const DATE = '12/25/2017';

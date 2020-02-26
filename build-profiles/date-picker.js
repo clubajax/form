@@ -1,0 +1,1 @@
+require('../src/date-picker/date-input');

@@ -5,7 +5,7 @@ const dates = require('@clubajax/dates');
 const util = require('./util');
 const onKey = require('./onKey');
 const isValid = require('./isValid');
-const focusManager = require('./focusManager');
+// const focusManager = require('./focusManager');
 const uid = require('../lib/uid');
 require('./icon-calendar');
 require('../ui-popup');
@@ -49,7 +49,8 @@ class DateInput extends BaseComponent {
 
 	attributeChanged (name, value) {
 		// need to manage value manually
-		if (name === 'value') {
+        if (name === 'value') {
+            console.log('SET VALUE');
 			this.value = value;
 		}
 	}
