@@ -6,7 +6,9 @@ const util = require('./util');
 const onKey = require('./onKey');
 const isValid = require('./isValid');
 const focusManager = require('./focusManager');
+const uid = require('../lib/uid');
 require('./icon-calendar');
+require('../ui-popup');
 
 const defaultPlaceholder = 'MM/DD/YYYY';
 const defaultMask = 'XX/XX/XXXX';
@@ -14,13 +16,13 @@ const defaultMask = 'XX/XX/XXXX';
 const FLASH_TIME = 1000;
 
 // BIG TODO:
-// Move this into FORM
 // create a separate DIST for calendar
 //
 // TODO: 
 //      disabled, read only
 //      clean up unused properties
 //      now for value (not just min & max)
+// change 'static' property name
 // mask throws errors
 // min disables wrong dates: 
 //  value="02/24/2020"
@@ -29,11 +31,20 @@ const FLASH_TIME = 1000;
 
 
 class DateInput extends BaseComponent {
+    // static;
+    labelNode;
+    errorNode;
+    input;
+    hasTime;
+    name;
+    label;
+    placeholder;
 
 	constructor () {
 		super();
 		this.dateType = 'date';
-		this.showing = false;
+        this.showing = false;
+        this.fireOwnDomready = true;
 	}
 
 	attributeChanged (name, value) {
@@ -86,13 +97,14 @@ class DateInput extends BaseComponent {
         this.errorNode.innerHTML = e.detail.message || '';
     }
 
-	get templateString () {
+    get templateString() {
+        this.buttonId = uid('button'); 
 		return `
 <label>
 	<span ref="labelNode"></span>
 	<div class="date-input-wrapper">
 		<input ref="input" class="empty" />
-        <button class="icon-button" ref="icon" aria-expanded="false" aria-label="Date Picker">
+        <button class="icon-button" id=${this.buttonId} ref="icon" aria-expanded="false" aria-label="Date Picker">
             <icon-calendar aria-hidden="true" />
         </button>
     </div>
@@ -165,35 +177,27 @@ class DateInput extends BaseComponent {
 	show () {
 		if (this.showing) {
 			return;
-		}
+        }
+        this.popup.show();
 		this.showing = true;
 		this.picker.onShow();
-		this.picker.classList.add('show');
-
-		window.requestAnimationFrame(() => {
-			const win = dom.box(window);
-			const box = dom.box(this.picker);
-			if (box.x + box.w > win.h) {
-				this.picker.classList.add('right-align');
-			}
-			if (box.top + box.h > win.h) {
-				this.picker.classList.add('bottom-align');
-			}
-		});
+        this.picker.classList.add('show');
+        this.picker.focus();
 	}
 
 	hide () {
-		if (this.static || !this.showing || window.keepPopupsOpen) {
+        if (this.static || !this.showing || window.keepPopupsOpen) {
 			return;
-		}
+        }
+        this.popup.hide();
 		this.showing = false;
-		dom.classList.remove(this.picker, 'right-align bottom-align show');
-		dom.classList.toggle(this, 'invalid', !this.isValid());
+		// dom.classList.remove(this.picker, 'right-align bottom-align show');
+		// dom.classList.toggle(this, 'invalid', !this.isValid());
 		this.picker.onHide();
 	}
 
 	focus () {
-		onDomReady(this, () => {
+		this.onDomReady(() => {
 			this.input.focus();
 		});
 	}
@@ -218,7 +222,7 @@ class DateInput extends BaseComponent {
 		this.setValue(this.strDate || '', true);
 	}
 
-	domReady () {
+    domReady() {
 		this.time = this.time || this.hasTime;
 		this.mask = this.mask || defaultMask;
 		this.input.setAttribute('type', 'text');
@@ -231,17 +235,25 @@ class DateInput extends BaseComponent {
 		}
 		this.connectKeys();
 
-		this.picker = dom('date-picker', { time: this.time, tabindex: '0', 'event-name': 'date-change' }, this);
-		this.picker.onDomReady(() => {
+        this.popup = dom('ui-popup', {buttonid: this.buttonId, class: 'ui-date-input'}, document.body);
+        this.picker = dom('date-picker', {time: this.time, tabindex: '0', 'event-name': 'date-change'}, this.popup);
+        
+        this.picker.onDomReady(() => {
 			this.picker.on('date-change', (e) => {
-				this.setValue(e.detail.value, e.detail.silent);
-			});
-			if (this.static) {
-				this.show();
-			} else {
-				this.focusHandle = focusManager(this, this.show.bind(this), this.hide.bind(this));
-			}
-		});
+                this.setValue(e.detail.value, e.detail.silent);
+                this.hide();
+            });
+            this.popup.on('popup-open', () => {
+                this.show();
+            });
+        });
+        
+        window.onDomReady([this.picker, this.popup], () => {
+            if (this.static) {
+                this.show();
+            }
+            this.fire('domready');
+        })
 	}
 
 	connectKeys () {

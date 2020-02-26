@@ -13,6 +13,15 @@ const EVENT_NAME = 'change';
 
 class DatePicker extends BaseComponent {
 
+    container;
+    time;
+    monthNode;
+    footerLink;
+    calFooter;
+    lftMoNode;
+    rgtMoNode;
+    lftYrNode;
+    rgtYrNode;
     get templateString() {
         return `
 <div class="calendar" ref="calNode">
@@ -170,7 +179,7 @@ class DatePicker extends BaseComponent {
         if (isValid.call(this, strDate, this.dateType)) {
             this.valueDate = valueObject;
             this.current = dates.copy(this.valueDate);
-            onDomReady(this, () => {
+            this.onDomReady(() => {
                 this.render();
                 this.setAriaLabel();
             });
@@ -450,7 +459,7 @@ class DatePicker extends BaseComponent {
             daysInMonth = dates.getDaysInMonth(d),
             dateNum = dates.getFirstSunday(d),
             dateToday = getSelectedDate(today, d),
-            dateSelected = getSelectedDate(this.valueDate, d, true),
+            dateSelected = getSelectedDate(this.valueDate, d),
             highlighted = d.getDate(),
             dateObj = dates.add(new Date(d.getFullYear(), d.getMonth(), 1), dateNum);
 
@@ -514,7 +523,7 @@ class DatePicker extends BaseComponent {
 
             const ariaLabel = util.toDateAriaLabel(dateObj);
             day = dom("div", {
-                html: `<span>${tx}</span>`,
+                html: dom('span', {html: tx, 'data-no-clickoff': true}),
                 class: css,
                 'aria-label': ariaLabel,
                 tabindex: isSelected || isHighlighted ? 0 : -1
@@ -580,7 +589,7 @@ class DatePicker extends BaseComponent {
 
     connect() {
         this.on(this.container, 'click', (e) => {
-            this.fire('pre-click', e, true, true);
+            this.fire('pre-click', e, true);
             const node = e.target.closest('.day');
             if (node) {
                 this.onClickDay(node);

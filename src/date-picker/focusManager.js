@@ -1,7 +1,7 @@
 const on = require('@clubajax/on');
 
 module.exports = function (component, show, hide) {
-    const icon = component.icon;
+    // const icon = component.icon;
     const input = component.input;
 	const picker = component.picker;
 	const timeInput = picker.timeInput;
@@ -31,7 +31,7 @@ module.exports = function (component, show, hide) {
 
 		inPicker = current === picker;
 		if (!current) {
-			hide();
+			// hide();
 		}
 
 		return true;
@@ -47,7 +47,7 @@ module.exports = function (component, show, hide) {
 		}
 	});
 
-	on(icon, 'click', show);
+	// on(icon, 'click', show);
 
 	const docHandle = on(document.body, 'mousedown', (e) => {
 		return onNavigate(e);

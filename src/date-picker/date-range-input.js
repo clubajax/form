@@ -1,17 +1,19 @@
 require('./date-range-picker');
 const DateInput = require('./date-input');
 const dates = require('@clubajax/dates');
+const uid = require('../lib/uid');
 
 class DateRangeInput extends DateInput {
 
 
-	get templateString () {
+    get templateString() {
+        this.buttonId = uid('button'); 
 		return `
 <label>
 	<span ref="labelNode"></span>
 	<div class="input-wrapper">
 		<input ref="input" class="empty" />
-		<button class="icon-button" ref="icon"><icon-calendar /></button>
+		<button class="icon-button" id=${this.buttonId} ref="icon"><icon-calendar /></button>
     </div>
     <div class="input-error" ref="errorNode"></div>
 </label>

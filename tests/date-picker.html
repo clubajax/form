@@ -67,8 +67,8 @@
 
     <div class="xspacing"></div>
     <div id="tests">
-        <input placeholder="focus start" autofocus class="focus-start" />
-        <date-input value="11/20/1965" />
+        <!-- <input placeholder="focus start" autofocus class="focus-start" />
+        <date-input value="11/20/1965" /> -->
     </div>
     <div class="spacing"></div>
 
@@ -79,7 +79,6 @@
         describe('DatePicker', function () {
             this.timeout(3000);
 
-            console.log('DATES', window.dates);
             const describe = window.describe,
                 util = window.getDatePickerUtil(),
                 // dates = window.dates,
@@ -89,7 +88,7 @@
                 body = dom.byId('tests');
 
             function ready(node, cb) {
-                onDomReady(node, function () {
+                node.onDomReady(function () {
                     setTimeout(cb, 30);
                 });
             }
@@ -146,19 +145,18 @@
             }
 
             function clickDate(node, date) {
-                console.log('UTIL', util);
                 const day = util.toDateAriaLabel(date);
-                const n = dom.query(node, '[aria-label="' + day + '"]');
+                const n = dom.query(node.picker, '[aria-label="' + day + '"]');
                 if (n) {
                     on.emit(n, 'click');
                     node.blur();
                 } else {
-                    console.log('could not find:', date);
+                    console.log(`could not find: "${day}"`);
                 }
             }
 
             function showing(node) {
-                return node.picker.classList.contains('show') && dom.style(node.picker, 'display') !== 'none';
+                return node.popup.classList.contains('open') && dom.style(node.popup, 'display') !== 'none';
             }
 
             function focus(node) {
@@ -166,6 +164,9 @@
                 on.emit(node.input, 'focus');
             }
 
+            function open(node){
+                on.emit(node.icon, 'click');
+            }
             // FIXME: 
             //  time-input blur does not close calendar
 
@@ -350,6 +351,10 @@
                 });
 
                 describe('date input', function () {
+                    it('should pop up', function () {
+                        const node = dom('date-input', {label: 'Opens with ui-popup'}, body);
+                        expect(dom.isNode(node)).to.equal(true);
+                    });
 
                     it('should handle arrow keys', function (done) {
                         const node = dom('date-input', {
@@ -405,6 +410,7 @@
                         }, body);
 
                         ready(node, function () {
+                            open(node);
                             focus(node);
                             clickDate(node, '12/24/2017');
                             expect(node.value).to.equal('12/24/2017');

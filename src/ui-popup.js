@@ -106,8 +106,10 @@ class UiPopup extends BaseComponent {
                 this.connectHoverEvents();
             } else {
                 this.clickoff = on.makeMultiHandle([
-                    on(this, 'clickoff', () => {
-                        this.hide();
+                    on(this, 'clickoff', (e) => {
+                        if (!e.target.hasAttribute('data-no-clickoff')) {
+                            this.hide();
+                        }
                     }),
                     onScroll(this.hide.bind(this), this),
                 ]);
@@ -120,9 +122,6 @@ class UiPopup extends BaseComponent {
                         e.preventDefault();
                         this.show();
                     }
-                });
-                this.on(this.button, 'blur', () => {
-                    this.hide();
                 });
             }
         }
