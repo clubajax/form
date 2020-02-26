@@ -12,16 +12,23 @@ require('./time-input');
 const EVENT_NAME = 'change';
 
 class DatePicker extends BaseComponent {
+    constructor() {
+        super();
+        this.dateType = 'date';
+        this.current = new Date();
+        this.previous = {};
 
-    container;
-    time;
-    monthNode;
-    footerLink;
-    calFooter;
-    lftMoNode;
-    rgtMoNode;
-    lftYrNode;
-    rgtYrNode;
+        this.container;
+        this.time;
+        this.monthNode;
+        this.footerLink;
+        this.calFooter;
+        this.lftMoNode;
+        this.rgtMoNode;
+        this.lftYrNode;
+        this.rgtYrNode;
+    }
+
     get templateString() {
         return `
 <div class="calendar" ref="calNode">
@@ -73,13 +80,6 @@ class DatePicker extends BaseComponent {
             }
             this.render();
         });
-    }
-
-    constructor() {
-        super();
-        this.dateType = 'date';
-        this.current = new Date();
-        this.previous = {};
     }
 
     setDisplay(...args) {

@@ -6,11 +6,14 @@ require('./ui-icon');
 const DEFAULT_PLACEHOLDER = 'Enter text...';
 
 class UiInput extends BaseComponent {
-    readonly;
-    disabled;
-    placeholder;
-    icon;
-    label;
+    constructor() {
+        super();
+        this.readonly;
+        this.disabled;
+        this.placeholder;
+        this.icon;
+        this.label;
+    }
     attributeChanged(prop, value) {
         if (prop === 'value') {
             this.value = value;
@@ -57,7 +60,7 @@ class UiInput extends BaseComponent {
         // dom.classList.toggle(this, 'has-placeholder')
     }
 
-    emitEvent = (e) => {
+    emitEvent(e) {
         e.stopPropagation();
         this._value = this.input.value;
         emitEvent(this, this._value);
@@ -77,7 +80,7 @@ class UiInput extends BaseComponent {
             this.focused = true;
             this.emit('focus');
         });
-        this.on(this.input, 'change', this.emitEvent);
+        this.on(this.input, 'change', this.emitEvent.bind(this));
     }
     
     render() {

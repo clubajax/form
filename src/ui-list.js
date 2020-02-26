@@ -19,13 +19,16 @@ const ATTR = {
 
 
 class UIList extends BaseComponent {
-    sortdesc;
-    sortasc;
-    multiple;
-    readonly;
-    buttonid;
-    label;
-    lastValue = null;
+    constructor() {
+        super();
+        this.sortdesc;
+        this.sortasc;
+        this.multiple;
+        this.readonly;
+        this.buttonid;
+        this.label;
+        this.lastValue = null;
+    }
     attributeChanged(prop, value) {
         if (prop === 'value') {
             this.value = value;

@@ -5,13 +5,13 @@ const on = require('@clubajax/on');
 // detach popup from body when not showing
 // - unless keepPopupsAttached
 class UiPopup extends BaseComponent {
-    align;
-    buttonid;
-    label;
     constructor() {
         super();
         this.showing = false;
         this.handleMediaQuery = this.handleMediaQuery.bind(this);
+        this.align;
+        this.buttonid;
+        this.label;
     }
 
     onOpen(value) {

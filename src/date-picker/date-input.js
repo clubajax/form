@@ -31,20 +31,19 @@ const FLASH_TIME = 1000;
 
 
 class DateInput extends BaseComponent {
-    // static;
-    labelNode;
-    errorNode;
-    input;
-    hasTime;
-    name;
-    label;
-    placeholder;
-
 	constructor () {
 		super();
 		this.dateType = 'date';
         this.showing = false;
         this.fireOwnDomready = true;
+        this.static;
+        this.labelNode;
+        this.errorNode;
+        this.input;
+        this.hasTime;
+        this.name;
+        this.label;
+        this.placeholder;
 	}
 
 	attributeChanged (name, value) {

@@ -19,12 +19,15 @@ require('./ui-icon');
 const DEFAULT_PLACEHOLDER = 'Select One...';
 
 class UiDropdown extends BaseComponent {
-    sortdesc
-    sortasc;
-    label;
-    placeholder;
-    lastValue = null;
-    
+    constructor() {
+        super();
+        this.sortdesc
+        this.sortasc;
+        this.label;
+        this.placeholder;
+        this.lastValue = null;
+    }
+     
     set value(value) {
         this.lastValue = value;
         if (this.list) {

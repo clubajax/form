@@ -3,7 +3,10 @@ const dom = require('@clubajax/dom');
 const popup = require('./ui-popup');
 
 class UiTooltip extends BaseComponent {
-    open;
+    constructor() {
+        super();
+        this.open;
+    }
     domReady() {
         if (!this.value && this.innerHTML.length) {
             this.value = this.innerHTML;

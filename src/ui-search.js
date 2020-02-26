@@ -13,9 +13,12 @@ require('./ui-input');
 const DEFAULT_PLACEHOLDER = 'Begin typing...';
 
 class UiSearch extends BaseComponent {
-    placeholder;
-    busy;
-    label;
+    constructor() {
+        super();
+        this.placeholder;
+        this.busy;
+        this.label;
+    }
     set value(value) {
         this.onDomReady(() => {
             this.list.value = value;
