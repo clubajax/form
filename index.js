@@ -8,8 +8,11 @@ require('./src/ui-dropdown');
 require('./src/ui-search');
 require('./src/ui-tooltip');
 require('./src/ui-paginator');
-const iconMap = require('./src/lib/icon-map');
 
-module.exports = {
-    iconMap
-};
+require('./src/date-picker/date-picker');
+require('./src/date-picker/date-input');
+require('./src/date-picker/time-input');
+require('./src/date-picker/date-range-picker');
+require('./src/date-picker/date-range-input');
+require('./src/date-picker/date-range-inputs');
+require('./src/date-picker/date-time-input');
