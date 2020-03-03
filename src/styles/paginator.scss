@@ -1,21 +1,33 @@
-ui-paginator{
+ui-paginator {
     display: flex;
     flex-direction: row;
-    .ui-paginator-dropdown-label,
-    .ui-paginator-rows-label{
+    align-items: center;
+    font-size: 14px;
+    .dropdown-label,
+    .rows-label {
         font-size: 10px;
     }
-    ui-dropdown{
+    ui-dropdown {
 
+        button.ui-button > span{
+            overflow: visible;
+        }
     }
-    .ui-paginator-number{
-
+    .page-numbers {
+        display: flex;
+        flex-direction: row;
+        .page-number {
+        }
     }
-    .ui-paginator-button{
-        font-size: 18px;
+    .ui-button {
+        padding: 0;
+        font-size: 14px;
         border: 0;
         background-color: #eee;
         width: 20px;
-        height: 23px;
+        height: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 }
