@@ -33,6 +33,9 @@ function calButtons(start, limit, total) {
 }
 
 module.exports = (start, limit, total) => {
+    if (start % limit) {
+        throw new Error('start must be evenly divisible by limit');
+    }
     let buttons = ['*'];
     let status;
     let nextEnabled;
@@ -65,8 +68,8 @@ module.exports = (start, limit, total) => {
 
     start = start / limit;
     total = total / limit;
-    
-    const next = () => (start + 1 <= total ? start + 1 : start) * limit;
+
+    const next = () => (start + 1 < total ? start + 1 : start) * limit;
     const prev = () => (start - 1 > 0 ? start - 1 : 0) * limit;
     const goto = (num) => (num > 0 && num < total ? num : start) * limit;
 
@@ -79,14 +82,4 @@ module.exports = (start, limit, total) => {
         prev,
         goto,
     };
-
-    // return {
-    //     buttons, //: calButtons(start, limit, total),
-    //     nextEnabled: true,
-    //     prevEnabled: true,
-    //     status: `${start + 1}-${start + limit} of ${total}`,
-    //     next,
-    //     prev,
-    //     goto,
-    // };
 };
