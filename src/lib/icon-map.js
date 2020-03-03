@@ -12,6 +12,7 @@ const map = {
     angleRight: 'fas fa-angle-right',
     search: 'fas fa-search',
     spinner: 'fas fa-sync-alt',
+    calendar: 'far fa-calendar-alt',
 
     'folder': 'far fa-folder',
     'file': 'far fa-file-alt',

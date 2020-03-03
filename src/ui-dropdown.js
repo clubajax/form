@@ -54,7 +54,7 @@ class UiDropdown extends BaseComponent {
                 this.value = value;
             }
             this.list.data = data;
-            if (this['size-to-popup']) {
+            if (this['size-to-popup'] || this['autosized']) {
                 this.sizeToPopup();
             }
         });
@@ -165,6 +165,6 @@ function getValueFromList(data) {
 
 module.exports = BaseComponent.define('ui-dropdown', UiDropdown, {
     props: ['placeholder', 'label', 'limit', 'name', 'event-name', 'align', 'btn-class', 'sortdesc', 'sortasc'],
-    bools: ['disabled', 'open-when-blank', 'allow-new', 'required', 'case-sensitive', 'autofocus', 'busy', 'no-arrow', 'size-to-popup'],
+    bools: ['disabled', 'open-when-blank', 'allow-new', 'required', 'case-sensitive', 'autofocus', 'busy', 'no-arrow', 'size-to-popup', 'autosized'],
     attrs: ['value']
 });

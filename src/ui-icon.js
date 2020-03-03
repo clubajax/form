@@ -4,6 +4,7 @@ const iconMap = require('./lib/icon-map');
 
 class UiIcon extends BaseComponent {
     onType(type) { 
+        // console.log('TYPE', type);
         // if (!iconMap[type]) console.warn('icon type missing:', type);
         if (!missingStylesheet()) {
             console.warn('Icon stylesheet missing');

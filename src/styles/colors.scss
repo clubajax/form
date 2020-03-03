@@ -93,7 +93,7 @@ $btn-dsbl-clr: #999;
     --list-item-hvr: #eee;
     --list-item-current: #eee;
     --list-item-selected: #333;
-    --list-item-focus: #83bffc;
+    --list-item-focus: #6c9fd8;
     --list-item-bg-disabled: #ccc;
     --list-item-txt-disabled: #666;
     // --list-item-label-font: 
@@ -104,6 +104,12 @@ $btn-dsbl-clr: #999;
     --list-item-group-brd: #e0e0e0;
     --list-item-divider: #ccc;
     --list-item-divider-pad: 5px;
-    
+    //
+    --chk-brd: 1px solid #ccc;
+    --chk-bg: #0073d6;
+    --chk-bg-hvr: #4d9be0;
+    --chk-focus-brd: #6c9fd8;
+    --chk-focus-txt: #4a698d;
+    --chk-hvr: #f2f2f2;
     
 }

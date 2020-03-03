@@ -12,6 +12,12 @@ require('./ui-icon');
 
 class CheckBox extends FormElement {
 
+    // attributeChanged(prop, value) {
+    //     if (prop === 'value') {
+    //         this.value = value;
+    //     }
+    // }
+
     get value() {
         return this.indeterminate ? null : Boolean(this.checked);
     }
@@ -84,11 +90,11 @@ class CheckBox extends FormElement {
         const html = this.label || '';
         const chkId = this.label ? (this.id || uid('checkbox')) : null;
         const lblId = this.label ? (this.id || uid('label')) : null;
-
-        this.input = dom('ui-icon', {type, id: chkId, role: 'checkbox', 'aria-labelledby': lblId, 'aria-checked': false, tabindex: '0'});
+        this.setAttribute('tabindex', '0');
+        this.input = dom('ui-icon', {type, id: chkId, role: 'checkbox', 'aria-labelledby': lblId, 'aria-checked': false});
         this.labelNode = dom('span', {html, class: 'ui-label', 'for': chkId, id: lblId});
 
-        if (this['check-after']) {
+        if (!this['check-after']) {
             this.appendChild(this.input);
             this.appendChild(this.labelNode);
         } else {
@@ -101,5 +107,6 @@ class CheckBox extends FormElement {
 }
 
 module.exports = BaseComponent.define('ui-checkbox', CheckBox, {
-    bools: ['checked', 'check-after', 'indeterminate']
+    bools: ['checked', 'check-after', 'indeterminate'],
+    // attrs: ['value']
 });

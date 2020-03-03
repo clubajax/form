@@ -7,8 +7,8 @@ const onKey = require('./onKey');
 const isValid = require('./isValid');
 // const focusManager = require('./focusManager');
 const uid = require('../lib/uid');
-require('./icon-calendar');
 require('../ui-popup');
+require('../ui-icon');
 
 const defaultPlaceholder = 'MM/DD/YYYY';
 const defaultMask = 'XX/XX/XXXX';
@@ -24,10 +24,6 @@ const FLASH_TIME = 1000;
 //      now for value (not just min & max)
 // change 'static' property name
 // mask throws errors
-// min disables wrong dates: 
-//  value="02/24/2020"
-//  min="02/04/2020"
-//  max="03/17/2020"
 
 
 class DateInput extends BaseComponent {
@@ -49,7 +45,6 @@ class DateInput extends BaseComponent {
 	attributeChanged (name, value) {
 		// need to manage value manually
         if (name === 'value') {
-            console.log('SET VALUE');
 			this.value = value;
 		}
 	}
@@ -81,6 +76,7 @@ class DateInput extends BaseComponent {
 
     onMin(value) {
         this.onDomReady(() => {
+            console.log('MIN::', value, dates.toDate(value));
             this.minDate = util.getMinDate(value === 'now' ? new Date() : dates.toDate(value));
             this.picker.min = value;
         });
@@ -105,7 +101,7 @@ class DateInput extends BaseComponent {
 	<div class="date-input-wrapper">
 		<input ref="input" class="empty" />
         <button class="icon-button" id=${this.buttonId} ref="icon" aria-expanded="false" aria-label="Date Picker">
-            <icon-calendar aria-hidden="true" />
+            <ui-icon type="calendar" />
         </button>
     </div>
     <div class="input-error" ref="errorNode"></div>
@@ -191,8 +187,6 @@ class DateInput extends BaseComponent {
         }
         this.popup.hide();
 		this.showing = false;
-		// dom.classList.remove(this.picker, 'right-align bottom-align show');
-		// dom.classList.toggle(this, 'invalid', !this.isValid());
 		this.picker.onHide();
 	}
 

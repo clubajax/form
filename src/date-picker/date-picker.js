@@ -61,9 +61,11 @@ class DatePicker extends BaseComponent {
     }
 
     onMin(value) {
+        console.log('PICK MIN', value);
         this.onDomReady(() => {
             this.minDate = util.getMinDate(value);
-            this.minDate.setDate(this.minDate.getDate() - 1);
+            // this caused the wrong date to be disabled - why did I do this?
+            // this.minDate.setDate(this.minDate.getDate() - 1);
             if (this.timeInput) {
                 this.timeInput.min = value;
             }
@@ -469,6 +471,7 @@ class DatePicker extends BaseComponent {
             dom("div", {html: dates.days.abbr[i], class: 'day-of-week'}, node);
         }
 
+        console.log(' - ', this.minDate);
         for (i = 0; i < 42; i++) {
 
             minmax = dates.isLess(dateObj, this.minDate) || dates.isGreater(dateObj, this.maxDate);

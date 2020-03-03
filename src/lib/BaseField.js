@@ -5,15 +5,11 @@ const emitEvent = require('./emitEvent');
 class FormElement extends BaseComponent {
 
     onReadonly(value) {
-        if (this.input) {
-            dom.attr(this.input, 'tabindex', '0', !value && !this.disabled);
-        }
+        dom.attr(this, 'tabindex', value ? false : '0');
     }
 
     onDisabled(value) {
-        if (this.input) {
-            dom.attr(this.input, 'tabindex', '0', !value && !this.readonly);
-        }
+        dom.attr(this, 'tabindex', value ? false : '0');
     }
 
     onLabel(value) {

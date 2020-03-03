@@ -402,10 +402,11 @@ date-time-input {
     border: 0;
     background: none;
     cursor: pointer;
-    icon-calendar {
+    ui-icon {
         display: block;
-        width: 18px;
-        height: 18px;
+        font-size: 18px;
+        // width: 18px;
+        // height: 18px;
     }
 }
 
