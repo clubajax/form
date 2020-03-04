@@ -11,6 +11,7 @@ require('./src/ui-paginator');
 
 require('./src/date-picker/date-picker');
 require('./src/date-picker/date-input');
+require('./src/ui-drawer');
 // require('./src/date-picker/time-input');
 // require('./src/date-picker/date-range-picker');
 // require('./src/date-picker/date-range-input');

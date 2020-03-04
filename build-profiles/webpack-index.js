@@ -5,6 +5,7 @@ require('../src/ui-popup');
 require('../src/ui-dropdown');
 require('../src/ui-search');
 require('../src/ui-tooltip');
+require('../src/ui-drawer');
 require('../src/date-picker/date-picker');
 require('../src/date-picker/date-input');
 

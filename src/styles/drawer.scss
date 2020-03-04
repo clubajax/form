@@ -1,0 +1,10 @@
+ui-drawer{
+    display: none;
+    &.show{
+        display: inline-block;
+    }
+    &.animate{
+        overflow: hidden;
+        transition: all 150ms ease-out;
+    }
+}

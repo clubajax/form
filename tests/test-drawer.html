@@ -1,0 +1,71 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <title>Test Drawer</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+        integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+    <script src="src/test-files.js"></script>
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            padding: 20px 20px 100px 20px;
+            margin-bottom: 100px;
+            font-family: sans-serif;
+        }
+        section{
+            margin-bottom: 10px;
+        }
+        .drawer-content {
+            width: 250px;
+            height: 250px;
+            background-color: #ccc;
+            padding: 10px;
+            border: 1px solid #999;
+        }
+        .two{
+            width: 350px;
+        }
+    </style>
+</head>
+
+<body>
+    <h4>Test Drawer</h4>
+    <div id="tests">
+        <section>
+            <button class="ui-button" id="btn">Toggle Horizontal</button>
+            <ui-drawer id="drawer" open="true">
+                <div class="drawer-content">
+                    This content is in the drawer
+                </div>
+            </ui-drawer>
+        </section>
+        <script>
+            const drawer = dom.byId('drawer');
+            on('btn', 'click', () => {
+                drawer.open = !drawer.open;
+            });
+        </script>
+        <section>
+            <button class="ui-button" id="btn2">Toggle Vertical</button>
+            <ui-drawer id="drawer2" open="false" vertical="true">
+                <div class="drawer-content two">
+                    This content is in the drawer
+                </div>
+            </ui-drawer>
+        </section>
+        <script>
+            const drawer2 = dom.byId('drawer2');
+            on('btn2', 'click', () => {
+                drawer2.open = !drawer2.open;
+            });
+        </script>
+    </div>
+</body>
+
+</html>
