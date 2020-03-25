@@ -36,7 +36,8 @@ module.exports = (start, limit, total) => {
     if (start % limit) {
         throw new Error('start must be evenly divisible by limit');
     }
-    let buttons = ['*'];
+    let buttons = [];
+    let buttonIndex = -1;
     let status;
     let nextEnabled;
     let prevEnabled;
@@ -44,6 +45,7 @@ module.exports = (start, limit, total) => {
     if (total <= limit) {
         return {
             buttons,
+            buttonIndex,
             nextEnabled: false,
             prevEnabled: false,
             status: `1-${total} of ${total}`,
@@ -68,16 +70,22 @@ module.exports = (start, limit, total) => {
 
     start = start / limit;
     total = total / limit;
+    buttonIndex = start;
 
     const next = () => (start + 1 < total ? start + 1 : start) * limit;
     const prev = () => (start - 1 > 0 ? start - 1 : 0) * limit;
     const goto = (num) => (num > 0 && num < total ? num : start) * limit;
+    const setLimit = (_limit) => {
+        limit = _limit;
+    }
 
     return {
         buttons,
+        buttonIndex,
         nextEnabled,
         prevEnabled,
         status,
+        setLimit,
         next,
         prev,
         goto,

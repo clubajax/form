@@ -7,8 +7,12 @@ ui-paginator {
     .rows-label {
         font-size: 10px;
     }
+    .rows-label {
+        margin-right: 5px;
+    }
     ui-dropdown {
-
+        height: 29px;
+        margin-right: 5px;
         button.ui-button > span{
             overflow: visible;
         }
@@ -17,17 +21,73 @@ ui-paginator {
         display: flex;
         flex-direction: row;
         .page-number {
+            font-size: 10px;
+            &:disabled{
+                background-color: var(--primary);
+                color: white;
+                border-radius: 50%;
+            }
         }
+    }
+    .page-number-dots{
+        margin: 0 3px;
     }
     .ui-button {
         padding: 0;
         font-size: 14px;
-        border: 0;
-        background-color: #eee;
+        background-color: white;
         width: 20px;
         height: 20px;
         display: flex;
         justify-content: center;
         align-items: center;
+        
+    }
+
+    .ui-button.left:disabled,
+    .ui-button.right:disabled{
+        color: var(--disabled);
+        cursor: default;
+        &:hover{
+            background-color: transparent;
+        }
+    }
+
+    .ui-button,
+    .page-numbers .page-number {
+        border: 1px solid transparent;
+        &:focus{
+            border-color: var(--btn-brd-focus);
+        }
+    }
+
+    &.hide-buttons{
+        .ui-button.left,
+        .ui-button.right,
+        .page-numbers{
+            display: none;
+        }
+    }
+
+    &.hide-dropdown{
+        .dropdown-label,
+        ui-dropdown{
+            display: none;
+        }
+    }
+
+    .extra-status{
+        display: none;
+    }
+
+    &.show-extra-status .extra-status{
+        display: inline-block;
+    }
+
+    &[disabled]{
+        opacity: 0.4;
+        button.ui-button{
+            pointer-events: none;
+        }
     }
 }

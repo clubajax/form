@@ -126,7 +126,7 @@ class UiDropdown extends BaseComponent {
     }
 
     renderButton(buttonid) {
-        this.button = dom('button', {id: buttonid, class: 'ui-button drop-input'}, this);
+        this.button = dom('button', {id: buttonid, class: 'ui-button drop-input', type:'button'}, this);
         this.setDisplay();
     }
 

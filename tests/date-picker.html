@@ -68,8 +68,8 @@
     <div class="xspacing"></div>
     <div id="tests">
         <!-- <input placeholder="focus start" autofocus class="focus-start" /> -->
-        <date-input min="12/12/2012" value="12/14/2012" label="Markup with Min"/>
-        <date-input value="11/20/1965" label="Markup"/>
+        <!-- <date-input min="12/12/2012" value="12/14/2012" label="Markup with Min"/>
+        <date-input value="11/20/1965" label="Markup"/> -->
     </div>
     <div class="spacing"></div>
 
@@ -172,7 +172,7 @@
             //  time-input blur does not close calendar
 
             describe('tests', function () {
-                return
+                // return
                 describe('utils', function () {
                     it('should validate date and time strings', function () {
                         const DATE = '12/25/2017';
@@ -352,9 +352,12 @@
                 });
 
                 describe('date input', function () {
-                    it('should pop up', function () {
-                        const node = dom('date-input', {label: 'Opens with ui-popup'}, body);
+                    it.only('should pop up', function () {
+                        const node = dom('date-input', {label: 'Opens with ui-popup', min: null, max: null}, body);
                         expect(dom.isNode(node)).to.equal(true);
+                        node.on('blur', () => {
+                            console.log('test.blur');
+                        });
                     });
 
                     it('should handle arrow keys', function (done) {

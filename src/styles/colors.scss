@@ -56,6 +56,11 @@ $btn-dsbl: #ccc;
 $btn-dsbl-clr: #999;
 
 :root {
+    // colors
+    --primary: #2275ec;
+    --disabled: #ccc;
+    //
+    // buttons
     --btn-brd: 1px solid #d8d8d8;
     --btn-bg: rgb(204, 246, 255);
     --btn-bg-hvr: rgb(232, 251, 255);
@@ -65,11 +70,13 @@ $btn-dsbl-clr: #999;
     --btn-rad: 2px;
     --btn-brd-focus: #6c9fd8;
     //
+    // dropdown
     --drop-btn-pad: 5px 10px 8px 10px;
     --drop-btn-pad-thin: 1px 4px 3px 4px;
     --drop-btn-bg: white;
     --drop-btn-bg-hvr: #ddd;
     //
+    // tooltip
     --tip-bg: white;
     --tip-txt: black;
     --tip-brd: rgb(92, 92, 92);
@@ -82,6 +89,7 @@ $btn-dsbl-clr: #999;
     --tip-txt-error: rgb(255, 255, 255);
     --tip-brd-error: rgb(226, 0, 0);
     //
+    // list
     --list-bg: white;
     --list-brd: 1px solid #ccc;
     --list-brd-focus: black;
@@ -105,6 +113,7 @@ $btn-dsbl-clr: #999;
     --list-item-divider: #ccc;
     --list-item-divider-pad: 5px;
     //
+    // checkbox
     --chk-brd: 1px solid #ccc;
     --chk-bg: #0073d6;
     --chk-bg-hvr: #4d9be0;

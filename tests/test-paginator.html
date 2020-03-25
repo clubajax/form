@@ -18,7 +18,6 @@
             margin-bottom: 100px;
             font-family: sans-serif;
         }
-
     </style>
 </head>
 
@@ -47,17 +46,9 @@
                 body = dom.byId('tests');
 
             describe('ui-paginator', function () {
-                let node, events;
-
-                function ready(cb) {
-                    events = [];
-                    onDomReady(node, function () {
-
-                    });
-                }
 
                 describe('util', function () {
-                    function check(p, desc, btns){
+                    function check(p, desc, btns) {
                         console.log(p.status, p.buttons.join(','));
                         expect(p.status).to.equal(desc);
                         expect(p.buttons.join(',')).to.equal(btns);
@@ -73,6 +64,8 @@
                         check(paginate(70, 10, 100), '71-80 of 100', '1,0,7,8,9,10');
                         check(paginate(80, 10, 100), '81-90 of 100', '1,0,7,8,9,10');
                         check(paginate(90, 10, 100), '91-100 of 100', '1,0,7,8,9,10');
+
+                        // console.log('paginate', paginate(90, 10, 100));
                     });
                     it('should calculate 10/1000 based', function () {
                         check(paginate(0, 10, 1000), '1-10 of 1000', '1,2,3,4,0,100');
@@ -96,9 +89,9 @@
 
                     it('should not allow an odd start', function () {
                         let error;
-                        try{
+                        try {
                             paginate(20, 15, 90);
-                        }catch(e) {
+                        } catch (e) {
                             error = e;
                         }
                         expect(error).to.be.ok;
@@ -110,7 +103,7 @@
 
                     it('should navigate', function () {
                         let p;
-                        
+
                         p = paginate(0, 10, 100);
                         expect(p.prev()).to.equal(0);
                         expect(p.next()).to.equal(10);
@@ -146,19 +139,193 @@
                     });
                 });
 
+                let node, events;
+
+                function ready(cb) {
+                    events = [];
+                    onDomReady(node, function () {
+                        node.on('change', (e) => {
+                            console.log('change', e.value);
+                            events.push(e.value);
+                        });
+                        cb();
+                    });
+                }
+
+                function getEvent() {
+                    return events[events.length - 1];
+                }
+
+                function extraStatusShowing() {
+                    return dom.style(dom.query(node, '.extra-status'), 'display') !== 'none';
+                }
+                function getStatusText() {
+                    return dom.query(node, '.main-status').textContent;
+                }
+                function dropShowing(){
+                    return dom.style(node.limitDrop, 'display') !== 'none';
+                }
+                function getDropText(){
+                    if (!dropShowing()) {
+                        return '';
+                    }
+                    const label = dom.query(node, '.dropdown-label').textContent;
+                    return `${label} ${node.limitDrop.value} `;
+                }
+                function getTextContent(){
+                    const extra = extraStatusShowing() ? dom.query(node, '.extra-status').textContent : '';
+                    const leftText = leftShowing() ? '<' : '';
+                    const rightText = rightShowing() ? '>' : ''; 
+                    return `${extra}${getDropText()}${getStatusText()}${leftText}${node.pageNumbers.textContent}${rightText}`;
+                }
+                function leftShowing(){
+                    return dom.style(getButton('left'), 'display') !== 'none';
+                }
+                function rightShowing(){
+                    return dom.style(getButton('right'), 'display') !== 'none';
+                }
+                function getButton(index) {
+                    if (index === 'left') {
+                        return dom.query(node, '.ui-button.left');
+                    }
+                    if (index === 'right') {
+                        return dom.query(node, '.ui-button.right');
+                    }
+                    return dom.query(node, `.ui-button.page-number[data-value="${index}"]`);
+                }
+
                 describe('render', function () {
-                    it.only('should render a paginator', function (done) {
+                    it('should render a paginator - first page', function (done) {
+                        node = dom('ui-paginator', {
+                            data: {
+                                start: 0,
+                                limit: 10,
+                                total: 100
+                            },
+                            limits: '10, 25'
+                        }, body);
+                        ready(function () {
+                            expect(node.textContent).to.equal('Rows per page:Select One...Showing results:1-10 of 1001234...10');
+                            expect(getButton(1).disabled).to.equal(true);
+                            expect(getButton('left').disabled).to.equal(true);
+                            done();
+                        });
+                    });
+                    it('should render a paginator - last page', function (done) {
+                        node = dom('ui-paginator', {
+                            data: {
+                                start: 90,
+                                limit: 10,
+                                total: 100
+                            },
+                            limits: '10, 25'
+                        }, body);
+                        ready(function () {
+                            expect(node.textContent).to.equal('Rows per page:Select One...Showing results:91-100 of 1001...78910');
+                            expect(getButton(10).disabled).to.equal(true);
+                            expect(getButton('right').disabled).to.equal(true);
+                            done();
+                        });
+                    });
+                    it('should emit events [MANUAL]', function (done) {
                         node = dom('ui-paginator', {
                             data: {
                                 start: 10,
                                 limit: 10,
                                 total: 100
-                            }, 
+                            },
                             limits: '10, 25'
                         }, body);
-                        // ready(function () {
+                        ready(function () {
                             done();
-                        // });
+                        });
+                    });
+                    it('should rerender when receiving new data', function (done) {
+                        node = dom('ui-paginator', {
+                            data: {
+                                start: 0,
+                                limit: 10,
+                                total: 100
+                            },
+                            limits: '10, 25'
+                        }, body);
+                        ready(function () {
+                            expect(getButton('left').disabled).to.equal(true);
+                            expect(getButton('right').disabled).to.equal(false);
+                            expect(getButton(1).disabled).to.equal(true);
+                            expect(extraStatusShowing()).to.equal(false);
+                            expect(getStatusText()).to.equal('1-10 of 100');
+
+                            node.data = {
+                                start: 20,
+                                limit: 10,
+                                total: 100
+                            };
+                            expect(getButton('left').disabled).to.equal(false);
+                            expect(getButton('right').disabled).to.equal(false);
+                            expect(getButton(1).disabled).to.equal(false);
+                            expect(getButton(3).disabled).to.equal(true);
+                            expect(extraStatusShowing()).to.equal(false);
+                            expect(getStatusText()).to.equal('21-30 of 100');
+
+                            node.data = {
+                                start: 90,
+                                limit: 10,
+                                total: 100
+                            };
+                            expect(getButton('left').disabled).to.equal(false);
+                            expect(getButton('right').disabled).to.equal(true);
+                            expect(getButton(3)).to.equal(null);
+                            expect(getButton(10).disabled).to.equal(true);
+                            expect(extraStatusShowing()).to.equal(false);
+                            expect(getStatusText()).to.equal('91-100 of 100');
+                            
+                            done();
+                        });
+                    });
+                    it('should disable', function (done) {
+                        node = dom('ui-paginator', {
+                            data: {
+                                start: 0,
+                                limit: 10,
+                                total: 100
+                            },
+                            limits: '10, 25',
+                            disabled: true
+                        }, body);
+                        ready(function () {
+                            expect(dom.style(node, 'opacity')).to.equal(0.4);
+                            expect(dom.style(getButton('right'), 'pointer-events')).to.equal('none');
+                            done();
+                        });
+                    });
+                    it('should render only the status', function (done) {
+                        node = dom('ui-paginator', {
+                            data: {
+                                start: 0,
+                                limit: 10,
+                                total: 8
+                            },
+                            limits: '10, 25'
+                        }, body);
+                        ready(function () {
+                            expect(getTextContent()).to.equal('Showing results:1-8 of 8');
+                            done();
+                        });
+                    });
+                    it('should render partial status', function (done) {
+                        node = dom('ui-paginator', {
+                            data: {
+                                start: 0,
+                                limit: 25,
+                                total: 24
+                            },
+                            limits: '10, 25'
+                        }, body);
+                        ready(function () {
+                            expect(getTextContent()).to.equal('Rows per page: 25 1-24 of 24');
+                            done();
+                        });
                     });
                 });
             });

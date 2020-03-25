@@ -75,6 +75,9 @@ class DateInput extends BaseComponent {
 	}
 
     onMin(value) {
+        if (!value || value === null) {
+            return;
+        }
         this.onDomReady(() => {
             console.log('MIN::', value, dates.toDate(value));
             this.minDate = util.getMinDate(value === 'now' ? new Date() : dates.toDate(value));
@@ -83,6 +86,9 @@ class DateInput extends BaseComponent {
 	}
 
     onMax(value) {
+        if (!value || value === null) {
+            return;
+        }
         this.onDomReady(() => {
             this.maxDate = util.getMaxDate(value === 'now' ? new Date() : dates.toDate(value));
             this.picker.max = value;
@@ -202,13 +208,14 @@ class DateInput extends BaseComponent {
 		}
 	}
 
-	onBlur () {
+    onBlur() {
 		const valid = this.validate();
 		if (valid) {
 			this.emitEvent();
 		} else {
 			this.reset();
-		}
+        }
+        this.emit('blur');
 	}
 
 	reset () {
