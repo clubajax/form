@@ -6,7 +6,6 @@ require('./ui-dropdown');
 require('./ui-icon');
 
 const DEFAULT_DROP_DATA = [
-    { label: '5', value: '5' },
     { label: '10', value: '10' },
     { label: '20', value: '20' },
     { label: '50', value: '50' },
@@ -16,7 +15,6 @@ const DEFAULT_DROP_DATA = [
 class Paginator extends BaseComponent {
     onData(data) {
         this.pagination = paginate(data.start, data.limit, data.total);
-        // console.log('this.pagination', this.pagination);
         this.setDropdown();
         this.renderPageNumbers();
         this.setStatus();
@@ -36,10 +34,6 @@ class Paginator extends BaseComponent {
         this.setDropdown();
     }
 
-    // onDisabled(disabled) {
-    //     dom.classList.toggle(this, 'disabled', disabled);
-    // }
-
     domReady() {
         this.render();
     }
@@ -52,19 +46,18 @@ class Paginator extends BaseComponent {
     }
 
     onDropChange(e) {
-        // console.log('onDropChange', e.detail.value);
-        // console.log('data', this.data);
-        this.emitEvent({
-            value: {
-                ...this.data,
-                start: 0,
-                limit: e.detail.value,
-            },
-        });
+        if (e.detail) {
+            this.emitEvent({
+                value: {
+                    ...this.data,
+                    start: 0,
+                    limit: e.detail.value,
+                },
+            });
+        }
     }
 
     onNumClick(e) {
-        console.log('NUM', e.target);
         const num = e.target.getAttribute('data-value');
         if (num) {
             this.emitEvent({
@@ -107,10 +100,10 @@ class Paginator extends BaseComponent {
             return;
         }
         const { buttonIndex } = this.pagination;
-        const { start, total, limit } = this.data;
+        const {start, total, limit} = this.data;
         const dropData = (this.dropData || DEFAULT_DROP_DATA).map((d) => parseInt(d.value, 10));
         const minDropValue = Math.min(...dropData);
-        const showButtons = total >= limit;
+        const showButtons = total > limit;
         const showDropdown = limit > minDropValue || showButtons;
         const leftDisabled = buttonIndex === 0;
         const rightDisabled = start + limit >= total;
@@ -128,7 +121,6 @@ class Paginator extends BaseComponent {
         if (!this.pageNumbers || !this.pagination) {
             return;
         }
-        // dom.clean(this.pageNumbers);
         this.pageNumbers.innerHTML = '';
         this.pagination.buttons.forEach((num, i) => {
             renderNumButton(num, this.pageNumbers, parseInt(num, 10) === this.pagination.buttonIndex + 1);

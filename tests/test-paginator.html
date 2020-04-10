@@ -299,7 +299,7 @@
                             done();
                         });
                     });
-                    it('should render only the status', function (done) {
+                    it.only('should render only the status', function (done) {
                         node = dom('ui-paginator', {
                             data: {
                                 start: 0,
@@ -313,7 +313,7 @@
                             done();
                         });
                     });
-                    it('should render partial status', function (done) {
+                    it.only('should render partial status', function (done) {
                         node = dom('ui-paginator', {
                             data: {
                                 start: 0,
