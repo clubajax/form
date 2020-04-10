@@ -2,6 +2,7 @@ require('./src/ui-input');
 require('./src/ui-checkbox');
 // require('./src/ui-radio');
 // require('./src/ui-radio-buttons');
+require('./src/ui-actionbutton');
 require('./src/ui-list');
 require('./src/ui-popup');
 require('./src/ui-dropdown');

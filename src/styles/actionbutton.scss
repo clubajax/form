@@ -1,0 +1,19 @@
+ui-actionbutton{
+    &.icon-only{
+        button{
+            background-color: transparent;
+            border: 0;
+            border-radius: 50%;
+        }
+    }
+}
+
+ui-popup.actionbutton {
+    ui-list ul li[aria-selected] {
+        background-color: white;
+        color: var(--list-item-txt);
+        &:hover{
+            background-color: var(--list-item-hvr);
+        }
+    }
+}

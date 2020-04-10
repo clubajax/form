@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
 	<title>Test Action Button</title>
-	<script src="src/test-files.js"></script>
+    <script src="src/test-files.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+        integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
 	<style>
 		body {
 			padding: 20px 20px 100px 20px;
@@ -15,14 +17,14 @@
 <h1>Test Action Button</h1>
 <div id="mocha"></div>
 <div id="tests">
-	<input />
+	<!-- <input />
 	<action-button id="act1">
 		<li value="one">One</li>
 		<li value="two">Two</li>
 		<li value="three">Three</li>
 		<li value="four">Four Thousand</li>
 	</action-button>
-</div>
+</div> -->
 <script>
 
 	mocha.setup('tdd');
@@ -38,13 +40,13 @@
 			body = dom.byId('tests'),
 			data = [
 				{ label: 'Orange', value: 'orange' },
-				{ label: 'Red', value: 'red', selected: true },
+				{ label: 'Red', value: 'red' },
 				{ label: 'Blue', value: 'blue' },
 				{ label: 'Green', value: 'green' }
 			],
 			data2 = [
 				{ label: 'Puppy', value: 'puppy' },
-				{ label: 'Birdy', value: 'birdy', selected: true },
+				{ label: 'Birdy', value: 'birdy' },
 				{ label: 'Kitty', value: 'kitty' },
 				{ label: 'Snakey', value: 'snakey' }
 			];
@@ -72,16 +74,18 @@
 
 		suite('action-button', function () {
 
-			test('it should use custom events', function (done) {
-				const node = dom('action-button', {
-					label: 'Test Custom Events',
+			test.only('it should use custom events', function (done) {
+				const node = dom('ui-actionbutton', {
+                    // label: 'Test Custom Events',
+                    icon: 'gear',
 					'event-name': 'test-action',
-					data: data
+                    data: data,
+                    class: 'icon-only'
 				}, body);
 				onDomReady(node, function () {
 					select(node, 0, 'test-action').then(function (e) {
 						console.log('e', e);
-						expect(e.detail.value).to.equal('orange');
+						// expect(e.detail.value).to.equal('orange');
 					});
 					done();
 				});

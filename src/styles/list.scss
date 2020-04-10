@@ -1,9 +1,10 @@
 ui-list {
     display: block;
-    &[readonly], &[disabled]{
-        li{
+    &[readonly],
+    &[disabled] {
+        li {
             cursor: default;
-            &:hover:not(.group):not(.label):not([readonly]):not([aria-selected="true"]) {
+            &:hover:not(.group):not(.label):not([readonly]):not([aria-selected='true']) {
                 background-color: transparent;
             }
         }
@@ -14,8 +15,9 @@ ui-list {
         list-style: none;
         margin: 0;
         padding: 0;
+        min-height: 21px;
         outline: none;
-        &:focus{
+        &:focus {
             border-color: var(--list-brd-focus);
         }
         li {
@@ -25,7 +27,7 @@ ui-list {
             cursor: pointer;
             border: 0;
             outline: 0;
-            &:hover:not(.group):not(.label):not(.divider):not([readonly]):not([aria-selected="true"]) {
+            &:hover:not(.group):not(.label):not(.divider):not([readonly]):not([aria-selected='true']) {
                 background-color: var(--list-item-hvr);
             }
             &:focus {
@@ -45,7 +47,9 @@ ui-list {
                     box-shadow: 0 0 10px var(--list-item-focus) inset;
                 }
             }
-            
+            &.is-editing{
+                background-color: var(--list-bg);
+            }
             &[disabled] {
                 background-color: var(--list-item-bg-disabled);
                 color: var(--list-item-txt-disabled);
@@ -67,16 +71,76 @@ ui-list {
                 font-weight: bold;
                 pointer-events: none;
                 &:before {
-                    content: "";
+                    content: '';
                     display: block;
                     border-top: 1px solid var(--list-item-group-brd);
                     margin-bottom: 10px;
                 }
             }
-            &.divider{
+            &.divider {
                 padding: 0;
                 margin: var(--list-item-divider-pad);
                 border-bottom: 1px solid var(--list-item-divider);
+            }
+            ui-input{
+                margin: 0 -9px;
+                background-color: var(--primary-very-light);
+                input{
+                    outline: 0;
+                }
+            }
+        }
+    }
+
+    &[editable] {
+        //
+    }
+    .edit-bar {
+        text-align: right;
+        button {
+            border: 0;
+            border-radius: 50%;
+            background: none;
+            font-size: 12px;
+            width: 24px;
+            height: 24px;
+            margin-left: 2px;
+            margin-top: 2px;
+            cursor: pointer;
+            opacity: 0.2;
+            color: var(--list-button);
+            &.btn-list-edit{
+                pointer-events: none;
+            }
+        }
+    }
+    .edit-bar {
+        &:hover {
+            button.btn-list-add {
+                opacity: 1;
+            }
+        }
+        button.btn-list-add {
+            cursor: pointer;
+            pointer-events: auto;
+            &:hover {
+                background-color: var(--list-button-hvr);
+            }
+        }
+    }
+    &.has-selected {
+        .edit-bar {
+            &:hover {
+                button {
+                    opacity: 1;
+                }
+            }
+            button {
+                cursor: pointer;
+                pointer-events: auto;
+                &:hover {
+                    background-color: var(--list-button-hvr);
+                }
             }
         }
     }

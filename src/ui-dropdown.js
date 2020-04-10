@@ -26,6 +26,7 @@ class UiDropdown extends BaseComponent {
         this.label;
         this.placeholder;
         this.lastValue = null;
+        this.popupClass = 'dropdown';
     }
      
     set value(value) {
@@ -144,7 +145,7 @@ class UiDropdown extends BaseComponent {
             buttonid,
             label: this.label,
             html: this.list,
-            class: 'dropdown'
+            class: this.popupClass
         }, document.body);
         this.setDisplay();
     }

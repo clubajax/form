@@ -58,6 +58,7 @@ $btn-dsbl-clr: #999;
 :root {
     // colors
     --primary: #2275ec;
+    --primary-very-light: #edf2fa;
     --disabled: #ccc;
     //
     // buttons
@@ -112,6 +113,9 @@ $btn-dsbl-clr: #999;
     --list-item-group-brd: #e0e0e0;
     --list-item-divider: #ccc;
     --list-item-divider-pad: 5px;
+    --list-button: #333;
+    --list-button-hvr: #ddd;
+    
     //
     // checkbox
     --chk-brd: 1px solid #ccc;
