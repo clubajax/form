@@ -4,6 +4,8 @@
 <head>
     <title>Test List</title>
     <script src="src/test-files.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+        integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
     <style>
         body {
             padding: 20px 20px 100px 20px;
@@ -60,10 +62,10 @@
                     {label: 'Snakey', value: 'snakey'}
                 ],
                 data3 = [
-                    dom('li', {html: 'Mike Wilcox', id:1}),
-                    dom('li', {html: 'Lance Cox', id:2}),
-                    dom('li', {html: 'Bob Byron', id:3}),
-                    dom('li', {html: 'Ben Jones', id:4})
+                    dom('li', {html: 'Mike Wilcox', id: 1}),
+                    dom('li', {html: 'Lance Cox', id: 2}),
+                    dom('li', {html: 'Bob Byron', id: 3}),
+                    dom('li', {html: 'Ben Jones', id: 4})
                 ],
                 data4 = [
                     dom('li', {
@@ -103,7 +105,7 @@
                     {label: 'Fruit', type: 'label'},
                     {label: 'Oranges', value: 'oranges'},
                     {label: 'Apples', value: 'apples'},
-                    {type:'divider'},
+                    {type: 'divider'},
                     {label: 'Grapes', value: 'grapes'},
                     {label: 'Prunes', value: 'prunes'},
                     {label: 'Veggies', type: 'label'},
@@ -181,6 +183,9 @@
                 on.emit(node.list, 'keydown', {key: k});
             }
 
+            function copy(d) {
+                return JSON.parse(JSON.stringify(d));
+            }
 
             let value;
             let items;
@@ -189,7 +194,7 @@
                 node = dom('ui-list', options, body);
                 node.onDomReady(function () {
                     items = dom.queryAll(node, 'li');
-                    values = items.map(function(n){
+                    values = items.map(function (n) {
                         return n.getAttribute('value');
                     })
                 });
@@ -255,7 +260,7 @@
                         done();
                     });
                 });
-                
+
                 it('should sort asc by a property', function (done) {
                     setup({data: data, label: 'Sort Ascending', sortasc: 'label'});
                     ready(function () {
@@ -391,14 +396,50 @@
                         done();
                     });
                 });
-            
-                it('should skip disabled items', function(done) {
+
+                it('should skip disabled items', function (done) {
                     setup({data: dataD, label: 'Disabled Items'});
                     done();
                 });
+
+                it.only('should add/remove rows', function (done) {
+                    const items = copy(data);
+                    setup({data: items, label: 'Add/Remove Rows', editable: true});
+                    ready(function () {
+                        node.on('remove', (e) => {
+                            console.log('rem:', e.detail.value);
+                            const index = items.findIndex(item => item.value === e.detail.value);
+                            if (index > -1) {
+                                items.splice(index, 1);
+                                node.data = items;
+                            }
+                        });
+                        node.on('add', (e) => {
+                            console.log('add:', e.detail);
+                            items.splice(e.detail.index, 0, e.detail.value);
+                            node.data = items;
+                        });
+                        node.on('edit', (e) => {
+                            const index = items.findIndex(item => item.value === e.detail.value.value);
+                            if (index > -1) {
+                                items[index] = e.detail.value;
+                                node.data = [];
+                                node.data = items;
+                            }
+                        });
+                        // node.list.focus();
+                        // key('ArrowDown');
+                        // expect(items[0].getAttribute('aria-current')).to.equal('true');
+                        // key('ArrowDown');
+                        // key('Enter');
+                        // expect(items[1].getAttribute('aria-selected')).to.equal('true');
+                        // expect(value).to.equal('red');
+                        done();
+                    });
+                });
             });
 
-            describe('Lazy Data', function(){
+            describe('Lazy Data', function () {
                 it('should render with lazy data', function (done) {
                     setup({data: data5, label: 'Lazy data'});
                     ready(function () {
@@ -409,8 +450,8 @@
                 });
             });
 
-            describe('groups dividers labels', function(){
-                it('should have dividers and labels', function(done){
+            describe('groups dividers labels', function () {
+                it('should have dividers and labels', function (done) {
                     setup({data: dataL, label: 'Dividers & Labels'});
                     done();
                 });
@@ -484,7 +525,7 @@
                             value: 'purple',
                             label: 'Purple'
                         });
-                        update(); 
+                        update();
                         expectMultiValue(getListValues(), ["orange", "red", "blue", "green", "purple"]);
                         done();
                     });
