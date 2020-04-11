@@ -132,7 +132,9 @@ class UiDropdown extends BaseComponent {
     }
 
     render() {
-        this.labelNode = dom('label', {html: this.label, class: 'ui-label'}, this);
+        if (this.label) {
+            this.labelNode = dom('label', {html: this.label, class: 'ui-label'}, this);
+        }
         const buttonid = uid('drop-button');
         this.renderButton(buttonid);
         this.list = dom('ui-list', {

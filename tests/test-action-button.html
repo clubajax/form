@@ -10,7 +10,10 @@
 			padding: 20px 20px 100px 20px;
 			font-family: sans-serif;
 		}
-
+        ui-actionbutton.icon-only.small-test button{
+            width: 16px;
+            height: 16px;
+        }
 	</style>
 </head>
 <body>
@@ -80,7 +83,7 @@
                     icon: 'gear',
 					'event-name': 'test-action',
                     data: data,
-                    class: 'icon-only'
+                    class: 'icon-only small-test'
 				}, body);
 				onDomReady(node, function () {
 					select(node, 0, 'test-action').then(function (e) {
