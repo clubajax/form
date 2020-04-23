@@ -11,6 +11,7 @@ require('./ui-icon');
 
 
 // TODO remove and append popup
+// popupClass as attribute
 //  disconnected is faster than destroy
 //  kill popup
 //  update ReactWebComponent
@@ -67,6 +68,9 @@ class UiDropdown extends BaseComponent {
     }
 
     setDisplay() {
+        if (!this.list) {
+            
+        }
         this.button.innerHTML = '';
         
         const item = this.list ? this.list.getItem(this.value) : {};

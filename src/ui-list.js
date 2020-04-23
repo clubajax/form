@@ -202,6 +202,9 @@ class UIList extends BaseComponent {
         }
         this.update();
         this.connect();
+        if (this.afterData) {
+            this.afterData();
+        }
     }
 
     initDomData() {
@@ -306,7 +309,8 @@ class UIList extends BaseComponent {
     }
 
     getIndex(value = this.value) {
-        return this.items.findIndex(item => item.value === value);
+        value = `${value}`;
+        return this.items ? this.items.findIndex(item => `${item.value}` === value) : -1;
     }
 
     connected() {
@@ -415,20 +419,27 @@ class UIList extends BaseComponent {
     }
 
     editRowRemove() {
+        this.afterData = () => {
+            if (index < this.items.length) {
+                this.value = this.items[index].value;
+            } else if (this.items.length) {
+                this.value = this.items[0].value;
+            }
+        }
+        const index = this.getIndex();
         this.fire('remove', { value: this.value });
     }
 
     editRowEdit() {
         const item = this.getItem(this.value);
         const node = this.getNode(this.value);
-        console.log('item', item);
         if (!item) {
             return;
         }
         this.controller.setSelected(null);
         this.readonly = true;
         this.connectEvents();
-        createInput(node, item, () => {
+        createInput(node, item, true, () => {
             this.readonly = false;
             this.connectEvents();
             this.fire('edit', {value: item})
@@ -440,16 +451,27 @@ class UIList extends BaseComponent {
             value: Infinity,
             label: ''
         };
-        const index = this.getIndex();
-        const refNode = this.getNode();
-        this.controller.setSelected(null);
         const node = dom('li', {});
-        dom.insertAfter(refNode, node);
+        let index = this.getIndex();
+        if (index > -1) {
+            const refNode = this.getNode();
+            dom.insertAfter(refNode, node);
+        } else {
+            index = this.items.length - 1;
+            this.list.appendChild(node);
+        }
+
+        this.controller.setSelected(null);
+        
         this.readonly = true;
         this.connectEvents();
-        createInput(node, item, () => {
+        createInput(node, item, false, () => {
             this.readonly = false;
             this.connectEvents();
+            this.afterData = () => {
+                // select
+                this.value = item.value;
+            };
             this.fire('add', {value: item, index: index + 1});
         });
     }
@@ -493,13 +515,10 @@ class UIList extends BaseComponent {
             this.on(this.editNode, 'click', 'button', (e) => {
                 const node = e.target.closest('button');
                 if (node.hasAttribute('data-add')) {
-                    console.log('ADD');
                     this.editRowAdd();
                 } else if (node.hasAttribute('data-remove')) {
-                    console.log('REM');
                     this.editRowRemove();
                 } else if (node.hasAttribute('data-edit')) {
-                    console.log('EDIT');
                     this.editRowEdit();
                 }
             });
@@ -524,7 +543,7 @@ function fromHtml(value) {
     return value;
 }
 
-function createInput(node, item, callback) {
+function createInput(node, item, isEdit, callback) {
     const value = item.label;
     node.classList.add('is-editing');
     node.innerHTML = '';
@@ -545,8 +564,6 @@ function createInput(node, item, callback) {
     });
 
     const destroy = () => {
-        console.log('DETROY');
-
         node.classList.remove('is-editing');
         input.destroy();
         callback();
@@ -562,12 +579,13 @@ function createInput(node, item, callback) {
 
     // if added and input is empty, don't close on blur
     input.on('change', (e) => {
-        console.log('change');
         e.stopPropagation();
         // node.innerHTML = toHtml(e.value);
         
         item.label = e.value;
-        item.value = e.value;
+        if (!isEdit) {
+            item.value = e.value;
+        }
         destroy();
         // on.emit(node, 'change', { value: item });
         clearTimeout(exitTimer);

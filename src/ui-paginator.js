@@ -132,7 +132,7 @@ class Paginator extends BaseComponent {
             return;
         }
         const data = this.dropData || DEFAULT_DROP_DATA;
-        const value = this.data ? this.data.limit : data[0].value;
+        const value = getValue(this.data, data);
         this.limitDrop.data = data;
         this.limitDrop.value = value;
     }
@@ -192,6 +192,14 @@ class Paginator extends BaseComponent {
 
         this.setDisplayState();
     }
+}
+
+function getValue(data, dropData){
+    const value = data ? data.limit : dropData[0].value;
+    if (!dropData.find(d => d.value === value)) {
+        return dropData[0].value;
+    }
+    return value;
 }
 
 function renderNumButton(num, parent, disabled) {
