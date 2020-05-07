@@ -22,6 +22,7 @@ const ATTR = {
 class UIList extends BaseComponent {
     constructor() {
         super();
+        this.destroyOnDisconnect = false;
         this.sortdesc;
         this.sortasc;
         this.multiple;
@@ -59,9 +60,6 @@ class UIList extends BaseComponent {
     }
 
     set data(data) {
-        // if (noValues(data)) {
-        //     throw new Error('data does not contain any values');
-        // }
         if (typeof data === 'function') {
             this.lazyDataFN = data;
             this.onConnected(() => {
@@ -74,6 +72,9 @@ class UIList extends BaseComponent {
     }
 
     get data() {
+        if (this.lazyDataFN) {
+            return this.lazyDataFN();
+        }
         return this.items;
     }
 
@@ -301,7 +302,8 @@ class UIList extends BaseComponent {
     }
 
     getItem(value = this.value) {
-        return this.items ? this.items.find((item) => item.value === value || `${item.value}` === `${value}`) : null;
+        let items = this.lazyDataFN ? this.lazyDataFN() : this.items;
+        return items ? items.find((item) => item.value === value || `${item.value}` === `${value}`) : null;
     }
 
     getNode(value = this.value) {

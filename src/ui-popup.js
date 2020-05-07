@@ -7,6 +7,7 @@ const on = require('@clubajax/on');
 class UiPopup extends BaseComponent {
     constructor() {
         super();
+        this.destroyOnDisconnect = false;
         this.showing = false;
         this.handleMediaQuery = this.handleMediaQuery.bind(this);
         this.align;
@@ -41,6 +42,9 @@ class UiPopup extends BaseComponent {
         this.mq = window.matchMedia('(max-width: 415px)');
         this.mq.addListener(this.handleMediaQuery);
         this.handleMediaQuery(this.mq);
+
+        this.parent = this.parentNode;
+        this.parent.removeChild(this);
     }
 
     renderMobileButtons() {
@@ -113,7 +117,7 @@ class UiPopup extends BaseComponent {
                     }),
                     onScroll(this.hide.bind(this), this),
                 ]);
-                this.on(this.button, 'click', e => {
+                this.on(this.button, 'click', (e) => {
                     this.show();
                 });
                 this.on(this.button, 'keydown', e => {
@@ -172,13 +176,17 @@ class UiPopup extends BaseComponent {
             return;
         }
         this.showing = true;
-        this.classList.add('open');
+        this.parent.appendChild(this);
         if (this.clickoff) {
             this.clickoff.resume();
         }
         if (!this.isMobile) {
             position(this, this.button, this.align);
         }
+
+        setTimeout(() => {
+            this.classList.add('open');
+        }, 1);
         this.fire('popup-open');
     }
 
@@ -192,6 +200,11 @@ class UiPopup extends BaseComponent {
             this.clickoff.pause();
         }
         this.fire('popup-close');
+        setTimeout(() => {
+            if (this.parentNode) {
+                this.parentNode.removeChild(this);
+            }
+        }, 500)
     }
 
     destroy() {

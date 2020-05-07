@@ -22,6 +22,12 @@ ui-dropdown {
             background-color: var(--drop-btn-bg-hvr);
         }
     }
+    &[disabled]{
+        button.ui-button {
+            pointer-events: none;
+            background-color: var(--disabled);
+        }
+    }
     ui-icon {
         margin-left: 10px;
     }

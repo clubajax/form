@@ -728,10 +728,10 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@clubajax/base-component@2.4.1":
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/@clubajax/base-component/-/base-component-2.4.1.tgz#eea3b7170abea28a4df19aa8a7fe07bf97fca7a5"
-  integrity sha512-OiPl8tEw33pvVvuDeDz6svTKxgLqD/xBZVIoeurwc2dnc8Cfv6YxgCixLNiJbkwIoYV0s3S6ZJl4UZbLXpWWqg==
+"@clubajax/base-component@2.4.2":
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/@clubajax/base-component/-/base-component-2.4.2.tgz#921498d03930fad3ca090a5dcf5f003d40f6fe89"
+  integrity sha512-kL8a73mGZkGhmVasjz13ZtC/wLGXjdApGHz6WYi7/FCVgus/HBSdSnAuIs1DkEXpNgyHwAxbrheUL5eQe5rzVw==
   dependencies:
     "@clubajax/on" "^2.2.0"
 

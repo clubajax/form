@@ -10,11 +10,8 @@ require('./ui-icon');
 // https://blog.mobiscroll.com/how-to-do-multiple-selection-on-mobile/
 
 
-// TODO remove and append popup
 // popupClass as attribute
 //  disconnected is faster than destroy
-//  kill popup
-//  update ReactWebComponent
 //
 
 const DEFAULT_PLACEHOLDER = 'Select One...';
@@ -51,11 +48,15 @@ class UiDropdown extends BaseComponent {
 
     set data(data) {
         this.onDomReady(() => {
-            const value = getValueFromList(data);
-            if (value) {
-                this.value = value;
+            if (!this.value) {
+                const value = getValueFromList(data);
+                if (value) {
+                    this.value = value;
+                }
             }
             this.list.data = data;
+            this.setDisplay();
+
             if (this['size-to-popup'] || this['autosized']) {
                 this.sizeToPopup();
             }
@@ -64,29 +65,7 @@ class UiDropdown extends BaseComponent {
     }
 
     get data() {
-        return this.list ? this.list.items : this.__data;
-    }
-
-    setDisplay() {
-        if (!this.list) {
-            
-        }
-        this.button.innerHTML = '';
-        
-        const item = this.list ? this.list.getItem(this.value) : {};
-        this.__value = item ? item.value : this.__value;
-        dom('span', {html: isNull(this.value) ? this.placeholder || DEFAULT_PLACEHOLDER : (item.alias || item.label)}, this.button);
-        if (!this['no-arrow']) {
-            dom('ui-icon', {type: 'caretDown'}, this.button);
-        }
-        setTimeout(() => {
-            // don't resize the popup right away - wait until it closes, or it jumps
-            if (this.popup) {
-                dom.style(this.popup, {
-                    'min-width': dom.box(this.button).w
-                });
-            }
-        }, 500);
+        return this.list ? this.list.data : this.__data;
     }
 
     sizeToPopup() {
@@ -130,8 +109,33 @@ class UiDropdown extends BaseComponent {
         });
     }
 
+    setDisplay() {
+        this.button.innerHTML = '';
+        
+        const item = this.list ? this.list.getItem(this.value) : {};
+        this.__value = item ? item.value : this.__value;
+        dom('span', {html: isNull(this.value) ? this.placeholder || DEFAULT_PLACEHOLDER : (item.alias || item.label)}, this.button);
+        if (!this['no-arrow']) {
+            dom('ui-icon', {type: 'caretDown'}, this.button);
+        }
+        setTimeout(() => {
+            // don't resize the popup right away - wait until it closes, or it jumps
+            if (this.popup) {
+                dom.style(this.popup, {
+                    'min-width': dom.box(this.button).w
+                });
+            }
+        }, 500);
+    }
+
     renderButton(buttonid) {
-        this.button = dom('button', {id: buttonid, class: 'ui-button drop-input', type:'button'}, this);
+        this.button = dom('button', {id: buttonid, class: 'ui-button drop-input', type: 'button'}, this);
+        if (typeof this.data === 'function') {
+            this.once(this.button, 'click', () => {
+                this.list.setLazyData();
+                this.isLazy = false;
+            });
+        }
         this.setDisplay();
     }
 
@@ -166,6 +170,9 @@ function isNull(value) {
 }
 
 function getValueFromList(data) {
+    if (typeof data === 'function') {
+        data = data();
+    }
     const item = data.find(m => m.selected);
     return item ? item.value : null;
 }

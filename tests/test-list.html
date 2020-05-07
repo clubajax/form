@@ -403,7 +403,7 @@
                     done();
                 });
 
-                it.only('should add/remove rows', function (done) {
+                it('should add/remove rows', function (done) {
                     const items = copy(data);
                     setup({data: items, label: 'Add/Remove Rows', editable: true});
                     ready(function () {
@@ -441,7 +441,7 @@
             });
 
             describe('Lazy Data', function () {
-                it('should render with lazy data', function (done) {
+                it.only('should render with lazy data', function (done) {
                     setup({data: data5, label: 'Lazy data'});
                     ready(function () {
                         node.setLazyData();
