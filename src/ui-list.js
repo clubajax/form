@@ -528,6 +528,9 @@ class UIList extends BaseComponent {
     }
 
     destroy() {
+        if (this.controller) {
+            this.controller.destroy();
+        }
         super.destroy();
     }
 }

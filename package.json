@@ -1,6 +1,6 @@
 {
   "name": "@clubajax/form",
-  "version": "0.8.37",
+  "version": "0.8.38",
   "description": "Web Components for Forms",
   "main": "build/index.js",
   "repository": "https://github.com/clubajax/form.git",
@@ -10,7 +10,7 @@
   "scripts": {
     "start": "grunt dev",
     "build": "webpack --mode production --config ./webpack.config.js && node ./scripts/deploy.js",
-    "build-again": "webpack --mode production --config ./webpack.config.js",
+    "quick-build": "webpack --mode production --config ./webpack.config.js",
     "vers": "grunt version"
   },
   "dependencies": {

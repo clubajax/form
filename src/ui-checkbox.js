@@ -11,13 +11,6 @@ require('./ui-icon');
 // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/checkbox
 
 class CheckBox extends FormElement {
-
-    // attributeChanged(prop, value) {
-    //     if (prop === 'value') {
-    //         this.value = value;
-    //     }
-    // }
-
     get value() {
         return this.indeterminate ? null : Boolean(this.checked);
     }
@@ -103,6 +96,15 @@ class CheckBox extends FormElement {
         }
 
         dom.attr(this, 'label', false);
+    }
+
+    disconnected() {
+        this.destroy();
+    }
+    
+    destroy() {
+        // console.log('destroy checkbox');
+        super.destroy();
     }
 }
 

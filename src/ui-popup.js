@@ -29,6 +29,7 @@ class UiPopup extends BaseComponent {
         this.component = this.children[0] || {};
         this.button = dom.byId(this.buttonid);
         if (!this.button) {
+            console.log('this.destroyed', this.destroyed);
             throw new Error(
                 'ui-tooltip must be associated with a parent via the parentid'
             );
@@ -214,6 +215,7 @@ class UiPopup extends BaseComponent {
         if (this.mq) {
             this.mq.removeListener(this.handleMediaQuery);
         }
+        this.destroyed = true;
         super.destroy();
     }
 }

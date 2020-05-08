@@ -98,6 +98,14 @@ class UiInput extends BaseComponent {
         this.setPlaceholder();
         this.connect();
     }
+
+    disconnected() {
+        this.destroy();
+    }
+
+    destroy() {
+        super.destroy();
+    }
 }
 
 function isNull(value) {

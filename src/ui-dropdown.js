@@ -9,10 +9,8 @@ require('./ui-icon');
 // ref
 // https://blog.mobiscroll.com/how-to-do-multiple-selection-on-mobile/
 
-
+// TODO
 // popupClass as attribute
-//  disconnected is faster than destroy
-//
 
 const DEFAULT_PLACEHOLDER = 'Select One...';
 
@@ -161,7 +159,9 @@ class UiDropdown extends BaseComponent {
     }
 
     disconnected() {
+        this.list.destroy();
         this.popup.destroy();
+        this.destroy();
     }
 }
 
