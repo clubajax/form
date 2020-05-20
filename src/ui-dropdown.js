@@ -24,6 +24,12 @@ class UiDropdown extends BaseComponent {
         this.lastValue = null;
         this.popupClass = 'dropdown';
     }
+
+    onDisabled(disabled) {
+        this.onDomReady(() => {
+            dom.attr(this.button, 'tabindex', disabled ? '-1' : false);
+        });
+    }
      
     set value(value) {
         this.lastValue = value;
@@ -31,7 +37,12 @@ class UiDropdown extends BaseComponent {
             this.list.value = value;
         } else {
             this.onDomReady(() => {
-                this.list.value = value;
+                setTimeout(() => {
+                    if (!this.list.lazyDataFN) {
+                        this.list.value = value;
+                    }
+                }, 1);
+                
             });
         }
         this.__value = value;
@@ -45,6 +56,7 @@ class UiDropdown extends BaseComponent {
     }
 
     set data(data) {
+        
         this.onDomReady(() => {
             if (!this.value) {
                 const value = getValueFromList(data);
@@ -84,6 +96,9 @@ class UiDropdown extends BaseComponent {
 
     connectEvents() {
         this.list.on('list-change', (e) => {
+            if (e.detail.value === this.__value) {
+                return;
+            }
             // set display, regardless of elligible event
             this.setDisplay();
             // ensure value is not the same,
@@ -110,9 +125,12 @@ class UiDropdown extends BaseComponent {
     setDisplay() {
         this.button.innerHTML = '';
         
-        const item = this.list ? this.list.getItem(this.value) : {};
-        this.__value = item ? item.value : this.__value;
-        dom('span', {html: isNull(this.value) ? this.placeholder || DEFAULT_PLACEHOLDER : (item.alias || item.label)}, this.button);
+        const value = this.value || this.__value;
+        
+        const item = getItemFromList(this.data, value);
+        
+        // this.__value = item && item.value ? item.value : this.__value;
+        dom('span', {html: isNull(item) ? (this.placeholder || DEFAULT_PLACEHOLDER) : (item.alias || item.label)}, this.button);
         if (!this['no-arrow']) {
             dom('ui-icon', {type: 'caretDown'}, this.button);
         }
@@ -130,7 +148,7 @@ class UiDropdown extends BaseComponent {
         this.button = dom('button', {id: buttonid, class: 'ui-button drop-input', type: 'button'}, this);
         if (typeof this.data === 'function') {
             this.once(this.button, 'click', () => {
-                this.list.setLazyData();
+                this.list.setLazyData(this.value || this.__value);
                 this.isLazy = false;
             });
         }
@@ -175,6 +193,16 @@ function getValueFromList(data) {
     }
     const item = data.find(m => m.selected);
     return item ? item.value : null;
+}
+
+function getItemFromList(data, value) {
+    if (!data) {
+        return null;
+    }
+    if (typeof data === 'function') {
+        data = data();
+    }
+    return data.find(m => m.value === value);
 }
 
 module.exports = BaseComponent.define('ui-dropdown', UiDropdown, {

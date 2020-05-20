@@ -50,6 +50,7 @@
     <div id="tests">
         <input autofocus />
     </div>
+    <input />
     <script>
 
         mocha.setup('bdd');
@@ -71,6 +72,12 @@
                     {label: 'Red', value: 'red'},
                     {label: 'Blue', value: 'blue'},
                     {label: 'Green', value: 'green'}
+                ],
+                dataStrings = [
+                    {label: 'Orange', value: '1'},
+                    {label: 'Red', value: '2'},
+                    {label: 'Blue', value: '3'},
+                    {label: 'Green', value: '4'}
                 ],
                 dataNums = [
                     {label: 'Uno', value: 1},
@@ -211,7 +218,14 @@
                             done();
                         });
                     });
-                    it('should render a disabled dropdown', function (done) {
+                    it('should should handle integer values', function (done) {
+                        node = dom('ui-dropdown', {data: dataNums, label: 'Simple drop', placeholder: 'Select'}, body);
+                        ready(function () {
+                            expect(lis.length).to.equal(4);
+                            done();
+                        });
+                    });
+                    it.only('should render a disabled dropdown', function (done) {
                         node = dom('ui-dropdown', {data: data, label: 'Disabled drop', disabled: true, value: 'red', placeholder: 'Select'}, body);
                         ready(function () {
                             expect(lis.length).to.equal(4);
@@ -304,7 +318,7 @@
                 });
 
                 describe('events', function () {
-                ;    it('should emit one event when selecting', (done) => {
+                    it('should emit one event when selecting', (done) => {
                         node = dom('ui-dropdown', {data: data, label: 'Events', placeholder: 'Select'}, body);
                         ready(async function () {
                             await select(1);

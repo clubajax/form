@@ -28,12 +28,15 @@ class UiPopup extends BaseComponent {
     domReady() {
         this.component = this.children[0] || {};
         this.button = dom.byId(this.buttonid);
-        if (!this.button) {
-            console.log('this.destroyed', this.destroyed);
-            throw new Error(
-                'ui-tooltip must be associated with a parent via the parentid'
-            );
-        }
+
+        // need to determine if this is a tooltip or not
+        // throws errors in REact
+        // if (!this.button) {
+        //     console.log('this.destroyed', this.destroyed);
+        //     throw new Error(
+        //         'ui-tooltip must be associated with a parent via the parentid'
+        //     );
+        // }
 
         this.connectEvents();
         if (!this.parentNode) {
@@ -121,8 +124,12 @@ class UiPopup extends BaseComponent {
                 this.on(this.button, 'click', (e) => {
                     this.show();
                 });
+                this.on(this.button, 'blur', (e) => {
+                    this.hide();
+                });
                 this.on(this.button, 'keydown', e => {
                     if (e.key === 'Enter' && !this.showing) {
+                        console.log('ENTER', this.disabled);
                         // prevent key-nav from detecting Enter when not open
                         e.preventDefault();
                         this.show();

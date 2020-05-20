@@ -64,6 +64,11 @@
                     done();
                 });
 
+                it('should render readonly', function (done) {
+                    node = dom('ui-input', {value: 'I read books!', readonly: true}, body);
+                    done();
+                });
+
             });
         });
 

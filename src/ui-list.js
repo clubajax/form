@@ -39,24 +39,27 @@ class UIList extends BaseComponent {
 
     set value(value) {
         this.lastValue = value;
-        this.onDomReady(() => {
+        this.onConnected(() => {
             this.setControllerValue(value);
         });
         this.__value = value;
     }
 
     get value() {
-        if (!this.controller) {
-            return this.__value || this.getAttribute('value');
+        const getValue = () => {
+            if (!this.controller) {
+                return this.__value || this.getAttribute('value');
+            }
+            if (this.multiple) {
+                return this.controller.getSelected().map((node) => node.getAttribute('value'));
+            }
+            const node = this.controller.getSelected();
+            if (node) {
+                return node.getAttribute('value');
+            }
+            return this.__value || null;
         }
-        if (this.multiple) {
-            return this.controller.getSelected().map((node) => node.getAttribute('value'));
-        }
-        const node = this.controller.getSelected();
-        if (node) {
-            return node.getAttribute('value');
-        }
-        return this.__value || null;
+        return dom.normalize(getValue());
     }
 
     set data(data) {
@@ -101,12 +104,15 @@ class UIList extends BaseComponent {
         this.emitEvent();
     }
 
-    setLazyData() {
+    setLazyData(value) {
         // to be called externally, for example, by a dropdown
         this.setData(this.lazyDataFN());
         this.lazyDataFN = null;
         // I think this should be next:
         this.connectEvents();
+        if (value) {
+            this.value = value;
+        }
         this.fire('dom-update');
     }
 
@@ -294,10 +300,9 @@ class UIList extends BaseComponent {
                 const selector = value.map(getSelector).join(',');
                 this.controller.setSelected(dom.queryAll(this, selector));
             } else {
-                this.controller.setSelected(dom.query(this, getSelector(value)));
+                const r = dom.query(this, getSelector(value))
+                this.controller.setSelected(r);
             }
-        } else {
-            console.warn('UIList.setControllerValue: No controller');
         }
     }
 
@@ -389,6 +394,9 @@ class UIList extends BaseComponent {
                 this.list.focus();
             }),
             this.on('key-select', () => {
+                if (isNull(this.value)) {
+                    return;
+                }
                 this.lastValue = this.value;
                 dom.classList.toggle(this, 'has-selected', !!this.value);
                 this.emitEvent();
@@ -533,6 +541,11 @@ class UIList extends BaseComponent {
         }
         super.destroy();
     }
+}
+
+
+function isNull(value) {
+    return value === null || value === undefined;
 }
 
 const SPACE = '&nbsp;';
