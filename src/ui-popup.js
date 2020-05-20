@@ -129,7 +129,6 @@ class UiPopup extends BaseComponent {
                 });
                 this.on(this.button, 'keydown', e => {
                     if (e.key === 'Enter' && !this.showing) {
-                        console.log('ENTER', this.disabled);
                         // prevent key-nav from detecting Enter when not open
                         e.preventDefault();
                         this.show();

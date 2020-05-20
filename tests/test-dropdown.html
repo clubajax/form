@@ -454,7 +454,7 @@
                 });
 
                 describe('lazy loading', function () {
-                    it('should lazy load options', function (done) {
+                    it.only('should lazy load options', function (done) {
                         node = dom('ui-dropdown', {data: dataQnA, label: 'Lazy Long Options Middle', class: 'abs-mid'}, body);
                         done();
                     });

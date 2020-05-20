@@ -17,7 +17,7 @@ const DEFAULT_PLACEHOLDER = 'Select One...';
 class UiDropdown extends BaseComponent {
     constructor() {
         super();
-        this.sortdesc
+        this.sortdesc;
         this.sortasc;
         this.label;
         this.placeholder;
@@ -30,7 +30,7 @@ class UiDropdown extends BaseComponent {
             dom.attr(this.button, 'tabindex', disabled ? '-1' : false);
         });
     }
-     
+
     set value(value) {
         this.lastValue = value;
         if (this.list) {
@@ -42,7 +42,6 @@ class UiDropdown extends BaseComponent {
                         this.list.value = value;
                     }
                 }, 1);
-                
             });
         }
         this.__value = value;
@@ -56,7 +55,6 @@ class UiDropdown extends BaseComponent {
     }
 
     set data(data) {
-        
         this.onDomReady(() => {
             if (!this.value) {
                 const value = getValueFromList(data);
@@ -80,7 +78,7 @@ class UiDropdown extends BaseComponent {
 
     sizeToPopup() {
         dom.style(this.button, {
-            width: dom.box(this.popup).w + 20 // allow for dropdown arrow
+            width: dom.box(this.popup).w + 20, // allow for dropdown arrow
         });
     }
 
@@ -102,7 +100,7 @@ class UiDropdown extends BaseComponent {
             // set display, regardless of elligible event
             this.setDisplay();
             // ensure value is not the same,
-            // do not emit events for initialization and 
+            // do not emit events for initialization and
             // externally setting the value
             if (this.lastValue + '' !== this.value + '') {
                 emitEvent(this);
@@ -124,32 +122,46 @@ class UiDropdown extends BaseComponent {
 
     setDisplay() {
         this.button.innerHTML = '';
-        
+
         const value = this.value || this.__value;
-        
+
         const item = getItemFromList(this.data, value);
-        
-        // this.__value = item && item.value ? item.value : this.__value;
-        dom('span', {html: isNull(item) ? (this.placeholder || DEFAULT_PLACEHOLDER) : (item.alias || item.label)}, this.button);
+
+        dom(
+            'span',
+            { html: isNull(item) ? this.placeholder || DEFAULT_PLACEHOLDER : item.alias || item.label },
+            this.button
+        );
         if (!this['no-arrow']) {
-            dom('ui-icon', {type: 'caretDown'}, this.button);
+            dom('ui-icon', { type: 'caretDown' }, this.button);
         }
         setTimeout(() => {
             // don't resize the popup right away - wait until it closes, or it jumps
             if (this.popup) {
                 dom.style(this.popup, {
-                    'min-width': dom.box(this.button).w
+                    'min-width': dom.box(this.button).w,
                 });
             }
         }, 500);
     }
 
+    setLazyData() {
+        if (this.lazyDataIsSet) {
+            return;
+        }
+        this.lazyDataIsSet = true;
+        this.list.setLazyData(this.value || this.__value);
+        this.isLazy = false;
+    }
+
     renderButton(buttonid) {
-        this.button = dom('button', {id: buttonid, class: 'ui-button drop-input', type: 'button'}, this);
+        this.button = dom('button', { id: buttonid, class: 'ui-button drop-input', type: 'button' }, this);
         if (typeof this.data === 'function') {
-            this.once(this.button, 'click', () => {
-                this.list.setLazyData(this.value || this.__value);
-                this.isLazy = false;
+            this.once(this.button, 'click', () => this.setLazyData.bind(this));
+            this.once(this.button, 'keydown', (e) => {
+                if (e.key === 'Enter') {
+                    this.setLazyData();
+                }
             });
         }
         this.setDisplay();
@@ -157,7 +169,7 @@ class UiDropdown extends BaseComponent {
 
     render() {
         if (this.label) {
-            this.labelNode = dom('label', {html: this.label, class: 'ui-label'}, this);
+            this.labelNode = dom('label', { html: this.label, class: 'ui-label' }, this);
         }
         const buttonid = uid('drop-button');
         this.renderButton(buttonid);
@@ -165,14 +177,18 @@ class UiDropdown extends BaseComponent {
             buttonid,
             'event-name': 'list-change',
             sortdesc: this.sortdesc,
-            sortasc: this.sortasc
+            sortasc: this.sortasc,
         });
-        this.popup = dom('ui-popup', {
-            buttonid,
-            label: this.label,
-            html: this.list,
-            class: this.popupClass
-        }, document.body);
+        this.popup = dom(
+            'ui-popup',
+            {
+                buttonid,
+                label: this.label,
+                html: this.list,
+                class: this.popupClass,
+            },
+            document.body
+        );
         this.setDisplay();
     }
 
@@ -191,7 +207,7 @@ function getValueFromList(data) {
     if (typeof data === 'function') {
         data = data();
     }
-    const item = data.find(m => m.selected);
+    const item = data.find((m) => m.selected);
     return item ? item.value : null;
 }
 
@@ -202,11 +218,22 @@ function getItemFromList(data, value) {
     if (typeof data === 'function') {
         data = data();
     }
-    return data.find(m => m.value === value);
+    return data.find((m) => m.value === value);
 }
 
 module.exports = BaseComponent.define('ui-dropdown', UiDropdown, {
     props: ['placeholder', 'label', 'limit', 'name', 'event-name', 'align', 'btn-class', 'sortdesc', 'sortasc'],
-    bools: ['disabled', 'open-when-blank', 'allow-new', 'required', 'case-sensitive', 'autofocus', 'busy', 'no-arrow', 'size-to-popup', 'autosized'],
-    attrs: ['value']
+    bools: [
+        'disabled',
+        'open-when-blank',
+        'allow-new',
+        'required',
+        'case-sensitive',
+        'autofocus',
+        'busy',
+        'no-arrow',
+        'size-to-popup',
+        'autosized',
+    ],
+    attrs: ['value'],
 });
