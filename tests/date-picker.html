@@ -355,8 +355,11 @@
                     it.only('should pop up', function () {
                         const node = dom('date-input', {label: 'Opens with ui-popup', min: null, max: null}, body);
                         expect(dom.isNode(node)).to.equal(true);
-                        node.on('blur', () => {
-                            console.log('test.blur');
+                        // node.on('blur', () => {
+                        //     console.log('test.blur');
+                        // });
+                        node.on('change', (e) => {
+                            console.log('change', e.value);
                         });
                     });
 

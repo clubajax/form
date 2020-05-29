@@ -18,6 +18,8 @@ class DatePicker extends BaseComponent {
         this.current = new Date();
         this.previous = {};
 
+        this.destroyOnDisconnect = false;
+
         this.container;
         this.time;
         this.monthNode;

@@ -106,6 +106,7 @@ class UIList extends BaseComponent {
 
     setLazyData(value) {
         // to be called externally, for example, by a dropdown
+        console.log('set lazy...');
         this.setData(this.lazyDataFN());
         this.lazyDataFN = null;
         // I think this should be next:

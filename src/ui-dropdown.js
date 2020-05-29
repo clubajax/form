@@ -38,7 +38,7 @@ class UiDropdown extends BaseComponent {
         } else {
             this.onDomReady(() => {
                 setTimeout(() => {
-                    if (!this.list.lazyDataFN) {
+                    if (this.list && !this.list.lazyDataFN) {
                         this.list.value = value;
                     }
                 }, 1);
@@ -62,7 +62,9 @@ class UiDropdown extends BaseComponent {
                     this.value = value;
                 }
             }
-            this.list.data = data;
+            if (this.list) {
+                this.list.data = data;
+            }
             this.setDisplay();
 
             if (this['size-to-popup'] || this['autosized']) {
@@ -88,7 +90,6 @@ class UiDropdown extends BaseComponent {
 
     connected() {
         this.render();
-        this.connectEvents();
         this.connected = () => {};
     }
 
@@ -135,29 +136,34 @@ class UiDropdown extends BaseComponent {
         if (!this['no-arrow']) {
             dom('ui-icon', { type: 'caretDown' }, this.button);
         }
-        setTimeout(() => {
-            // don't resize the popup right away - wait until it closes, or it jumps
-            if (this.popup) {
+        if (this.popup) {
+            setTimeout(() => {
+                // don't resize the popup right away - wait until it closes, or it jumps
                 dom.style(this.popup, {
                     'min-width': dom.box(this.button).w,
                 });
-            }
-        }, 500);
+            }, 500);
+        }
     }
 
     setLazyData() {
         if (this.lazyDataIsSet) {
             return;
         }
+        this.renderPopup();
         this.lazyDataIsSet = true;
-        this.list.setLazyData(this.value || this.__value);
         this.isLazy = false;
+        this.popup.onDomReady(() => {
+            this.popup.show();
+        });
     }
 
-    renderButton(buttonid) {
-        this.button = dom('button', { id: buttonid, class: 'ui-button drop-input', type: 'button' }, this);
+    renderButton() {
+        this.button = dom('button', { id: this.buttonid, class: 'ui-button drop-input', type: 'button' }, this);
         if (typeof this.data === 'function') {
-            this.once(this.button, 'click', () => this.setLazyData.bind(this));
+            this.once(this.button, 'click', () => {
+                this.setLazyData();
+            });
             this.once(this.button, 'keydown', (e) => {
                 if (e.key === 'Enter') {
                     this.setLazyData();
@@ -167,34 +173,48 @@ class UiDropdown extends BaseComponent {
         this.setDisplay();
     }
 
-    render() {
-        if (this.label) {
-            this.labelNode = dom('label', { html: this.label, class: 'ui-label' }, this);
-        }
-        const buttonid = uid('drop-button');
-        this.renderButton(buttonid);
+    renderPopup() {
+        const data = typeof this.data === 'function' ? this.data() : this.data;
         this.list = dom('ui-list', {
-            buttonid,
+            buttonid: this.buttonid,
             'event-name': 'list-change',
             sortdesc: this.sortdesc,
             sortasc: this.sortasc,
+            data,
+            value: this.value,
         });
+
         this.popup = dom(
             'ui-popup',
             {
-                buttonid,
+                buttonid: this.buttonid,
                 label: this.label,
                 html: this.list,
                 class: this.popupClass,
             },
             document.body
         );
+
+        this.connectEvents();
+    }
+
+    render() {
+        if (this.label) {
+            this.labelNode = dom('label', { html: this.label, class: 'ui-label' }, this);
+        }
+        this.buttonid = uid('drop-button');
+        this.renderButton();
+        if (typeof this.data !== 'function') {
+            this.renderPopup();
+        }
         this.setDisplay();
     }
 
     disconnected() {
-        this.list.destroy();
-        this.popup.destroy();
+        if (this.popup) {
+            this.list.destroy();
+            this.popup.destroy();
+        }
         this.destroy();
     }
 }

@@ -170,13 +170,16 @@
                 function ready(cb) {
                     events = [];
                     onDomReady(node, function () {
-                        lis = dom.queryAll(node.popup, 'li');
-                        items = lis.map(function (n) {
-                            return {
-                                value: n.getAttribute('value'),
-                                label: n.textContent
-                            }
-                        });
+                        btn = dom.query(node, 'button');
+                        if (node.popup) {
+                            lis = dom.queryAll(node.popup, 'li');
+                            items = lis.map(function (n) {
+                                return {
+                                    value: n.getAttribute('value'),
+                                    label: n.textContent
+                                }
+                            });
+                        }
                         node.on('change', (e) => {
                             console.log('test.change', e.value, typeof e.value);
                             events.push(e.value);
@@ -225,7 +228,7 @@
                             done();
                         });
                     });
-                    it.only('should render a disabled dropdown', function (done) {
+                    it('should render a disabled dropdown', function (done) {
                         node = dom('ui-dropdown', {data: data, label: 'Disabled drop', disabled: true, value: 'red', placeholder: 'Select'}, body);
                         ready(function () {
                             expect(lis.length).to.equal(4);
@@ -454,8 +457,8 @@
                 });
 
                 describe('lazy loading', function () {
-                    it.only('should lazy load options', function (done) {
-                        node = dom('ui-dropdown', {data: dataQnA, label: 'Lazy Long Options Middle', class: 'abs-mid'}, body);
+                    it('should lazy load options', function (done) {
+                        node = dom('ui-dropdown', {data: () => dataQnA, label: 'Lazy Long Options Middle', class: 'abs-mid'}, body);
                         done();
                     });
 
@@ -463,6 +466,11 @@
                         const data = copy(data4);
                         data[1].selected = false;
                         node = dom('ui-dropdown', {data: () => data, value: 'spades', label: 'Lazy Options With Value', class: ''}, body);
+                        ready(() => {
+                            expect(node.popup).to.equal(undefined);
+                            click();
+                            expect(!!node.popup).to.equal(true);
+                        })
                         done();
                     });
                 });
@@ -485,7 +493,7 @@
             });
         });
 
-        function copy(o){
+        function copy(o) {
             return JSON.parse(JSON.stringify(o))
         }
 

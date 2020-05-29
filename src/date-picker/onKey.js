@@ -19,16 +19,10 @@ function onKey (e, type) {
 	if (k === 'Escape') {
 		this.blur();
     }
-
-    // if (k === 'Backspace') {
-    //     // this.blur();
-    //     return true;
-    // }
-    
     
 
     if (util.isControl(e)) {
-		util.stopEvent(e);
+        util.stopEvent(e);
 		return;
 	}
 
@@ -50,7 +44,6 @@ function onKey (e, type) {
 			return;
 
 		} else if (value !== this.typedValue) {
-			// console.log('not typed');
 			this.setValue(value, true);
 		}
 
@@ -82,8 +75,6 @@ function onKey (e, type) {
 
 		} else if (/[ap]/i.test(k) && /time/.test(type)) {
 			this.setValue(this.setAMPM(value, k === 'a' ? 'am' : 'pm'), true);
-		} else {
-			//console.log('CHAR IS', k);
 		}
 
 		setSelection(beg);

@@ -5,8 +5,8 @@ const dates = require('@clubajax/dates');
 const util = require('./util');
 const onKey = require('./onKey');
 const isValid = require('./isValid');
-// const focusManager = require('./focusManager');
 const uid = require('../lib/uid');
+require('./date-picker');
 require('../ui-popup');
 require('../ui-icon');
 
@@ -79,7 +79,6 @@ class DateInput extends BaseComponent {
             return;
         }
         this.onDomReady(() => {
-            console.log('MIN::', value, dates.toDate(value));
             this.minDate = util.getMinDate(value === 'now' ? new Date() : dates.toDate(value));
             this.picker.min = value;
         });
@@ -128,7 +127,7 @@ class DateInput extends BaseComponent {
 		if (valid) {
 			this.strDate = value;
 			this.picker.value = value;
-			if (!silent) {
+            if (!silent) {
 				this.emitEvent();
 			}
 		}
@@ -139,11 +138,11 @@ class DateInput extends BaseComponent {
 		return value;
 	}
 
-	emitEvent () {
+    emitEvent() {
 		const value = this.value;
-		if (value === this.lastValue || !this.isValid(value)) {
+        if (value === this.lastValue || !this.isValid(value)) {
 			return;
-		}
+        }
 		this.lastValue = value;
 		this.emit('change', { value });
 	}
@@ -237,6 +236,7 @@ class DateInput extends BaseComponent {
 		this.connectKeys();
 
         this.popup = dom('ui-popup', {buttonid: this.buttonId, class: 'ui-date-input'}, document.body);
+        this.popup.noHideOnBlur = true;
         this.picker = dom('date-picker', {time: this.time, tabindex: '0', 'event-name': 'date-change'}, this.popup);
         
         this.picker.onDomReady(() => {
@@ -257,10 +257,28 @@ class DateInput extends BaseComponent {
         })
 	}
 
-	connectKeys () {
+    connectKeys() {
+        let isMeta;
+        let isPaste;
 		this.on(this.input, 'keypress', util.stopEvent);
-		this.on(this.input, 'keyup', (e) => {
-			onKey.call(this, e, this.dateType);
+        this.on(this.input, 'keyup', (e) => {
+            if (e.key === 'Meta') {
+                isMeta = false;
+            }
+            if (isPaste) {
+                isPaste = false;
+                this.setValue(this.input.value);
+            } else {
+                onKey.call(this, e, this.dateType);
+            }
+        });
+        this.on(this.input, 'keydown', (e) => {
+            if (e.key === 'Meta') {
+                isMeta = true;
+            }
+            if (e.key.toLowerCase() === 'v' && isMeta) {
+                isPaste = true;
+            }
 		});
         this.on(this.input, 'blur', this.onBlur.bind(this));
         this.on(this, 'validation', this.onValidation.bind(this));
