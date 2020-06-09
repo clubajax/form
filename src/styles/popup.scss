@@ -18,7 +18,7 @@ ui-popup {
             display: block;
             flex: 0 0 20px;
             padding: 10px;
-            background-color: #eee;
+            background-color: var(--label-bk);
         }
         .ui-button-row {
             display: flex;

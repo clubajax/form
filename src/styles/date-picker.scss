@@ -1,34 +1,3 @@
-
-
-
-
-
-
-
-
-:root {
-    --cal-brd: #ccc;
-    --cal-bg: #fff;
-    --cal-hov: #dadada;
-    --cal-sel: #5dbae0;
-    --cal-hdr-hvr: #d2f0ff;
-    --cal-hdr-nav: #0968d2;
-    --cal-link: #0968d2;
-    --cal-off-txt: #999;
-    --cal-today: #b1b1b1;
-    --cal-today-txt: #fff;
-    --cal-dsbl: white;
-    --cal-dsbl-txt: #999;
-    --cal-dsbl-sel: #9dc8da;
-    --cal-sel-txt: white;
-    --cal-range: #beecff;
-    --cal-range-select: #5dbae0;
-
-    --cal-warn-brd: #be4304;
-    --cal-warn-bk: #fffdd5;
-    --cal-error: red;
-}
-
 date-picker {
     * {
         box-sizing: border-box;
@@ -48,7 +17,7 @@ date-picker {
         height: 180px;
     }
     .day-of-week {
-        border-bottom: 1px solid $brd;
+        border-bottom: 1px solid var(--inp-brd);
     }
     .cal-header {
         position: relative;
@@ -285,7 +254,7 @@ date-range-input {
             border-radius: 2px;
             font-size: 13px;
 
-            border: 1px solid $brd;
+            border: 1px solid var(--inp-brd);
             transition: background-color 300ms ease, border-color 300ms ease;
             &::placeholder {
                 font-style: italic;
@@ -365,7 +334,7 @@ date-range-input {
 date-range-picker {
     border-radius: 4px;
     display: inline-block;
-    border: 1px solid $brd;
+    border: 1px solid var(inp-brd);
     padding: 3px;
     background: var(--cal-bg);
     &.show {

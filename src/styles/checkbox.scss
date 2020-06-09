@@ -70,11 +70,11 @@ ui-checkbox {
     &[disabled] {
         cursor: default;
         .ui-label {
-            color: $btn-dsbl-clr;
+            color: var(--label-dsbl);
             font-style: italic;
         }
         ui-icon {
-            background-color: $btn-dsbl;
+            background-color: var(--label-dsbl);
         }
     }
     
@@ -83,7 +83,7 @@ ui-checkbox {
         outline: 0;
         ui-icon {
             border: 1px solid var(--chk-focus-brd);
-            box-shadow: 0 0 5px $focus;
+            box-shadow: 0 0 5px var(--focus-brd);
         }
         .ui-label {
             color: var(--chk-focus-txt);

@@ -58,7 +58,7 @@ ui-radio{
     &[disabled]{
         label{
             cursor: default;
-            color: $btn-dsbl-clr;
+            color: var(--label-dsbl);
             font-style: italic;
         }
         .radio-button{

@@ -94,7 +94,7 @@
 		}
 
 		suite('ui-radio', function () {
-			test('it should get and set values of a radio button', function (done) {
+			test.only('it should get and set values of a radio button', function (done) {
 				const node = dom('ui-radio', { value: 'aaa', name: 'AAA', label: 'AAA', checked: true}, body);
 				onDomReady(node, function () {
 					console.log('node', node.value, node.name, node.checked);
