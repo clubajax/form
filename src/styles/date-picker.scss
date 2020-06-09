@@ -1,26 +1,33 @@
-$brd: #ccc;
-$bg: white;
-$header: #eee;
-$header-hov: #d2f0ff;
-$header-nav: #0968d2;
-$link: #0968d2;
 
-$off-txt: #999;
-$today: #b1b1b1; //selected day
-$today-txt: white;
-$dsbl: white;
-$dsbl-txt: #999;
-$dsbl-sel: #9dc8da;
-$hov: #dadada;
-$sel: #5dbae0;
-$sel-txt: white;
-$sel-hov: #57add1;
 
-$range: #beecff;
-$range-select: #5dbae0;
 
-$warn-brd: #be4304;
-$warn-bk: #fffdd5;
+
+
+
+
+
+:root {
+    --cal-brd: #ccc;
+    --cal-bg: #fff;
+    --cal-hov: #dadada;
+    --cal-sel: #5dbae0;
+    --cal-hdr-hvr: #d2f0ff;
+    --cal-hdr-nav: #0968d2;
+    --cal-link: #0968d2;
+    --cal-off-txt: #999;
+    --cal-today: #b1b1b1;
+    --cal-today-txt: #fff;
+    --cal-dsbl: white;
+    --cal-dsbl-txt: #999;
+    --cal-dsbl-sel: #9dc8da;
+    --cal-sel-txt: white;
+    --cal-range: #beecff;
+    --cal-range-select: #5dbae0;
+
+    --cal-warn-brd: #be4304;
+    --cal-warn-bk: #fffdd5;
+    --cal-error: red;
+}
 
 date-picker {
     * {
@@ -32,9 +39,9 @@ date-picker {
     .calendar {
         border-radius: 4px;
         display: inline-block;
-        border: 1px solid $brd;
+        border: 1px solid var(--cal-brd);
         padding: 3px;
-        background: $bg;
+        background: var(--cal-bg);
     }
     .cal-container {
         width: 100%;
@@ -71,7 +78,7 @@ date-picker {
         height: 20px;
         vertical-align: top;
         &:hover {
-            background: $header-hov;
+            background: var(--cal-hdr-hvr);
         }
     }
     .cal-lft:before,
@@ -81,8 +88,8 @@ date-picker {
     .cal-yr-lft:after,
     .cal-yr-rgt:after {
         position: absolute;
-        content: "\25B6";
-        color: $header-nav;
+        content: '\25B6';
+        color: var(--cal-hdr-nav);
     }
     .cal-lft {
         &:before {
@@ -124,8 +131,8 @@ date-picker {
         height: 100%;
         div {
             // .day
+            display: inline-block;
             box-sizing: border-box;
-            float: left;
             width: 14.285%;
             height: 14.285%; // 6 weeks + day header
             text-align: center;
@@ -140,26 +147,26 @@ date-picker {
                 border-radius: 3px;
             }
             &.off {
-                color: $off-txt;
+                color: var(--cal-off-txt);
             }
             &.on,
             &.off {
                 cursor: pointer;
                 border-radius: 3px;
                 &:hover {
-                    background: $hov;
+                    background: var(--cal-hov);
                 }
             }
             &.today {
                 background: white;
-                color: $link;
-                border: 1px solid $today;
+                color: var(--cal-link);
+                border: 1px solid var(--cal-today);
             }
             &.selected {
-                background: $sel;
-                color: $sel-txt;
+                background: var(--cal-sel);
+                color: var(--cal-sel-txt);
                 &:hover {
-                    background: $sel-hov;
+                    background: var(--cal-sel)-hov;
                 }
             }
             &.highlighted {
@@ -169,40 +176,39 @@ date-picker {
                 outline: 0;
                 &:not(.disabled) {
                     span {
-                        border: 1px solid blue;
-                        //box-shadow: 3px 3px 3px black;
+                        border: 1px solid var(--cal-focus);
                     }
                 }
             }
             &.range.on {
-                background: $range;
+                background: var(--cal-range);
                 border-radius: 0;
             }
             &.range-first.on {
-                background: $range-select;
+                background: var(--cal-range-select);
                 color: white;
                 border-radius: 3px 0 0 3px;
             }
             &.range-second.on {
-                background: $range-select;
+                background: var(--cal-range-select);
                 color: white;
                 border-radius: 0 3px 3px 0;
             }
             &.disabled {
-                background: $dsbl;
-                color: $dsbl-txt;
+                background: var(--cal-dsbl);
+                color: var(--cal-dsbl-txt);
                 cursor: default;
                 font-style: italic;
                 &.today {
-                    background: $today;
-                    color: $today-txt;
+                    background: var(--cal-today);
+                    color: var(--cal-today-txt);
                 }
                 &.selected {
-                    background: $dsbl-sel;
-                    color: $dsbl-txt;
+                    background: var(--cal-dsbl-sel);
+                    color: var(--cal-dsbl-txt);
                     &:hover {
-                        background: $dsbl-sel;
-                        color: $dsbl-txt;
+                        background: var(--cal-dsbl-sel);
+                        color: var(--cal-dsbl-txt);
                     }
                 }
             }
@@ -215,7 +221,7 @@ date-picker {
             background: none;
             border: 0;
             cursor: pointer;
-            color: $link;
+            color: var(--cal-link);
             text-decoration: none;
             &:hover {
                 text-decoration: underline;
@@ -260,12 +266,11 @@ date-input,
 date-range-input {
     display: inline-block;
     position: relative;
-    //outline: none;
 
     label {
         span {
             font-size: 12px;
-            color: #999;
+            color: var(--label-txt);
             display: block;
             margin-bottom: 3px;
         }
@@ -290,17 +295,26 @@ date-range-input {
             }
         }
     }
+    &[disabled] {
+        input {
+            background-color: #ddd;
+        }
+        .icon-button {
+            opacity: 0.4;
+            pointer-events: none;
+        }
+    }
     &.invalid {
         .input-wrapper input,
         input {
-            border-color: red;
-            outline-color: red;
+            border-color: var(--cal-error);
+            outline-color: var(--cal-error);
         }
     }
     &.warning {
         .input-wrapper input {
-            border-color: $warn-brd;
-            background-color: $warn-bk;
+            border-color: var(--cal-warn-brd);
+            background-color: var(--cal-warn-bk);
         }
     }
     date-picker,
@@ -335,7 +349,7 @@ date-range-input {
 time-input {
     input {
         width: 70px;
-        border: 1px solid #ccc;
+        border: 1px solid var(--inp-brd);
         padding: 6px;
         border-radius: 2px;
         font-size: 13px;
@@ -353,7 +367,7 @@ date-range-picker {
     display: inline-block;
     border: 1px solid $brd;
     padding: 3px;
-    background: $bg;
+    background: var(--cal-bg);
     &.show {
         display: inline-block;
         date-picker {
@@ -405,14 +419,12 @@ date-time-input {
     ui-icon {
         display: block;
         font-size: 18px;
-        // width: 18px;
-        // height: 18px;
     }
 }
 
 .input-error {
     font-size: 12px;
-    color: red;
+    color: var(--error-txt);
 }
 
 ui-popup.ui-date-input {

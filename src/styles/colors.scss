@@ -59,7 +59,15 @@ $btn-dsbl-clr: #999;
     // colors
     --primary: #2275ec;
     --primary-very-light: #edf2fa;
-    --disabled: #ccc;
+    --disabled: #ddd;
+    // 
+    // error
+    --error-txt: red;
+    //
+    --label-txt: #666;
+    //
+    // inputs
+    --inp-brd: #d8d8d8;
     //
     // buttons
     --btn-brd: 1px solid #d8d8d8;
@@ -105,7 +113,6 @@ $btn-dsbl-clr: #999;
     --list-item-focus: #6c9fd8;
     --list-item-bg-disabled: #ccc;
     --list-item-txt-disabled: #666;
-    // --list-item-label-font: 
     --list-item-label-bg: transparent;
     --list-item-label-pad: 10px 5px 5px 5px;
     --list-item-label-txt: rgb(176, 176, 176);
@@ -118,11 +125,16 @@ $btn-dsbl-clr: #999;
     
     //
     // checkbox
+    --chk-size: 16px;
     --chk-brd: 1px solid #ccc;
     --chk-bg: #0073d6;
     --chk-bg-hvr: #4d9be0;
     --chk-focus-brd: #6c9fd8;
     --chk-focus-txt: #4a698d;
     --chk-hvr: #f2f2f2;
+
+    //
+    // data-picker
+    --cal-focus: blue;
     
 }

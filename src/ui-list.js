@@ -39,9 +39,7 @@ class UIList extends BaseComponent {
 
     set value(value) {
         this.lastValue = value;
-        this.onConnected(() => {
-            this.setControllerValue(value);
-        });
+        this.setControllerValue(value);
         this.__value = value;
     }
 
@@ -58,7 +56,7 @@ class UIList extends BaseComponent {
                 return node.getAttribute('value');
             }
             return this.__value || null;
-        }
+        };
         return dom.normalize(getValue());
     }
 
@@ -106,7 +104,6 @@ class UIList extends BaseComponent {
 
     setLazyData(value) {
         // to be called externally, for example, by a dropdown
-        console.log('set lazy...');
         this.setData(this.lazyDataFN());
         this.lazyDataFN = null;
         // I think this should be next:
@@ -301,7 +298,7 @@ class UIList extends BaseComponent {
                 const selector = value.map(getSelector).join(',');
                 this.controller.setSelected(dom.queryAll(this, selector));
             } else {
-                const r = dom.query(this, getSelector(value))
+                const r = dom.query(this, getSelector(value));
                 this.controller.setSelected(r);
             }
         }
@@ -318,7 +315,7 @@ class UIList extends BaseComponent {
 
     getIndex(value = this.value) {
         value = `${value}`;
-        return this.items ? this.items.findIndex(item => `${item.value}` === value) : -1;
+        return this.items ? this.items.findIndex((item) => `${item.value}` === value) : -1;
     }
 
     connected() {
@@ -436,7 +433,7 @@ class UIList extends BaseComponent {
             } else if (this.items.length) {
                 this.value = this.items[0].value;
             }
-        }
+        };
         const index = this.getIndex();
         this.fire('remove', { value: this.value });
     }
@@ -453,14 +450,14 @@ class UIList extends BaseComponent {
         createInput(node, item, true, () => {
             this.readonly = false;
             this.connectEvents();
-            this.fire('edit', {value: item})
+            this.fire('edit', { value: item });
         });
     }
 
     editRowAdd() {
         const item = {
             value: Infinity,
-            label: ''
+            label: '',
         };
         const node = dom('li', {});
         let index = this.getIndex();
@@ -473,7 +470,7 @@ class UIList extends BaseComponent {
         }
 
         this.controller.setSelected(null);
-        
+
         this.readonly = true;
         this.connectEvents();
         createInput(node, item, false, () => {
@@ -483,7 +480,7 @@ class UIList extends BaseComponent {
                 // select
                 this.value = item.value;
             };
-            this.fire('add', {value: item, index: index + 1});
+            this.fire('add', { value: item, index: index + 1 });
         });
     }
 
@@ -544,7 +541,6 @@ class UIList extends BaseComponent {
     }
 }
 
-
 function isNull(value) {
     return value === null || value === undefined;
 }
@@ -600,7 +596,7 @@ function createInput(node, item, isEdit, callback) {
     input.on('change', (e) => {
         e.stopPropagation();
         // node.innerHTML = toHtml(e.value);
-        
+
         item.label = e.value;
         if (!isEdit) {
             item.value = e.value;

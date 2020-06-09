@@ -70,6 +70,12 @@ class DateInput extends BaseComponent {
 		return this.isValid();
 	}
 
+    onDisabled(value) {
+        if (this.input) {
+            this.input.disabled = value;
+        }
+    }
+
 	onLabel (value) {
 		this.labelNode.innerHTML = value;
 	}
@@ -226,7 +232,11 @@ class DateInput extends BaseComponent {
 		this.time = this.time || this.hasTime;
 		this.mask = this.mask || defaultMask;
 		this.input.setAttribute('type', 'text');
-		this.input.setAttribute('placeholder', this.placeholder || defaultPlaceholder);
+        this.input.setAttribute('placeholder', this.placeholder || defaultPlaceholder);
+        this.input.setAttribute('disabled', this.disabled || null);
+
+        dom.attr(this.input, 'disabled', this.disabled);
+
 		if (this.name) {
 			this.input.setAttribute('name', this.name);
 		}
@@ -292,7 +302,7 @@ class DateInput extends BaseComponent {
 }
 
 module.exports = BaseComponent.define('date-input', DateInput, {
-	bools: ['required', 'time', 'static'],
+	bools: ['required', 'disabled', 'time', 'static'],
 	props: ['label', 'name', 'placeholder', 'mask', 'min', 'max', 'time', 'validation'],
 	attrs: ['value']
 });

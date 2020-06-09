@@ -45,6 +45,10 @@ class UiDropdown extends BaseComponent {
             });
         }
         this.__value = value;
+
+        if (this.list && !this.list.getItem(value)) {
+            this.setDisplay();
+        }
     }
 
     get value() {

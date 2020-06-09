@@ -1,5 +1,6 @@
 const BaseComponent = require('@clubajax/base-component');
 const dom = require('@clubajax/dom');
+const on = require('@clubajax/on');
 const uid = require('./lib/uid');
 require('./ui-popup');
 require('./ui-list');
@@ -21,7 +22,9 @@ class UiSearch extends BaseComponent {
     }
     set value(value) {
         this.onDomReady(() => {
-            this.list.value = value;
+            if (this.list) {
+                this.list.value = value;
+            }
             this.setDisplay();
         });
         this.__value = value;
@@ -36,9 +39,19 @@ class UiSearch extends BaseComponent {
 
     set data(data) {
         this.onDomReady(() => {
+            if (!this.list && !data.length) {
+                return;
+            }
+            this.renderList();
             this.list.data = data;
-            if (this.input.focused) {
-                this.popup.show();
+            if (this.input.focused && !this.isSelecting) {
+                if (this.popup.DOMSTATE === 'connected') {
+                    this.popup.onDomReady(() => {
+                        this.popup.show();
+                    });
+                } else {
+                    this.popup.show();
+                }
             }
         });
         this.__data = data;
@@ -71,21 +84,16 @@ class UiSearch extends BaseComponent {
 
     connected() {
         this.render();
-        this.connectEvents();
+        this.connectInput();
         this.connected = () => {};
     }
 
-    connectEvents() {
-        this.list.on('list-change', () => {
-            this.setDisplay();
-            this.emit('change', {value: this.value});
-            setTimeout(() => {
-                this.popup.hide();
-            }, 300);
-        });
-
-        this.input.on('key-search', e => {
-            this.fire('search', { value: e.detail.value });
+    connectInput() {
+        this.input.on('keyup', e => {
+            // meta handles paste
+            if (on.isAlphaNumeric(e.key) || e.key === 'Backspace' || e.key === 'Delete' || e.key === 'Meta') {
+                this.fire('search', { value: this.input.value });
+            }
         });
 
         this.input.on('focus', () => {
@@ -94,6 +102,20 @@ class UiSearch extends BaseComponent {
         
         this.input.on('focus', () => {
             this.classList.remove('is-focused');
+        });
+    }
+
+    connectList() {
+        this.list.on('list-change', () => {
+            this.isSelecting = true;
+            this.setDisplay();
+            this.emit('change', {value: this.value});
+            setTimeout(() => {
+                this.popup.hide();
+                setTimeout(() => {
+                    this.isSelecting = false;
+                }, 300);
+            }, 300);
         });
     }
 
@@ -112,28 +134,36 @@ class UiSearch extends BaseComponent {
         this.setDisplay();
     }
 
+    renderList() {
+        if (this.list) {
+            return;
+        }
+        this.list = dom('ui-list', {
+            'event-name': 'list-change',
+            'external-search': true,
+            buttonid: this.buttonid,
+        });
+        this.popup = dom(
+            'ui-popup',
+            {
+                buttonid: this.buttonid,
+                label: this.label,
+                html: this.list,
+            },
+            document.body
+        );
+        this.connectList();
+    }
+
     render() {
         this.labelNode = dom(
             'label',
             { html: this.label, class: 'ui-label' },
             this
         );
-        const buttonid = uid('drop-button');
-        this.renderButton(buttonid);
-        this.list = dom('ui-list', {
-            'event-name': 'list-change',
-            'external-search': true,
-            buttonid,
-        });
-        this.popup = dom(
-            'ui-popup',
-            {
-                buttonid,
-                label: this.label,
-                html: this.list,
-            },
-            document.body
-        );
+        this.buttonid = uid('drop-button');
+        this.renderButton(this.buttonid);
+       
         this.setDisplay();
     }
 }

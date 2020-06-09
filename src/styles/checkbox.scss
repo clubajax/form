@@ -12,7 +12,7 @@ ui-checkbox {
         margin-right: 5px;
     }
     ui-icon {
-        flex: 0 0 $size;
+        flex: 0 0 var(--chk-size);
         margin-right: 5px;
         position: relative;
         display: block;
