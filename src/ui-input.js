@@ -75,16 +75,24 @@ class UiInput extends BaseComponent {
         this.on(this.input, 'blur', () => {
             this.focused = false;
             this.emit('blur');
-        });
+            this.classList.remove('focus');
+        }, null);
         this.on(this.input, 'focus', () => {
             this.focused = true;
             this.emit('focus');
-        });
-        this.on(this.input, 'change', this.emitEvent.bind(this));
+            this.classList.add('focus');
+            if (this.autoselect) {
+                this.input.select();
+            }
+                
+        }, null);
+        this.on(this.input, 'change', this.emitEvent.bind(this), null);
     }
     
     render() {
-        this.labelNode = dom('label', {}, this);
+        if (this.label) {
+            this.labelNode = dom('label', {}, this);
+        }
         this.input = dom('input', {
             value: this._value || '',
             readonly: this.readonly,
@@ -114,6 +122,6 @@ function isNull(value) {
 
 module.exports = BaseComponent.define('ui-input', UiInput, {
     props: ['placeholder', 'label', 'limit', 'name', 'event-name', 'align', 'icon'],
-    bools: ['disabled', 'ready', 'required', 'autofocus'],
+    bools: ['disabled', 'ready', 'required', 'autofocus', 'autoselect'],
     attrs: ['value']
 });

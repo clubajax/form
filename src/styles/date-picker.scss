@@ -236,32 +236,30 @@ date-range-input {
     display: inline-block;
     position: relative;
 
-    label {
-        span {
-            font-size: 12px;
-            color: var(--label-txt);
-            display: block;
-            margin-bottom: 3px;
-        }
-        .date-input-wrapper {
-            position: relative;
-            input {
-                width: calc(100% - 45px);
-            }
-        }
+    span {
+        font-size: 12px;
+        color: var(--label-txt);
+        display: block;
+        margin-bottom: 3px;
+    }
+    .date-input-wrapper {
+        position: relative;
         input {
-            padding: 5px;
-            border-radius: 2px;
-            font-size: 13px;
+            width: calc(100% - 45px);
+        }
+    }
+    input {
+        padding: 5px;
+        border-radius: 2px;
+        font-size: 13px;
 
-            border: 1px solid var(--inp-brd);
-            transition: background-color 300ms ease, border-color 300ms ease;
-            &::placeholder {
-                font-style: italic;
-            }
-            &:-ms-input-placeholder {
-                font-style: italic;
-            }
+        border: 1px solid var(--inp-brd);
+        transition: background-color 300ms ease, border-color 300ms ease;
+        &::placeholder {
+            font-style: italic;
+        }
+        &:-ms-input-placeholder {
+            font-style: italic;
         }
     }
     &[disabled] {

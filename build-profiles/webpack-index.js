@@ -1,5 +1,6 @@
 require('../src/ui-checkbox');
 require('../src/ui-actionbutton');
+require('../src/ui-minitags');
 require('../src/ui-input');
 require('../src/ui-list');
 require('../src/ui-popup');

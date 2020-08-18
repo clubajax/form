@@ -132,7 +132,7 @@ class UIList extends BaseComponent {
         this.update();
         this.onConnected(() => {
             this.setItemsFromData();
-            // this.controller.setSelected(this.controller.getSelected());
+            // this.controller.setSelected(open.getSelected());
         });
     }
 
@@ -244,9 +244,9 @@ class UIList extends BaseComponent {
 
         this.disabled = this.hasAttribute(ATTR.DISABLED);
 
-        if (postValue || parentValue) {
-            this.select(postValue || parentValue);
-        }
+        // if (postValue || parentValue) {
+        //     this.select(postValue || parentValue);
+        // }
     }
 
     setDomData() {
@@ -387,18 +387,21 @@ class UIList extends BaseComponent {
         this.connectHandles = on.makeMultiHandle([
             this.on('click', () => {
                 this.list.focus();
-            }),
+            }, null, null),
             this.on('focus', () => {
                 this.list.focus();
-            }),
+            }, null, null),
             this.on('key-select', () => {
                 if (isNull(this.value)) {
                     return;
                 }
+                const changed = this.value !== this.lastValue;
                 this.lastValue = this.value;
                 dom.classList.toggle(this, 'has-selected', !!this.value);
-                this.emitEvent();
-            }),
+                if (changed) {
+                    this.emitEvent();
+                }
+            }, null, null),
         ]);
 
         this.controller = keys(this.list, options);
@@ -435,7 +438,7 @@ class UIList extends BaseComponent {
             }
         };
         const index = this.getIndex();
-        this.fire('remove', { value: this.value });
+        this.fire('remove', { value: this.value }, false);
     }
 
     editRowEdit() {
@@ -480,7 +483,7 @@ class UIList extends BaseComponent {
                 // select
                 this.value = item.value;
             };
-            this.fire('add', { value: item, index: index + 1 });
+            this.fire('add', { value: item, index: index + 1 }, null);
         });
     }
 

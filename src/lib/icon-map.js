@@ -10,12 +10,23 @@ const map = {
     chess: 'fas fa-chess-rook',
     error: 'fas fa-exclamation-circle',
     warning: 'fas fa-exclamation-triangle',
-    caretDown: 'fas fa-caret-down',
-    angleLeft: 'fas fa-angle-left',
-    angleRight: 'fas fa-angle-right',
     search: 'fas fa-search',
     spinner: 'fas fa-sync-alt',
     calendar: 'far fa-calendar-alt',
+    close: 'far fa-times-circle',
+    
+    caretDown: 'fas fa-caret-down',
+    caretup: 'fas fa-caret-up',
+    caretRight: 'fas fa-caret-right',
+    caretLeft: 'fas fa-caret-left',
+
+    angleLeft: 'fas fa-angle-left',
+    angleRight: 'fas fa-angle-right',
+    angleUp: 'fas fa-angle-up',
+    angleDown: 'fas fa-angle-down',
+
+    sortUp: 'fas fa-sort-up',
+    sortDown: 'fas fa-sort-down',
 
     'folder': 'far fa-folder',
     'file': 'far fa-file-alt',

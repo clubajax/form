@@ -89,7 +89,7 @@ class UiSearch extends BaseComponent {
     }
 
     connectInput() {
-        this.input.on('keyup', e => {
+        this.input.on('keyup', (e) => {
             // meta handles paste
             if (on.isAlphaNumeric(e.key) || e.key === 'Backspace' || e.key === 'Delete' || e.key === 'Meta') {
                 this.fire('search', { value: this.input.value });
@@ -99,7 +99,7 @@ class UiSearch extends BaseComponent {
         this.input.on('focus', () => {
             this.classList.add('is-focused');
         });
-        
+
         this.input.on('focus', () => {
             this.classList.remove('is-focused');
         });
@@ -109,7 +109,7 @@ class UiSearch extends BaseComponent {
         this.list.on('list-change', () => {
             this.isSelecting = true;
             this.setDisplay();
-            this.emit('change', {value: this.value});
+            this.emit('change', { value: this.value });
             setTimeout(() => {
                 this.popup.hide();
                 setTimeout(() => {
@@ -128,9 +128,16 @@ class UiSearch extends BaseComponent {
                 class: 'search-input',
                 placeholder: this.placeholder || DEFAULT_PLACEHOLDER,
                 icon: this.busy ? 'spinner' : 'search',
+                autoselect: this.autoselect
             },
             this
         );
+        this.input.on('focus', () => {
+            this.classList.add('focus');
+        });
+        this.input.on('blur', () => {
+            this.classList.remove('focus');
+        });
         this.setDisplay();
     }
 
@@ -156,14 +163,12 @@ class UiSearch extends BaseComponent {
     }
 
     render() {
-        this.labelNode = dom(
-            'label',
-            { html: this.label, class: 'ui-label' },
-            this
-        );
+        if (this.label) {
+            this.labelNode = dom('label', { html: this.label, class: 'ui-label' }, this);
+        }
         this.buttonid = uid('drop-button');
         this.renderButton(this.buttonid);
-       
+
         this.setDisplay();
     }
 }
@@ -173,23 +178,7 @@ function isNull(value) {
 }
 
 module.exports = BaseComponent.define('ui-search', UiSearch, {
-    props: [
-        'placeholder',
-        'label',
-        'limit',
-        'name',
-        'event-name',
-        'align',
-        'btn-class',
-    ],
-    bools: [
-        'disabled',
-        'open-when-blank',
-        'allow-new',
-        'required',
-        'case-sensitive',
-        'autofocus',
-        'busy',
-    ],
+    props: ['placeholder', 'label', 'limit', 'name', 'event-name', 'align', 'btn-class'],
+    bools: ['disabled', 'open-when-blank', 'allow-new', 'required', 'case-sensitive', 'autofocus', 'autoselect', 'busy'],
     attrs: ['value'],
 });

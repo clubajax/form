@@ -42,7 +42,7 @@ ui-list {
             }
             &[aria-selected] {
                 background-color: var(--list-item-selected);
-                color: white;
+                color: var(--list-item-selected-txt);
                 &:focus {
                     box-shadow: 0 0 10px var(--list-item-focus) inset;
                 }

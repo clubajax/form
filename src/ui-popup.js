@@ -122,12 +122,13 @@ class UiPopup extends BaseComponent {
                     onScroll(this.hide.bind(this), this),
                 ]);
                 this.on(this.button, 'click', (e) => {
+                    console.log('SHOW');
                     this.show();
-                });
+                }, null);
                 if (!this.noHideOnBlur) {
                     this.on(this.button, 'blur', (e) => {
                         this.hide();
-                    });
+                    }, null);
                 }
                 this.on(this.button, 'keydown', e => {
                     if (e.key === 'Enter' && !this.showing) {
@@ -135,7 +136,7 @@ class UiPopup extends BaseComponent {
                         e.preventDefault();
                         this.show();
                     }
-                });
+                }, null);
             }
         }
     }

@@ -1,0 +1,32 @@
+ui-minitags{
+    .ui-button{
+        width: 300px;
+        min-height: 50px;
+        background-color: white;
+        text-align: left;
+    }
+
+    .ui-tag{
+        position: relative;
+        display: inline-block;
+        border: 1px solid #ccc;
+        padding: 10px;
+        font-size: 14px;
+        margin: 0 5px 5px 0;
+        padding-right: 30px;
+
+        ui-icon{
+            position: absolute;
+            top: 50%;
+            right: 8px;
+            transform: translate(0, -50%);
+            cursor: pointer;
+        }
+    }
+}
+
+
+
+ui-popup.minitags{
+
+}

@@ -441,7 +441,7 @@
             });
 
             describe('Lazy Data', function () {
-                it.only('should render with lazy data', function (done) {
+                it('should render with lazy data', function (done) {
                     setup({data: data5, label: 'Lazy data'});
                     ready(function () {
                         node.setLazyData();

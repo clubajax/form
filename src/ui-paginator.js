@@ -171,7 +171,7 @@ class Paginator extends BaseComponent {
             'button',
             {
                 class: 'ui-button left',
-                html: dom('ui-icon', { type: 'angleLeft' }),
+                html: dom('ui-icon', { type: 'caretLeft' }),
             },
             this
         );
@@ -181,14 +181,14 @@ class Paginator extends BaseComponent {
             'button',
             {
                 class: 'ui-button right',
-                html: dom('ui-icon', { type: 'angleRight' }),
+                html: dom('ui-icon', { type: 'caretRight' }),
             },
             this
         );
 
-        this.on(this.leftButton, 'click', this.onLeftClick.bind(this));
-        this.on(this.rightButton, 'click', this.onRightClick.bind(this));
-        this.on(this.pageNumbers, 'click', this.onNumClick.bind(this));
+        this.on(this.leftButton, 'click', this.onLeftClick.bind(this), null);
+        this.on(this.rightButton, 'click', this.onRightClick.bind(this), null);
+        this.on(this.pageNumbers, 'click', this.onNumClick.bind(this), null);
 
         this.setDisplayState();
     }
@@ -196,10 +196,10 @@ class Paginator extends BaseComponent {
 
 function getValue(data, dropData){
     const value = data ? data.limit : dropData[0].value;
-    if (!dropData.find(d => d.value === value)) {
+    if (!dropData.find(d => `${d.value}` === `${value}`)) {
         return dropData[0].value;
     }
-    return value;
+    return `${value}`;
 }
 
 function renderNumButton(num, parent, disabled) {

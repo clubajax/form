@@ -1,0 +1,92 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<title>Test Mini Tags</title>
+    <script src="src/test-files.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+        integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+	<style>
+		body {
+			padding: 20px 20px 100px 20px;
+			font-family: sans-serif;
+		}
+	</style>
+</head>
+<body>
+<h1>Test Action Button</h1>
+<div id="mocha"></div>
+<div id="tests"></div>
+
+<script>
+
+	mocha.setup('tdd');
+
+	suite('UiMiniTags', function () {
+		this.timeout(3000);
+		var
+			suite = window.suite,
+			test = window.test,
+			dom = window.dom,
+			on = window.on,
+			expect = chai.expect,
+			body = dom.byId('tests'),
+			data = [
+				{ label: 'Orange', value: 'orange' },
+				{ label: 'Red', value: 'red' },
+				{ label: 'Blue', value: 'blue' },
+				{ label: 'Green', value: 'green' }
+			],
+			data2 = [
+				{ label: 'Puppy', value: 'puppy' },
+				{ label: 'Birdy', value: 'birdy' },
+				{ label: 'Kitty', value: 'kitty' },
+				{ label: 'Snakey', value: 'snakey' }
+			];
+
+		function click (node, index) {
+			const lis = dom.queryAll(node.popup, 'li');
+			node.once('open', function () {
+				on.emit(lis[index], 'click');
+			});
+			on.emit(node.button, 'click');
+		}
+
+		function select (node, index, eventName) {
+			eventName = eventName || 'change';
+			return new Promise(function (resolve) {
+				node.once(eventName, function (e) {
+					resolve(e);
+				});
+				node.once('open', function () {
+					on.emit(node.popup.children[index], 'click');
+				});
+				on.emit(node.button, 'click');
+			});
+		}
+
+		suite('ui-minitags', function () {
+
+			test.only('it should render', function (done) {
+				const node = dom('ui-minitags', {
+                    data: data,
+				}, body);
+				onDomReady(node, function () {
+					
+					done();
+				});
+			});
+
+			
+		});
+	});
+
+
+	if (!/puppeteer/.test(location.hash)) {
+		mocha.run();
+	}
+
+
+</script>
+
+</body>
+</html>

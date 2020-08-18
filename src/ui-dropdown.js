@@ -46,7 +46,8 @@ class UiDropdown extends BaseComponent {
         }
         this.__value = value;
 
-        if (this.list && !this.list.getItem(value)) {
+        // if (this.list && !this.list.getItem(value)) {
+        if (this.list) {
             this.setDisplay();
         }
     }
@@ -137,8 +138,8 @@ class UiDropdown extends BaseComponent {
             { html: isNull(item) ? this.placeholder || DEFAULT_PLACEHOLDER : item.alias || item.label },
             this.button
         );
-        if (!this['no-arrow']) {
-            dom('ui-icon', { type: 'caretDown' }, this.button);
+        if (this.icon !== 'none') {
+            dom('ui-icon', { type: this.icon || 'caretDown' }, this.button);
         }
         if (this.popup) {
             setTimeout(() => {
@@ -165,14 +166,24 @@ class UiDropdown extends BaseComponent {
     renderButton() {
         this.button = dom('button', { id: this.buttonid, class: 'ui-button drop-input', type: 'button' }, this);
         if (typeof this.data === 'function') {
-            this.once(this.button, 'click', () => {
-                this.setLazyData();
-            });
-            this.once(this.button, 'keydown', (e) => {
-                if (e.key === 'Enter') {
+            this.once(
+                this.button,
+                'click',
+                () => {
                     this.setLazyData();
-                }
-            });
+                },
+                null
+            );
+            this.once(
+                this.button,
+                'keydown',
+                (e) => {
+                    if (e.key === 'Enter') {
+                        this.setLazyData();
+                    }
+                },
+                null
+            );
         }
         this.setDisplay();
     }
@@ -187,6 +198,10 @@ class UiDropdown extends BaseComponent {
             data,
             value: this.value,
         });
+
+        if (this.className) {
+            this.popupClass += ' ' + this.className;
+        }
 
         this.popup = dom(
             'ui-popup',
@@ -236,17 +251,17 @@ function getValueFromList(data) {
 }
 
 function getItemFromList(data, value) {
-    if (!data) {
-        return null;
-    }
     if (typeof data === 'function') {
         data = data();
+    }
+    if (!data) {
+        return null;
     }
     return data.find((m) => m.value === value);
 }
 
 module.exports = BaseComponent.define('ui-dropdown', UiDropdown, {
-    props: ['placeholder', 'label', 'limit', 'name', 'event-name', 'align', 'btn-class', 'sortdesc', 'sortasc'],
+    props: ['icon', 'placeholder', 'label', 'limit', 'name', 'event-name', 'align', 'btn-class', 'sortdesc', 'sortasc'],
     bools: [
         'disabled',
         'open-when-blank',
@@ -255,7 +270,6 @@ module.exports = BaseComponent.define('ui-dropdown', UiDropdown, {
         'case-sensitive',
         'autofocus',
         'busy',
-        'no-arrow',
         'size-to-popup',
         'autosized',
     ],
