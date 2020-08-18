@@ -1,5 +1,6 @@
 const BaseComponent = require('@clubajax/base-component');
 const dom = require('@clubajax/dom');
+const nodash = require('@clubajax/no-dash');
 const uid = require('./lib/uid');
 const emitEvent = require('./lib/emitEvent');
 require('./ui-popup');
@@ -100,7 +101,8 @@ class UiDropdown extends BaseComponent {
 
     connectEvents() {
         this.list.on('list-change', (e) => {
-            if (e.detail.value === this.__value) {
+            console.log('list-change', e.detail);
+            if (nodash.equal(e.detail.value, this.__value)) {
                 return;
             }
             // set display, regardless of elligible event
@@ -197,6 +199,8 @@ class UiDropdown extends BaseComponent {
             sortasc: this.sortasc,
             data,
             value: this.value,
+            multiple: this.multiple,
+            'persist-multiple': this.persistMultiple,
         });
 
         if (this.className) {

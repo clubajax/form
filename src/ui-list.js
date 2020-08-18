@@ -37,6 +37,9 @@ class UIList extends BaseComponent {
         }
     }
 
+    get mult() {
+        return this.multitple || this['persist-multiple'];
+    }
     set value(value) {
         this.lastValue = value;
         this.setControllerValue(value);
@@ -48,8 +51,8 @@ class UIList extends BaseComponent {
             if (!this.controller) {
                 return this.__value || this.getAttribute('value');
             }
-            if (this.multiple) {
-                return this.controller.getSelected().map((node) => node.getAttribute('value'));
+            if (this.mult) {
+                return (this.controller.getSelected() || []).map((node) => node.getAttribute('value'));
             }
             const node = this.controller.getSelected();
             if (node) {
@@ -292,7 +295,7 @@ class UIList extends BaseComponent {
     setControllerValue(value) {
         if (this.controller) {
             if (Array.isArray(value)) {
-                if (!this.multiple) {
+                if (!this.mult) {
                     throw new Error('Trying to set multiple values without the `multiple` attribute');
                 }
                 const selector = value.map(getSelector).join(',');
@@ -340,6 +343,7 @@ class UIList extends BaseComponent {
 
     emitEvent() {
         // emits a "change" event
+        console.log('emit', this.value);
         emitEvent(this, this.value);
     }
 
@@ -379,6 +383,7 @@ class UIList extends BaseComponent {
         const options = {
             canSelectNone: this.getAttribute('can-select-none'),
             multiple: this.multiple,
+            persistMultiple: this['persist-multiple'],
             searchTime: this.getAttribute('search-time'),
             externalSearch: this['external-search'],
             buttonId: this.buttonid,
@@ -392,6 +397,7 @@ class UIList extends BaseComponent {
                 this.list.focus();
             }, null, null),
             this.on('key-select', () => {
+                console.log('key-select', this.value);
                 if (isNull(this.value)) {
                     return;
                 }
@@ -545,7 +551,7 @@ class UIList extends BaseComponent {
 }
 
 function isNull(value) {
-    return value === null || value === undefined;
+    return value === null || value === undefined || (Array.isArray(value) && !value.length);
 }
 
 const SPACE = '&nbsp;';
@@ -656,6 +662,6 @@ function noValues(data) {
 
 module.exports = BaseComponent.define('ui-list', UIList, {
     props: ['label', 'limit', 'name', 'event-name', 'align', 'buttonid', 'external-search', 'sortdesc', 'sortasc'],
-    bools: ['disabled', 'readonly', 'multiple', 'editable'],
+    bools: ['disabled', 'readonly', 'multiple', 'persist-multiple', 'editable'],
     attrs: ['value'],
 });

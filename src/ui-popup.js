@@ -122,7 +122,6 @@ class UiPopup extends BaseComponent {
                     onScroll(this.hide.bind(this), this),
                 ]);
                 this.on(this.button, 'click', (e) => {
-                    console.log('SHOW');
                     this.show();
                 }, null);
                 if (!this.noHideOnBlur) {

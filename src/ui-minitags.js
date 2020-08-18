@@ -8,27 +8,48 @@ class UiMiniTags extends UiDropdown {
     
     constructor() {
         super();
-        this.popupClass = 'actionbutton';
+        this.popupClass = 'minitags';
+        this.persistMultiple = true;
+    }
+
+    renderTag(id, label) {
+        dom('div', {
+            class: 'ui-tag',
+            'data-id': id,
+            html: [
+                dom('span', {html: label}),
+                dom('ui-icon', {type: 'close'})
+        ]}, this.button);
+    }
+
+    getNodeId(node) {
+        return dom.attr(node, 'data-id');    
+    }
+
+    getDisplayIds() {
+        return dom.queryAll(this, '.ui-tag').map(n => this.getNodeId(n))
     }
 
     setDisplay() {
-        dom('div', {
-            class: 'ui-tag',
-            html: [
-                dom('span', {html: 'Mike Wilcox'}),
-                dom('ui-icon', {type: 'close'})
-        ]}, this.button);
+        const ids = this.getDisplayIds();
+
+        console.log('this.value', this.value);
+        (this.value || []).forEach((val) => {
+            console.log('VAL', val);
+            if (!ids.includes(val)) {
+                this.renderTag(val, this.data.find(d => d.value === val).label);
+            }
+        })
     }
 
     renderButton() {
         this.button = dom('button', {id: this.buttonid, class: 'ui-button drop-input', type: 'button'}, this);
         this.on(this.button, 'click', (e) => {
-            console.log('E', e.target.localName);
+            console.log('VALUE', this.value);
             if (e.target.localName === 'ui-icon') {
-                // e.preventDefault();
-                // e.stopPropagation();
                 e.stopImmediatePropagation();
             }
+            const id = this.getNodeId(e.target);
         });
         if (typeof this.data === 'function') {
             this.once(
