@@ -13,6 +13,8 @@ class UiPopup extends BaseComponent {
         this.align;
         this.buttonid;
         this.label;
+
+        this.noHideOnBlur = true
     }
 
     onOpen(value) {
@@ -94,7 +96,7 @@ class UiPopup extends BaseComponent {
                     this.component.reset();
                 }
                 this.hide();
-            });
+            }, null);
         });
     }
 
@@ -156,10 +158,10 @@ class UiPopup extends BaseComponent {
                 this.hide();
             }, HIDE_TIMEOUT);
         };
-        this.on(this.button, 'mouseenter', show);
-        this.on(this.button, 'mouseleave', hide);
-        this.on('mouseenter', show);
-        this.on('mouseleave', hide);
+        this.on(this.button, 'mouseenter', show, null);
+        this.on(this.button, 'mouseleave', hide, null);
+        this.on('mouseenter', show, null, null);
+        this.on('mouseleave', hide, null, null);
         this.clickOff = onScroll(hide);
         this.clickOff.resume();
     }
@@ -214,6 +216,10 @@ class UiPopup extends BaseComponent {
                 this.parentNode.removeChild(this);
             }
         }, 500)
+    }
+
+    position() {
+        position(this, this.button, this.align);    
     }
 
     destroy() {

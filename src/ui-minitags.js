@@ -1,11 +1,10 @@
 const BaseComponent = require('@clubajax/base-component');
-const UiDropdown = require('./ui-dropdown');
 const dom = require('@clubajax/dom');
+const UiDropdown = require('./ui-dropdown');
+const emitEvent = require('./lib/emitEvent');
 require('./ui-icon');
 
-
 class UiMiniTags extends UiDropdown {
-    
     constructor() {
         super();
         this.popupClass = 'minitags';
@@ -13,68 +12,87 @@ class UiMiniTags extends UiDropdown {
     }
 
     renderTag(id, label) {
-        dom('div', {
-            class: 'ui-tag',
-            'data-id': id,
-            html: [
-                dom('span', {html: label}),
-                dom('ui-icon', {type: 'close'})
-        ]}, this.button);
+        dom(
+            'div',
+            {
+                class: 'ui-tag',
+                'data-id': id,
+                html: [dom('span', { html: label }), dom('ui-icon', { type: 'close' })],
+            },
+            this.button
+        );
+    }
+
+    removeTag(id) {
+        const node = dom.query(this, `[data-id="${id}"]`);
+        if (!node) {
+            return;
+        }
+        dom.destroy(node);
+        const value = this.value;
+        const index = value.findIndex((v) => v === id);
+        value.splice(index, 1);
+        this.value = value;
+        this.checkHeight();
+        emitEvent(this);
     }
 
     getNodeId(node) {
-        return dom.attr(node, 'data-id');    
+        return dom.attr(node, 'data-id');
     }
 
     getDisplayIds() {
-        return dom.queryAll(this, '.ui-tag').map(n => this.getNodeId(n))
+        return dom.queryAll(this, '.ui-tag').map((n) => this.getNodeId(n));
     }
 
     setDisplay() {
         const ids = this.getDisplayIds();
-
-        console.log('this.value', this.value);
         (this.value || []).forEach((val) => {
-            console.log('VAL', val);
             if (!ids.includes(val)) {
-                this.renderTag(val, this.data.find(d => d.value === val).label);
+                this.renderTag(val, this.data.find((d) => d.value === val).label);
             }
-        })
+        });
+        this.checkHeight();
     }
 
     renderButton() {
-        this.button = dom('button', {id: this.buttonid, class: 'ui-button drop-input', type: 'button'}, this);
+        this.button = dom('button', { id: this.buttonid, class: 'ui-button minitag-button', type: 'button' }, this);
+        dom('ui-icon', {type: 'caretDown'}, this);
         this.on(this.button, 'click', (e) => {
-            console.log('VALUE', this.value);
             if (e.target.localName === 'ui-icon') {
                 e.stopImmediatePropagation();
+                const id = this.getNodeId(e.target.parentNode);
+                this.removeTag(id);
             }
-            const id = this.getNodeId(e.target);
         });
-        if (typeof this.data === 'function') {
-            this.once(
-                this.button,
-                'click',
-                () => {
-                    this.setLazyData();
-                },
-                null
-            );
-            this.once(
-                this.button,
-                'keydown',
-                (e) => {
-                    if (e.key === 'Enter') {
-                        this.setLazyData();
-                    }
-                },
-                null
-            );
-        }
+        this.lazyListener();
+        this.currentHeight = dom.box(this).h;
         this.setDisplay();
+    }
+
+    renderPopup() {
+        super.renderPopup();
+        const applyButton = dom('button', {class: 'ui-button', html: 'Done'});
+        dom('div', {
+            class: 'minitag-apply-container',
+            html: applyButton
+        }, this.popup);
+        this.on(applyButton, 'click', () => {
+            this.popup.hide();
+        })
+    }
+
+    checkHeight() {
+        const h = dom.box(this).h;
+        if (h !== this.currentHeight) {
+            this.currentHeight = h;
+            if (this.popup) {
+                this.popup.position();
+            }
+        }
     }
 }
 
 module.exports = BaseComponent.define('ui-minitags', UiMiniTags, {
-    props: ['icon']
+    props: ['icon'],
 });

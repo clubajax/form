@@ -84,6 +84,10 @@ class UiDropdown extends BaseComponent {
         return this.list ? this.list.data : this.__data;
     }
 
+    get mult() {
+        return this.multitple || this.persistMultiple;
+    }
+
     sizeToPopup() {
         dom.style(this.button, {
             width: dom.box(this.popup).w + 20, // allow for dropdown arrow
@@ -101,7 +105,6 @@ class UiDropdown extends BaseComponent {
 
     connectEvents() {
         this.list.on('list-change', (e) => {
-            console.log('list-change', e.detail);
             if (nodash.equal(e.detail.value, this.__value)) {
                 return;
             }
@@ -114,9 +117,11 @@ class UiDropdown extends BaseComponent {
                 emitEvent(this);
                 this.lastValue = this.value;
             }
-            setTimeout(() => {
-                this.popup.hide();
-            }, 300);
+            if (!this.mult) {
+                setTimeout(() => {
+                    this.popup.hide();
+                }, 300);
+            }
         });
         this.popup.on('popup-open', () => {
             this.list.controller.scrollTo();
@@ -165,8 +170,7 @@ class UiDropdown extends BaseComponent {
         });
     }
 
-    renderButton() {
-        this.button = dom('button', { id: this.buttonid, class: 'ui-button drop-input', type: 'button' }, this);
+    lazyListener() {
         if (typeof this.data === 'function') {
             this.once(
                 this.button,
@@ -187,6 +191,11 @@ class UiDropdown extends BaseComponent {
                 null
             );
         }
+    }
+
+    renderButton() {
+        this.button = dom('button', { id: this.buttonid, class: 'ui-button drop-input', type: 'button' }, this);
+        this.lazyListener();
         this.setDisplay();
     }
 
@@ -276,6 +285,8 @@ module.exports = BaseComponent.define('ui-dropdown', UiDropdown, {
         'busy',
         'size-to-popup',
         'autosized',
+        'multiple',
+        'persist-multiple',
     ],
     attrs: ['value'],
 });

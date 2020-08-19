@@ -69,14 +69,33 @@
 
 		suite('ui-minitags', function () {
 
-			test.only('it should render', function (done) {
+			test('it should render with no values', function (done) {
 				const node = dom('ui-minitags', {
                     data: data,
 				}, body);
 				onDomReady(node, function () {
-					
+					node.on('change', (e) => {
+                        console.log('change', e.value);
+                    })
 					done();
 				});
+            });
+            
+            test.only('it should render with values', function (done) {
+                done();
+
+                setTimeout(() => {
+				const node = dom('ui-minitags', {
+                    data: [...data, ...data2],
+                    value: ['kitty', 'blue']
+				}, body);
+				onDomReady(node, function () {
+					node.on('change', (e) => {
+                        console.log('change', e.value);
+                    })
+					
+                });
+            }, 100)
 			});
 
 			

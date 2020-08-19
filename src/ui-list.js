@@ -40,6 +40,7 @@ class UIList extends BaseComponent {
     get mult() {
         return this.multitple || this['persist-multiple'];
     }
+    
     set value(value) {
         this.lastValue = value;
         this.setControllerValue(value);
@@ -299,7 +300,7 @@ class UIList extends BaseComponent {
                     throw new Error('Trying to set multiple values without the `multiple` attribute');
                 }
                 const selector = value.map(getSelector).join(',');
-                this.controller.setSelected(dom.queryAll(this, selector));
+                this.controller.setSelected(selector ? dom.queryAll(this, selector) : null);
             } else {
                 const r = dom.query(this, getSelector(value));
                 this.controller.setSelected(r);
@@ -343,7 +344,6 @@ class UIList extends BaseComponent {
 
     emitEvent() {
         // emits a "change" event
-        console.log('emit', this.value);
         emitEvent(this, this.value);
     }
 
@@ -397,7 +397,6 @@ class UIList extends BaseComponent {
                 this.list.focus();
             }, null, null),
             this.on('key-select', () => {
-                console.log('key-select', this.value);
                 if (isNull(this.value)) {
                     return;
                 }
