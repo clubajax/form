@@ -1,62 +1,80 @@
-
 ui-minitags {
     position: relative;
     display: block;
     width: var(--minitag-width);
     border: 1px solid var(--inp-brd);
-    .minitag-button {
-        width: 100%;
-        min-height: 40px;
-        background-color:white;
-        text-align: left;
-        border: 0;
-        padding: 10px 30px 5px 10px;
-    }
+    border-radius: 6px;
+    .minitag-buttonwrap {
+        position: relative;
+        .minitag-button {
+            border-radius: 6px;
+            width: 100%;
+            min-height: 40px;
+            background-color: white;
+            text-align: left;
+            border: 0;
+            padding: 10px 30px 5px 10px;
+        }
 
-    & > ui-icon{
-        position: absolute;
-        top: 50%;
-        right: 15px;
-        transform: translate(0, -50%);
+        & > ui-icon {
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translate(0, -50%);
+        }
     }
 
     .ui-tag {
         position: relative;
         display: inline-block;
-        border: 1px solid #ccc;
         padding: 5px 10px;
         font-size: 14px;
         margin: 0 5px 5px 0;
         padding-right: 30px;
         background-color: var(--tag-color);
-        border-radius: var(--tag-radius);
+        border-radius: 15px;
         ui-icon {
             position: absolute;
             top: 50%;
-            right: 8px;
+            right: 7px;
             transform: translate(0, -50%);
             cursor: pointer;
         }
     }
 }
 
-.minitag-apply-container{
-    padding: 10px;
-    border: 1px solid var(--inp-brd);
-    border-top: 0;
-    background-color: white;
-    text-align: right;
-    .ui-button{
-        display: inline-block;
+.minitag-apply-container {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 40px;
+    .ui-button {
+        width: 100%;
+        height: 100%;
+        border-top-right-radius: 0;
+        border-top-left-radius: 0;
+        border: 0;
     }
 }
 
-ui-popup.minitags {
-    min-width: var(--minitag-width);
-    transform: translateX(-1px);
+ui-container.minitags {
+    display: none;
+    .minitag-listwrap {
+        height: 200px;
+        background-color: white;
+        overflow: auto;
+        ul {
+            border: 0;
+        }
+    }
+
     ui-list ul li[aria-selected] {
         background-color: white;
         color: #ccc;
         pointer-events: none;
+    }
+
+    &.open{
+        display: block;
     }
 }

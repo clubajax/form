@@ -4,7 +4,7 @@ const on = require('@clubajax/on');
 
 // detach popup from body when not showing
 // - unless keepPopupsAttached
-class UiPopup extends BaseComponent {
+class UiPopMini extends BaseComponent {
     constructor() {
         super();
         this.destroyOnDisconnect = false;
@@ -493,7 +493,7 @@ function onScroll(hide, popup) {
         },
     };
 }
-module.exports = BaseComponent.define('ui-popup', UiPopup, {
-    props: ['buttonid', 'label', 'align', 'use-hover'],
-    bools: ['open', 'lazy'],
+module.exports = BaseComponent.define('ui-popmini', UiPopMini, {
+    props: ['align'],
+    bools: ['open'],
 });

@@ -1,6 +1,6 @@
 {
   "name": "@clubajax/form",
-  "version": "0.8.69",
+  "version": "0.8.70",
   "description": "Web Components for Forms",
   "main": "build/index.js",
   "repository": "https://github.com/clubajax/form.git",
@@ -17,7 +17,7 @@
     "@clubajax/base-component": "2.4.2",
     "@clubajax/dates": "^2.3.1",
     "@clubajax/dom": "2.8.5",
-    "@clubajax/key-nav": "2.6.2",
+    "@clubajax/key-nav": "2.6.4",
     "@clubajax/no-dash": "0.6.1",
     "@clubajax/on": "2.2.0"
   },

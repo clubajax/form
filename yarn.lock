@@ -750,10 +750,10 @@
   resolved "https://registry.yarnpkg.com/@clubajax/dom/-/dom-2.8.5.tgz#1d8893d9956f500d5354f248e5e553576cd55a64"
   integrity sha512-uDj2meNcvcrGE/mC1Jfzuq5mDRqydBLseFR9TSlH1529wYFWfqwvAl5lV22uXngIJerBFPcbULwZFDoeqkIU+g==
 
-"@clubajax/key-nav@2.6.2":
-  version "2.6.2"
-  resolved "https://registry.yarnpkg.com/@clubajax/key-nav/-/key-nav-2.6.2.tgz#2c20abefcf932aead3830a6a644070907c5eca4f"
-  integrity sha512-rYxuZkpS2VKHJnb1SBTJFPRrhQVVm39C0MfHyHPaZzxxek8dwlePzIZzrq9xadqMwCaGuZq2t5WeHSyjWZO/kw==
+"@clubajax/key-nav@2.6.4":
+  version "2.6.4"
+  resolved "https://registry.yarnpkg.com/@clubajax/key-nav/-/key-nav-2.6.4.tgz#9d43b89a76978e79ecf27b4be9e73a40ac71d3bc"
+  integrity sha512-8jCVJrXE68Bhge2q63pM0GzIw8wocJmEwKLl5JUpwJH/YWzzDnyXD8g94QK4FPM5Oy8Lxc2tcxIy6y0Y3oDEqg==
   dependencies:
     "@clubajax/on" "2.2.0"
 

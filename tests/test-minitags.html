@@ -1,114 +1,164 @@
 <!DOCTYPE HTML>
 <html lang="en">
+
 <head>
-	<title>Test Mini Tags</title>
+    <title>Test Mini Tags</title>
     <script src="src/test-files.js"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
         integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
-	<style>
-		body {
-			padding: 20px 20px 100px 20px;
-			font-family: sans-serif;
-		}
-	</style>
+    <style>
+        body {
+            padding: 20px 20px 100px 20px;
+            font-family: sans-serif;
+        }
+    </style>
 </head>
+
 <body>
-<h1>Test Mini Tags</h1>
-<em>Testing</em>
-<div id="mocha"></div>
-<div id="tests">
-    
-</div>
+    <h1>Test Mini Tags</h1>
+    <em>Testing</em>
+    <div id="mocha"></div>
+    <div id="tests">
 
-<script>
+    </div>
+    <p>
+        DOM Events are sent to notify code of interesting things that have taken place. Each event is represented by an object which is based on the Event interface, and may have additional custom fields and/or functions used to get additional information about what happened. Events can represent everything from basic user interactions to automated notifications of things happening in the rendering model.
 
-	mocha.setup('tdd');
+This article offers a list of events that can be sent; some are standard events defined in official specifications, while others are events used internally by specific browsers; for example, Mozilla-specific events are listed so that add-ons can use them to interact with the browser.
+    </p>
 
-	suite('UiMiniTags', function () {
-		this.timeout(3000);
-		var
-			suite = window.suite,
-			test = window.test,
-			dom = window.dom,
-			on = window.on,
-			expect = chai.expect,
-			body = dom.byId('tests'),
-			data = [
-				{ label: 'Orange', value: 'orange' },
-				{ label: 'Red', value: 'red' },
-				{ label: 'Blue', value: 'blue' },
-				{ label: 'Green', value: 'green' }
-			],
-			data2 = [
-				{ label: 'Puppy', value: 'puppy' },
-				{ label: 'Birdy', value: 'birdy' },
-				{ label: 'Kitty', value: 'kitty' },
-				{ label: 'Snakey', value: 'snakey' }
-			];
+    <script>
 
-		function click (node, index) {
-			const lis = dom.queryAll(node.popup, 'li');
-			node.once('open', function () {
-				on.emit(lis[index], 'click');
-			});
-			on.emit(node.button, 'click');
-		}
+        mocha.setup('tdd');
 
-		function select (node, index, eventName) {
-			eventName = eventName || 'change';
-			return new Promise(function (resolve) {
-				node.once(eventName, function (e) {
-					resolve(e);
-				});
-				node.once('open', function () {
-					on.emit(node.popup.children[index], 'click');
-				});
-				on.emit(node.button, 'click');
-			});
-		}
+        suite('UiMiniTags', function () {
+            this.timeout(3000);
+            var
+                suite = window.suite,
+                test = window.test,
+                dom = window.dom,
+                on = window.on,
+                expect = chai.expect,
+                body = dom.byId('tests'),
+                data = [
+                    {label: 'Orange', value: 'orange'},
+                    {label: 'Red', value: 'red'},
+                    {label: 'Blue', value: 'blue'},
+                    {label: 'Green', value: 'green'}
+                ],
+                data2 = [
+                    {label: 'Puppy', value: 'puppy'},
+                    {label: 'Birdy', value: 'birdy'},
+                    {label: 'Kitty', value: 'kitty'},
+                    {label: 'Snakey', value: 'snakey'},
+                    {label: 'Purple', value: 'purple'},
+                    {label: 'Yellow', value: 'yellow'},
+                    {label: 'Cyan', value: 'cyan'},
+                    {label: 'Indigo', value: 'indigo'},
+                    {label: 'Orange1', value: 'orange1'},
+                    {label: 'Red1', value: 'red1'},
+                    {label: 'Blue1', value: 'blue1'},
+                    {label: 'Green1', value: 'green1'},
+                    {label: 'Purple1', value: 'purple1'},
+                    {label: 'Yellow1', value: 'yellow1'},
+                    {label: 'Cyan1', value: 'cyan1'},
+                    {label: 'Indigo1', value: 'indigo1'},
+                ];
 
-		suite('ui-minitags', function () {
-
-			test('it should render with no values', function (done) {
-				const node = dom('ui-minitags', {
-                    data: data,
-				}, body);
-				onDomReady(node, function () {
-					node.on('change', (e) => {
-                        console.log('change', e.value);
-                    })
-					done();
-				});
-            });
-            
-            test.only('it should render with values', function (done) {
-                done();
-
-                setTimeout(() => {
-				const node = dom('ui-minitags', {
-                    data: [...data, ...data2],
-                    value: ['kitty', 'blue']
-				}, body);
-				onDomReady(node, function () {
-					node.on('change', (e) => {
-                        console.log('change', e.value);
-                    })
-					
+            function click(node, index) {
+                const lis = dom.queryAll(node.popup, 'li');
+                node.once('open', function () {
+                    on.emit(lis[index], 'click');
                 });
-            }, 100)
-			});
+                on.emit(node.button, 'click');
+            }
 
-			
-		});
-	});
+            function select(node, index, eventName) {
+                eventName = eventName || 'change';
+                return new Promise(function (resolve) {
+                    node.once(eventName, function (e) {
+                        resolve(e);
+                    });
+                    node.once('open', function () {
+                        on.emit(node.popup.children[index], 'click');
+                    });
+                    on.emit(node.button, 'click');
+                });
+            }
+
+            suite('ui-minitags', function () {
+
+                test('it should render with no values', function (done) {
+                    const node = dom('ui-minitags', {
+                        data: data,
+                    }, body);
+                    onDomReady(node, function () {
+                        node.on('change', (e) => {
+                            console.log('change', e.value);
+                        })
+                        done();
+                    });
+                });
+
+                test('it should render with values', function (done) {
+                    done();
+
+                    setTimeout(() => {
+                        const node = dom('ui-minitags', {
+                            data: [...data, ...data2],
+                            value: ['kitty', 'blue']
+                        }, body);
+                        onDomReady(node, function () {
+                            node.on('change', (e) => {
+                                console.log('change', e.value);
+                            })
+
+                        });
+                    }, 100)
+                });
+
+                test.only('it should open in a popup', function () {
+                    setTimeout(() => {
+                        const buttonid = 'test-button';
+                        const button = dom('button', {id: buttonid, html: 'Open Tags'}, body);
 
 
-	if (!/puppeteer/.test(location.hash)) {
-		mocha.run();
-	}
+
+                        on(button, 'click', () => {
+                            const node = dom('ui-minitags', {
+                                noselfdestroy: true,
+                                data: [...data, ...data2],
+                                value: ['kitty', 'blue']
+                            });
+                            const popup = dom('ui-popup', {
+                                buttonid,
+                                html: node
+                            }, body);
+
+                            popup.onDomReady(() => {
+                                popup.show();
+                            });
+
+                            node.on('popup-close', () => {
+                                node.destroy();
+                            })
+
+                        })
+
+                    }, 100)
+                });
+
+            });
+        });
 
 
-</script>
+        if (!/puppeteer/.test(location.hash)) {
+            mocha.run();
+        }
+
+
+    </script>
 
 </body>
+
 </html>

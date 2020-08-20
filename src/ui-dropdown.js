@@ -24,6 +24,8 @@ class UiDropdown extends BaseComponent {
         this.placeholder;
         this.lastValue = null;
         this.popupClass = 'dropdown';
+
+        this.destroyOnDisconnect = !this.noselfdestroy;
     }
 
     onDisabled(disabled) {
@@ -113,7 +115,7 @@ class UiDropdown extends BaseComponent {
             // ensure value is not the same,
             // do not emit events for initialization and
             // externally setting the value
-            if (this.lastValue + '' !== this.value + '') {
+            if (!nodash.equal(e.detail.value, this.__value)) {
                 emitEvent(this);
                 this.lastValue = this.value;
             }
@@ -219,6 +221,7 @@ class UiDropdown extends BaseComponent {
         this.popup = dom(
             'ui-popup',
             {
+                lazy: typeof this.data !== 'function',
                 buttonid: this.buttonid,
                 label: this.label,
                 html: this.list,
@@ -243,11 +246,17 @@ class UiDropdown extends BaseComponent {
     }
 
     disconnected() {
+        if (!this.noselfdestroy) {
+            this.destroy();
+        }
+    }
+
+    destroy() {
         if (this.popup) {
             this.list.destroy();
             this.popup.destroy();
         }
-        this.destroy();
+        super.destroy();
     }
 }
 
@@ -287,6 +296,7 @@ module.exports = BaseComponent.define('ui-dropdown', UiDropdown, {
         'autosized',
         'multiple',
         'persist-multiple',
+        'noselfdestroy'
     ],
     attrs: ['value'],
 });
