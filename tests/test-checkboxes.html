@@ -147,7 +147,7 @@
                     });
                 });
 
-                test.only('it should get and set via `value`', function (done) {
+                test('it should get and set via `value`', function (done) {
                     const node = dom('ui-checkbox', {label: 'Set by value', value: true}, body);
                     onDomReady(node, function () {
                         expect(node.value).to.equal(true);
@@ -191,7 +191,7 @@
                     });
                 });
 
-                test('it should emit custom events', function (done) {
+                test.only('it should emit custom events', function (done) {
                     const node = dom('ui-checkbox', {label: 'Emit custom events', 'event-name': 'boffo'}, body);
                     onDomReady(node, function () {
                         const events = [];
@@ -206,6 +206,10 @@
                         expect(events.join(',')).to.equal('1,0,1,0,1');
                         done();
                     });
+                });
+
+                test.only('it should render with no label', function () {
+                    const node = dom('ui-checkbox', {value: true}, body);
                 });
 
                 test('it should disable', function (done) {
@@ -270,6 +274,8 @@
                 test('it should appear as a smaller radio button (VISUAL)', function () {
                     const node = dom('ui-checkbox', {label: 'Radio Button', 'is-radio': true, class: 'small'}, body);
                 });
+
+                
             });
 
         });

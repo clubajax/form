@@ -40,17 +40,24 @@ class UiSearch extends BaseComponent {
     set data(data) {
         this.onDomReady(() => {
             if (!this.list && !data.length) {
+                if (this.popup) {
+                    this.popup.hide();
+                }
                 return;
             }
             this.renderList();
+            let updatePopup = false;
+            if (this.popup && this.list) {
+                updatePopup = this.popup.showing && data.length !== this.list.data.length;
+            }
             this.list.data = data;
-            if (this.input.focused && !this.isSelecting) {
+            if (this.input.focused && !this.isSelecting && data.length) {
                 if (this.popup.DOMSTATE === 'connected') {
                     this.popup.onDomReady(() => {
-                        this.popup.show();
+                        this.popup.show(updatePopup);
                     });
                 } else {
-                    this.popup.show();
+                    this.popup.show(updatePopup);
                 }
             }
         });
@@ -117,6 +124,10 @@ class UiSearch extends BaseComponent {
                 }, 300);
             }, 300);
         });
+
+        this.popup.on('popup-close', () => {
+            this.fire('hide', null, null);
+        });
     }
 
     renderButton(buttonid) {
@@ -128,7 +139,7 @@ class UiSearch extends BaseComponent {
                 class: 'search-input',
                 placeholder: this.placeholder || DEFAULT_PLACEHOLDER,
                 icon: this.busy ? 'spinner' : 'search',
-                autoselect: this.autoselect
+                autoselect: this.autoselect,
             },
             this
         );
@@ -156,6 +167,7 @@ class UiSearch extends BaseComponent {
                 buttonid: this.buttonid,
                 label: this.label,
                 html: this.list,
+                lazy: true
             },
             document.body
         );
@@ -179,6 +191,15 @@ function isNull(value) {
 
 module.exports = BaseComponent.define('ui-search', UiSearch, {
     props: ['placeholder', 'label', 'limit', 'name', 'event-name', 'align', 'btn-class'],
-    bools: ['disabled', 'open-when-blank', 'allow-new', 'required', 'case-sensitive', 'autofocus', 'autoselect', 'busy'],
+    bools: [
+        'disabled',
+        'open-when-blank',
+        'allow-new',
+        'required',
+        'case-sensitive',
+        'autofocus',
+        'autoselect',
+        'busy',
+    ],
     attrs: ['value'],
 });

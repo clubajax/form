@@ -107,7 +107,7 @@ class UiDropdown extends BaseComponent {
 
     connectEvents() {
         this.list.on('list-change', (e) => {
-            if (nodash.equal(e.detail.value, this.__value)) {
+            if (isEqual(e.detail.value, this.__value)) {
                 return;
             }
             // set display, regardless of elligible event
@@ -115,10 +115,8 @@ class UiDropdown extends BaseComponent {
             // ensure value is not the same,
             // do not emit events for initialization and
             // externally setting the value
-            if (!nodash.equal(e.detail.value, this.__value)) {
-                emitEvent(this);
-                this.lastValue = this.value;
-            }
+            emitEvent(this);
+            this.lastValue = this.value;
             if (!this.mult) {
                 setTimeout(() => {
                     this.popup.hide();
@@ -260,6 +258,13 @@ class UiDropdown extends BaseComponent {
     }
 }
 
+function isEqual(a, b) {
+    if (Array.isArray(a)) {
+        return nodash.equal(a, b);
+    }
+    return `${a}` === `${b}`;
+}
+
 function isNull(value) {
     return value === null || value === undefined;
 }
@@ -279,7 +284,7 @@ function getItemFromList(data, value) {
     if (!data) {
         return null;
     }
-    return data.find((m) => m.value === value);
+    return data.find((m) => `${m.value}` === `${value}`);
 }
 
 module.exports = BaseComponent.define('ui-dropdown', UiDropdown, {
@@ -296,7 +301,7 @@ module.exports = BaseComponent.define('ui-dropdown', UiDropdown, {
         'autosized',
         'multiple',
         'persist-multiple',
-        'noselfdestroy'
+        'noselfdestroy',
     ],
     attrs: ['value'],
 });

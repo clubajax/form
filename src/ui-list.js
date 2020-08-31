@@ -53,7 +53,7 @@ class UIList extends BaseComponent {
                 return this.__value || this.getAttribute('value');
             }
             if (this.mult) {
-                return (this.controller.getSelected() || []).map((node) => node.getAttribute('value'));
+                return toArray(this.controller.getSelected()).map((node) => node.getAttribute('value'));
             }
             const node = this.controller.getSelected();
             if (node) {
@@ -61,7 +61,12 @@ class UIList extends BaseComponent {
             }
             return this.__value || null;
         };
-        return dom.normalize(getValue());
+        
+        const v = getValue();
+        if (this.mult) {
+            return v.map(dom.normalize);
+        }
+        return dom.normalize(v);
     }
 
     set data(data) {
@@ -616,6 +621,9 @@ function createInput(node, item, isEdit, callback) {
 }
 
 function toArray(data) {
+    if (!data) {
+        return [];
+    }
     return Array.isArray(data) ? data : [data];
 }
 

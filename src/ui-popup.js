@@ -29,7 +29,6 @@ class UiPopup extends BaseComponent {
 
     domReady() {
         this.component = this.children[0] || {};
-        console.log('domready', this.component);
         this.button = dom.byId(this.buttonid);
 
         // need to determine if this is a tooltip or not
@@ -114,7 +113,6 @@ class UiPopup extends BaseComponent {
     }
 
     connectEvents() {
-        console.log('popup.connect');
         if (this.button) {
             if (this['use-hover']) {
                 this.connectHoverEvents();
@@ -128,7 +126,6 @@ class UiPopup extends BaseComponent {
                     onScroll(this.hide.bind(this), this),
                 ]);
                 this.on(this.button, 'click', (e) => {
-                    console.log('click', this.component);
                     this.show();
                 }, null);
                 if (!this.noHideOnBlur) {
@@ -191,8 +188,7 @@ class UiPopup extends BaseComponent {
         }
     }
 
-    show() {
-        console.log('show', this.component);
+    show(updatePosition) {
         if (this.showing) {
             return;
         }
@@ -224,7 +220,7 @@ class UiPopup extends BaseComponent {
         }
         this.fire('popup-close');
         setTimeout(() => {
-            if (this.parentNode) {
+            if (this.lazy && this.parentNode) {
                 this.parentNode.removeChild(this);
             }
         }, 500)
@@ -235,7 +231,6 @@ class UiPopup extends BaseComponent {
     }
 
     destroy() {
-        console.log('destroy.pop');
         if (this.clickoff) {
             this.clickoff.remove();
         }

@@ -256,7 +256,7 @@ class DateInput extends BaseComponent {
         }
         this.connectKeys();
 
-        this.popup = dom('ui-popup', { buttonid: this.buttonId, class: 'ui-date-input' }, document.body);
+        this.popup = dom('ui-popup', { buttonid: this.buttonId, class: 'ui-date-input', lazy: true }, document.body);
         this.popup.noHideOnBlur = true;
         this.picker = dom('date-picker', { time: this.time, tabindex: '0', 'event-name': 'date-change' }, this.popup);
 

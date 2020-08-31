@@ -1,5 +1,6 @@
 const BaseComponent = require('@clubajax/base-component');
 const dom = require('@clubajax/dom');
+const on = require('@clubajax/on');
 const paginate = require('./lib/paginate');
 const emitEvent = require('./lib/emitEvent');
 require('./ui-dropdown');
@@ -42,6 +43,11 @@ class Paginator extends BaseComponent {
         if (isDataEqual(value.value, this.data)) {
             return;
         }
+        this.data = {
+            start: value.value.start,
+            limit: value.value.limit,
+            total: value.value.total
+        }
         emitEvent(this, value);
     }
 
@@ -58,12 +64,13 @@ class Paginator extends BaseComponent {
     }
 
     onNumClick(e) {
-        const num = e.target.getAttribute('data-value');
+        let num = e.target.getAttribute('data-value');
         if (num) {
+            num = parseInt(num || e, 10);
             this.emitEvent({
                 value: {
                     ...this.data,
-                    start: (parseInt(num, 10) - 1) * 10,
+                    start: ((num - 1) * this.data.limit),
                 },
             });
         }
@@ -100,7 +107,7 @@ class Paginator extends BaseComponent {
             return;
         }
         const { buttonIndex } = this.pagination;
-        const {start, total, limit} = this.data;
+        const { start, total, limit } = this.data;
         const dropData = (this.dropData || DEFAULT_DROP_DATA).map((d) => parseInt(d.value, 10));
         const minDropValue = Math.min(...dropData);
         const showButtons = total > limit;
@@ -137,6 +144,16 @@ class Paginator extends BaseComponent {
         this.limitDrop.value = value;
     }
 
+    connectEvents() {
+        if (this.multiHandle) {
+            this.multiHandle.remove();
+        }
+        this.multiHandle = on.makeMultiHandle([
+            on(this.leftButton, 'click', this.onLeftClick.bind(this), null),
+            on(this.rightButton, 'click', this.onRightClick.bind(this), null),
+            on(this.pageNumbers, 'click', this.onNumClick.bind(this), null),
+        ]);
+    }
     renderDropdown() {
         this.limitDrop = dom(
             'ui-dropdown',
@@ -147,7 +164,7 @@ class Paginator extends BaseComponent {
             },
             this
         );
-        this.on('drop-change', this.onDropChange.bind(this));
+        this.on('drop-change', this.onDropChange.bind(this), null, null);
         this.setDropdown();
     }
 
@@ -155,8 +172,8 @@ class Paginator extends BaseComponent {
         dom('div', { class: 'dropdown-label', html: 'Rows per page:' }, this);
         this.renderDropdown();
 
-        this.extraStatusNode = dom('span', {html: 'Showing results:', class: 'extra-status'});
-        this.statusNode = dom('span', {class: 'main-status'});
+        this.extraStatusNode = dom('span', { html: 'Showing results:', class: 'extra-status' });
+        this.statusNode = dom('span', { class: 'main-status' });
         dom(
             'div',
             {
@@ -186,17 +203,21 @@ class Paginator extends BaseComponent {
             this
         );
 
-        this.on(this.leftButton, 'click', this.onLeftClick.bind(this), null);
-        this.on(this.rightButton, 'click', this.onRightClick.bind(this), null);
-        this.on(this.pageNumbers, 'click', this.onNumClick.bind(this), null);
+        this.connectEvents();
 
         this.setDisplayState();
     }
+
+    destroy() {
+        if (this.multiHandle) {
+            this.multiHandle.remove();
+        }
+    }
 }
 
-function getValue(data, dropData){
+function getValue(data, dropData) {
     const value = data ? data.limit : dropData[0].value;
-    if (!dropData.find(d => `${d.value}` === `${value}`)) {
+    if (!dropData.find((d) => `${d.value}` === `${value}`)) {
         return dropData[0].value;
     }
     return `${value}`;

@@ -14,6 +14,12 @@ ui-minitags {
             text-align: left;
             border: 0;
             padding: 10px 30px 5px 10px;
+            .no-tags{
+                position: relative;
+                top: -3px;
+                display: inline-block;
+                color: var(--disabled);
+            }
         }
 
         & > ui-icon {

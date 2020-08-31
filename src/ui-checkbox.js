@@ -23,8 +23,8 @@ class CheckBox extends FormElement {
         return {
             value: this.value,
             checked: this.checked,
-            name: this.name
-        }
+            name: this.name,
+        };
     }
 
     onChecked(value) {
@@ -53,7 +53,7 @@ class CheckBox extends FormElement {
         if (this.canEmit()) {
             this.emitEvent();
         } else {
-            this.fire('toggle', {value: this.value});
+            this.fire('toggle', { value: this.value });
         }
     }
 
@@ -79,20 +79,35 @@ class CheckBox extends FormElement {
     }
 
     render() {
+        console.log('this.label', this.label);
         const type = this.indeterminate ? 'minus' : 'check';
         const html = this.label || '';
-        const chkId = this.label ? (this.id || uid('checkbox')) : null;
-        const lblId = this.label ? (this.id || uid('label')) : null;
+        const chkId = this.label ? this.id || uid('checkbox') : null;
+        const lblId = this.label ? this.id || uid('label') : null;
         this.setAttribute('tabindex', '0');
-        this.input = dom('ui-icon', {type, id: chkId, role: 'checkbox', 'aria-labelledby': lblId, 'aria-checked': false});
-        this.labelNode = dom('span', {html, class: 'ui-label', 'for': chkId, id: lblId});
+        this.input = dom('ui-icon', {
+            type,
+            id: chkId,
+            role: 'checkbox',
+            'aria-labelledby': lblId,
+            'aria-checked': false,
+        });
+        this.labelNode = dom('span', { html, class: 'ui-label', for: chkId, id: lblId });
 
         if (!this['check-after']) {
             this.appendChild(this.input);
-            this.appendChild(this.labelNode);
+            if (this.label) {
+                this.appendChild(this.labelNode);
+            }
         } else {
-            this.appendChild(this.labelNode);
+            if (this.label) {
+                this.appendChild(this.labelNode);
+            }
             this.appendChild(this.input);
+        }
+
+        if (this.label) {
+            this.classList.add('has-label');
         }
 
         dom.attr(this, 'label', false);
@@ -101,7 +116,7 @@ class CheckBox extends FormElement {
     disconnected() {
         this.destroy();
     }
-    
+
     destroy() {
         // console.log('destroy checkbox');
         super.destroy();

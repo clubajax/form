@@ -22,7 +22,7 @@
 </head>
 
 <body>
-    <h1>Test Dropdown</h1>
+    <h1>Test Paginator</h1>
     <div id="mocha"></div>
     <div id="tests">
         <!-- <input autofocus /> -->
@@ -47,44 +47,50 @@
 
             describe('ui-paginator', function () {
 
-                describe('util', function () {
+                describe.only('util', function () {
                     function check(p, desc, btns) {
                         console.log(p.status, p.buttons.join(','));
                         expect(p.status).to.equal(desc);
                         expect(p.buttons.join(',')).to.equal(btns);
                     }
-                    it('should calculate 10/100 based', function () {
-                        check(paginate(0, 10, 100), '1-10 of 100', '1,2,3,4,0,10');
-                        check(paginate(10, 10, 100), '11-20 of 100', '1,2,3,4,0,10');
-                        check(paginate(20, 10, 100), '21-30 of 100', '1,0,3,4,5,0,10');
-                        check(paginate(30, 10, 100), '31-40 of 100', '1,0,4,5,6,0,10');
-                        check(paginate(40, 10, 100), '41-50 of 100', '1,0,5,6,7,0,10');
-                        check(paginate(50, 10, 100), '51-60 of 100', '1,0,6,7,8,0,10');
-                        check(paginate(60, 10, 100), '61-70 of 100', '1,0,7,8,9,10');
-                        check(paginate(70, 10, 100), '71-80 of 100', '1,0,7,8,9,10');
-                        check(paginate(80, 10, 100), '81-90 of 100', '1,0,7,8,9,10');
-                        check(paginate(90, 10, 100), '91-100 of 100', '1,0,7,8,9,10');
+                    it('should calculate small totals', function () {
+                        check(paginate(0, 10, 21), '1-10 of 21', '1,2,3');
+                        check(paginate(0, 10, 17), '1-10 of 17', '1,2');
+                    });
 
-                        // console.log('paginate', paginate(90, 10, 100));
+                    it('should calculate 10/100 based', function () {
+                        check(paginate(0, 10, 100), '1-10 of 100', '1,2,3,0,10');
+                        check(paginate(10, 10, 100), '11-20 of 100', '1,2,3,4,0,10');
+                        check(paginate(20, 10, 100), '21-30 of 100', '1,2,3,4,5,0,10');
+                        check(paginate(30, 10, 100), '31-40 of 100', '1,2,3,4,5,6,0,10');
+                        check(paginate(40, 10, 100), '41-50 of 100', '1,0,3,4,5,6,7,0,10');
+                        check(paginate(50, 10, 100), '51-60 of 100', '1,0,4,5,6,7,8,0,10');
+                        check(paginate(60, 10, 100), '61-70 of 100', '1,0,5,6,7,8,9,10');
+                        check(paginate(70, 10, 100), '71-80 of 100', '1,0,6,7,8,9,10');
+                        check(paginate(80, 10, 100), '81-90 of 100', '1,0,7,8,9,10');
+                        check(paginate(90, 10, 100), '91-100 of 100', '1,0,8,9,10');
+
                     });
                     it('should calculate 10/1000 based', function () {
-                        check(paginate(0, 10, 1000), '1-10 of 1000', '1,2,3,4,0,100');
+                        check(paginate(0, 10, 1000), '1-10 of 1000', '1,2,3,0,100');
                         check(paginate(10, 10, 1000), '11-20 of 1000', '1,2,3,4,0,100');
-                        check(paginate(20, 10, 1000), '21-30 of 1000', '1,0,3,4,5,0,100');
-                        check(paginate(300, 10, 1000), '301-310 of 1000', '1,0,31,32,33,0,100');
-                        check(paginate(400, 10, 1000), '401-410 of 1000', '1,0,41,42,43,0,100');
-                        check(paginate(500, 10, 1000), '501-510 of 1000', '1,0,51,52,53,0,100');
-                        check(paginate(600, 10, 1000), '601-610 of 1000', '1,0,61,62,63,0,100');
-                        check(paginate(700, 10, 1000), '701-710 of 1000', '1,0,71,72,73,0,100');
-                        check(paginate(970, 10, 1000), '971-980 of 1000', '1,0,97,98,99,100');
+                        check(paginate(20, 10, 1000), '21-30 of 1000', '1,2,3,4,5,0,100');
+                        //
+                        check(paginate(300, 10, 1000), '301-310 of 1000', '1,0,29,30,31,32,33,0,100');
+                        check(paginate(400, 10, 1000), '401-410 of 1000', '1,0,39,40,41,42,43,0,100');
+                        check(paginate(500, 10, 1000), '501-510 of 1000', '1,0,49,50,51,52,53,0,100');
+                        check(paginate(600, 10, 1000), '601-610 of 1000', '1,0,59,60,61,62,63,0,100');
+                        check(paginate(700, 10, 1000), '701-710 of 1000', '1,0,69,70,71,72,73,0,100');
+                        //
+                        check(paginate(970, 10, 1000), '971-980 of 1000', '1,0,96,97,98,99,100');
                         check(paginate(980, 10, 1000), '981-990 of 1000', '1,0,97,98,99,100');
-                        check(paginate(990, 10, 1000), '991-1000 of 1000', '1,0,97,98,99,100');
+                        check(paginate(990, 10, 1000), '991-1000 of 1000', '1,0,98,99,100');
                     });
 
                     it('should calculate odd totals', function () {
                         check(paginate(80, 10, 91), '81-90 of 91', '1,0,7,8,9,10');
-                        check(paginate(90, 10, 91), '91-91 of 91', '1,0,7,8,9,10');
-                        check(paginate(100, 10, 101), '101-101 of 101', '1,0,8,9,10,11');
+                        check(paginate(90, 10, 91), '91-91 of 91', '1,0,8,9,10');
+                        check(paginate(100, 10, 101), '101-101 of 101', '1,0,9,10,11');
                     });
 
                     it('should not allow an odd start', function () {
@@ -98,44 +104,44 @@
                     });
 
                     it('should calculate odd limits', function () {
-                        check(paginate(30, 15, 90), '31-45 of 90', '1,0,3,4,5,6');
+                        check(paginate(30, 15, 90), '31-45 of 90', '1,2,3,4,5,6');
                     });
 
-                    it('should navigate', function () {
+                    it.only('should navigate', function () {
                         let p;
 
                         p = paginate(0, 10, 100);
-                        expect(p.prev()).to.equal(0);
-                        expect(p.next()).to.equal(10);
-                        expect(p.goto(4)).to.equal(40);
+                        expect(p.prev()).to.equal(1);
+                        expect(p.next()).to.equal(11);
+                        expect(p.goto(4)).to.equal(41);
 
                         p = paginate(80, 10, 100);
-                        expect(p.next()).to.equal(90);
-                        expect(p.prev()).to.equal(70);
-                        expect(p.goto(4)).to.equal(40);
-                        expect(p.goto(9)).to.equal(90);
+                        expect(p.next()).to.equal(91);
+                        expect(p.prev()).to.equal(71);
+                        expect(p.goto(4)).to.equal(41);
+                        expect(p.goto(9)).to.equal(91);
 
                         p = paginate(90, 10, 100);
-                        expect(p.next()).to.equal(90);
-                        expect(p.prev()).to.equal(80);
+                        expect(p.next()).to.equal(91);
+                        expect(p.prev()).to.equal(81);
 
 
                         p = paginate(0, 5, 100);
-                        expect(p.prev()).to.equal(0);
-                        expect(p.next()).to.equal(5);
-                        expect(p.goto(4)).to.equal(20);
+                        expect(p.prev()).to.equal(1);
+                        expect(p.next()).to.equal(6);
+                        expect(p.goto(4)).to.equal(21);
 
                         p = paginate(0, 20, 100);
-                        expect(p.prev()).to.equal(0);
-                        expect(p.next()).to.equal(20);
-                        expect(p.goto(4)).to.equal(80);
+                        expect(p.prev()).to.equal(1);
+                        expect(p.next()).to.equal(21);
+                        expect(p.goto(4)).to.equal(81);
 
                         p = paginate(0, 25, 200);
-                        expect(p.prev()).to.equal(0);
-                        expect(p.next()).to.equal(25);
-                        expect(p.goto(4)).to.equal(100);
-                        expect(p.goto(7)).to.equal(175);
-                        expect(p.goto(8)).to.equal(0);
+                        expect(p.prev()).to.equal(1);
+                        expect(p.next()).to.equal(26);
+                        expect(p.goto(4)).to.equal(101);
+                        expect(p.goto(7)).to.equal(176);
+                        expect(p.goto(8)).to.equal(1);
                     });
                 });
 
@@ -299,7 +305,7 @@
                             done();
                         });
                     });
-                    it.only('should render only the status', function (done) {
+                    it('should render only the status', function (done) {
                         node = dom('ui-paginator', {
                             data: {
                                 start: 0,
@@ -313,7 +319,7 @@
                             done();
                         });
                     });
-                    it.only('should render partial status', function (done) {
+                    it('should render partial status', function (done) {
                         node = dom('ui-paginator', {
                             data: {
                                 start: 0,
