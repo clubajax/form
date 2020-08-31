@@ -1,6 +1,6 @@
 {
   "name": "@clubajax/form",
-  "version": "0.8.78",
+  "version": "0.8.79",
   "description": "Web Components for Forms",
   "main": "build/index.js",
   "repository": "https://github.com/clubajax/form.git",

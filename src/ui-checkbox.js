@@ -79,7 +79,6 @@ class CheckBox extends FormElement {
     }
 
     render() {
-        console.log('this.label', this.label);
         const type = this.indeterminate ? 'minus' : 'check';
         const html = this.label || '';
         const chkId = this.label ? this.id || uid('checkbox') : null;
@@ -118,7 +117,6 @@ class CheckBox extends FormElement {
     }
 
     destroy() {
-        // console.log('destroy checkbox');
         super.destroy();
     }
 }
