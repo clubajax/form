@@ -20,7 +20,6 @@ ui-input{
         outline: 0;
         &::placeholder {
             color: var(--inp-placeholder);
-            font-style: italic;
         }
     }
     &.has-icon{

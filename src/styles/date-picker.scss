@@ -256,10 +256,10 @@ date-range-input {
         border: 1px solid var(--inp-brd);
         transition: background-color 300ms ease, border-color 300ms ease;
         &::placeholder {
-            font-style: italic;
+            color: var(--inp-placeholder);
         }
         &:-ms-input-placeholder {
-            font-style: italic;
+            color: var(--inp-placeholder);
         }
     }
     &[disabled] {
