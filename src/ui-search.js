@@ -68,6 +68,12 @@ class UiSearch extends BaseComponent {
         return this.list ? this.list.items : this.__data;
     }
 
+    onDisabled(value) {
+        if (this.input) {
+            this.input.disabled = value;
+        }
+    }
+
     onBusy(value) {
         this.input.icon = value ? 'spinner' : 'search';
     }
@@ -140,6 +146,7 @@ class UiSearch extends BaseComponent {
                 placeholder: this.placeholder || DEFAULT_PLACEHOLDER,
                 icon: this.busy ? 'spinner' : 'search',
                 autoselect: this.autoselect,
+                disabled: this.disabled
             },
             this
         );

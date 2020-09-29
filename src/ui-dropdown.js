@@ -115,7 +115,8 @@ class UiDropdown extends BaseComponent {
             // ensure value is not the same,
             // do not emit events for initialization and
             // externally setting the value
-            emitEvent(this);
+            const value = this.value;
+            emitEvent(this, value, getItemFromList(this.data, value));
             this.lastValue = this.value;
             if (!this.mult) {
                 setTimeout(() => {
@@ -156,6 +157,7 @@ class UiDropdown extends BaseComponent {
                 });
             }, 500);
         }
+
     }
 
     setLazyData() {
@@ -245,7 +247,12 @@ class UiDropdown extends BaseComponent {
 
     disconnected() {
         if (!this.noselfdestroy) {
-            this.destroy();
+            setTimeout(() => {
+                if (this.DOMSTATE !== 'domready') {
+                    this.destroy();
+                }
+            }, 500)
+            
         }
     }
 
@@ -255,6 +262,7 @@ class UiDropdown extends BaseComponent {
             this.popup.destroy();
         }
         super.destroy();
+        
     }
 }
 

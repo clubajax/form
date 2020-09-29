@@ -21,7 +21,7 @@ class UiInput extends BaseComponent {
     }
 
     set value(value) {
-        this._value = value === undefined || value === null ? '' : value;
+        this._value = isNull(value) ? '' : value;
         this.setValue(this._value);
     }
 
@@ -88,13 +88,17 @@ class UiInput extends BaseComponent {
         }, null);
         this.on(this.input, 'change', this.emitEvent.bind(this), null);
     }
+
+    focus() {
+        this.input.focus();
+    }
     
     render() {
         if (this.label) {
             this.labelNode = dom('label', {}, this);
         }
         this.input = dom('input', {
-            value: this._value || '',
+            value: isNull(this._value) ? '' : this._value,
             readonly: this.readonly,
             disabled: this.disabled,
             placeholder: this.placeholder || DEFAULT_PLACEHOLDER
