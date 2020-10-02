@@ -92,7 +92,8 @@ class UiInput extends BaseComponent {
         this.on('click', (e) => {
             if (e.target.localName === 'ui-icon' && this.iconNode.type === 'close') {
                 this.value = '';
-                this.fire('clear')
+                this.fire('clear');
+                this.iconNode.type = 'search';
             }
             this.focus();
             this.input.select();
