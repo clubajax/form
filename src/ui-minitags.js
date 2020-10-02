@@ -1,8 +1,8 @@
 const BaseComponent = require('@clubajax/base-component');
 const dom = require('@clubajax/dom');
 const UiDropdown = require('./ui-dropdown');
-require('./ui-arrow');
 const emitEvent = require('./lib/emitEvent');
+require('./ui-arrow');
 require('./ui-icon');
 
 class UiContainer extends BaseComponent {
@@ -167,15 +167,12 @@ class UiMiniTags extends UiDropdown {
 
         this.renderApply();
 
-        console.log('set click off......');
         const clickoff = this.on('clickoff', (e) => {
-            console.log('CLICKOFF');
             this.popup.hide();
         });
         
         this.popup.on('popup-open', () => {
             clickoff.resume();
-            console.log('start clickoff');
         });
         
         this.popup.on('popup-close', () => {

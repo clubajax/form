@@ -14,6 +14,7 @@ class UiInput extends BaseComponent {
         this.icon;
         this.label;
     }
+
     attributeChanged(prop, value) {
         if (prop === 'value') {
             this.value = value;
@@ -87,6 +88,15 @@ class UiInput extends BaseComponent {
                 
         }, null);
         this.on(this.input, 'change', this.emitEvent.bind(this), null);
+
+        this.on('click', (e) => {
+            if (e.target.localName === 'ui-icon' && this.iconNode.type === 'close') {
+                this.value = '';
+                this.fire('clear')
+            }
+            this.focus();
+            this.input.select();
+        });
     }
 
     focus() {

@@ -78,6 +78,11 @@ class UiSearch extends BaseComponent {
         this.input.icon = value ? 'spinner' : 'search';
     }
 
+    getIcon() {
+        const value = this.input ? this.input.value : this.value; 
+        return value ? (this.busy ? 'spinner' : 'close') : 'search'
+    }
+
     setDisplay() {
         const item = this.list ? this.list.getItem(this.value) : false;
         this.__value = item ? item.value : this.__value;
@@ -116,6 +121,10 @@ class UiSearch extends BaseComponent {
         this.input.on('focus', () => {
             this.classList.remove('is-focused');
         });
+
+        this.input.on('clear', () => {
+            this.fire('search', { value: '' });
+        });
     }
 
     connectList() {
@@ -127,6 +136,7 @@ class UiSearch extends BaseComponent {
                 this.popup.hide();
                 setTimeout(() => {
                     this.isSelecting = false;
+                    this.list.value = null;
                 }, 300);
             }, 300);
         });
@@ -144,7 +154,7 @@ class UiSearch extends BaseComponent {
                 'event-name': 'input-change',
                 class: 'search-input',
                 placeholder: this.placeholder || DEFAULT_PLACEHOLDER,
-                icon: this.busy ? 'spinner' : 'search',
+                icon: this.getIcon(),
                 autoselect: this.autoselect,
                 disabled: this.disabled
             },
@@ -155,6 +165,9 @@ class UiSearch extends BaseComponent {
         });
         this.input.on('blur', () => {
             this.classList.remove('focus');
+        });
+        this.input.on('keyup', () => {
+            this.input.icon = this.getIcon();
         });
         this.setDisplay();
     }

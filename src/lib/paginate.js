@@ -49,7 +49,7 @@ module.exports = (start, limit, total) => {
     if ((start - 0) % limit) {
         throw new Error(`start must be evenly divisible by limit: ${start} % ${limit} = ${start % limit}`);
     }
-    const rndTotal = Math.ceil(total / limit);
+    const rndTotal = limit < total ? Math.ceil(total / limit) : total;
     let buttons = [];
     let buttonIndex = -1;
     let status;
