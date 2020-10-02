@@ -251,7 +251,7 @@ function clearPosition(popup, tooltip) {
         right: '',
         top: '',
         bottom: '',
-        height: '',
+        'max-height': '',
         width: '',
         overflow: '',
     });
@@ -448,13 +448,13 @@ function position(popup, button, align) {
     if (pop.h > topSpace && pop.h > botSpace) {
         if (botSpace < MIN_BOT_SPACE || topSpace > botSpace * 1.5) {
             // force top
-            style.height = topSpace - GAP * 2;
+            style.maxHeight = topSpace - GAP * 2;
             style.bottom = win.h - btn.y;
             style.top = '';
             style.overflow = 'auto';
         } else {
             // force bottom
-            style.height = botSpace - GAP * 2;
+            style.maxHeight = botSpace - GAP * 2;
             style.overflow = 'auto';
         }
     } else if (botSpace < pop.h) {
