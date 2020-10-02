@@ -1,0 +1,16 @@
+ui-checklist {
+    display: block;
+    ui-minipop {
+        .ui-list {
+            height: 200px;
+            overflow: auto;
+            ul.list {
+            }
+            li {
+                ui-checkbox {
+                    // display: flex;
+                }
+            }
+        }
+    }
+}

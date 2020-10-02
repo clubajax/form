@@ -1,0 +1,125 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <title>Test Check List</title>
+    <script src="src/test-files.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+        integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+    <style>
+        body {
+            padding: 20px 20px 100px 20px;
+            font-family: sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Test Check List</h1>
+    <em>Testing</em>
+    <div id="mocha"></div>
+    <div id="tests">
+
+    </div>
+    <p>
+        DOM Events are sent to notify code of interesting things that have taken place. Each event is represented by an object which is based on the Event interface, and may have additional custom fields and/or functions used to get additional information about what happened. Events can represent everything from basic user interactions to automated notifications of things happening in the rendering model.
+
+This article offers a list of events that can be sent; some are standard events defined in official specifications, while others are events used internally by specific browsers; for example, Mozilla-specific events are listed so that add-ons can use them to interact with the browser.
+    </p>
+
+    <script>
+
+        mocha.setup('tdd');
+
+        suite('UiCheckList', function () {
+            this.timeout(3000);
+            var
+                suite = window.suite,
+                test = window.test,
+                dom = window.dom,
+                on = window.on,
+                expect = chai.expect,
+                body = dom.byId('tests'),
+                data = [
+                    {label: 'Orange', value: 'orange'},
+                    {label: 'Red', value: 'red'},
+                    {label: 'Blue', value: 'blue'},
+                    {label: 'Green', value: 'green'},
+                    {label: 'Yellow Orange', value: 'orange1'},
+                    {label: 'Yellow Red', value: 'red1'},
+                    {label: 'Blue Green', value: 'blue1'},
+                    {label: 'Yellow Green', value: 'green1'},
+                    {label: 'Red Orange', value: 'orange2'},
+                    {label: 'Blood Red', value: 'red2'},
+                    {label: 'Blueish', value: 'blue2'},
+                    {label: 'Greenish', value: 'green2'}
+                ],
+                data2 = [
+                    {label: 'Puppy', value: 'puppy'},
+                    {label: 'Birdy', value: 'birdy'},
+                    {label: 'Kitty', value: 'kitty'},
+                    {label: 'Snakey', value: 'snakey'},
+                    {label: 'Purple', value: 'purple'},
+                    {label: 'Yellow', value: 'yellow'},
+                    {label: 'Cyan', value: 'cyan'},
+                    {label: 'Indigo', value: 'indigo'},
+                    {label: 'Orange1', value: 'orange1'},
+                    {label: 'Red1', value: 'red1'},
+                    {label: 'Blue1', value: 'blue1'},
+                    {label: 'Green1', value: 'green1'},
+                    {label: 'Purple1', value: 'purple1'},
+                    {label: 'Yellow1', value: 'yellow1'},
+                    {label: 'Cyan1', value: 'cyan1'},
+                    {label: 'Indigo1', value: 'indigo1'},
+                ];
+
+            function click(node, index) {
+                const lis = dom.queryAll(node.popup, 'li');
+                node.once('open', function () {
+                    on.emit(lis[index], 'click');
+                });
+                on.emit(node.button, 'click');
+            }
+
+            function select(node, index, eventName) {
+                eventName = eventName || 'change';
+                return new Promise(function (resolve) {
+                    node.once(eventName, function (e) {
+                        resolve(e);
+                    });
+                    node.once('open', function () {
+                        on.emit(node.popup.children[index], 'click');
+                    });
+                    on.emit(node.button, 'click');
+                });
+            }
+
+            suite('ui-checklist', function () {
+
+                test('it should render', function (done) {
+                    const node = dom('ui-checklist', {
+                        data: data,
+                        open: true
+                    }, body);
+                    onDomReady(node, function () {
+                        node.on('change', (e) => {
+                            console.log('change', e.value);
+                        })
+                        done();
+                    });
+                });
+
+            });
+        });
+
+
+        if (!/puppeteer/.test(location.hash)) {
+            mocha.run();
+        }
+
+
+    </script>
+
+</body>
+
+</html>

@@ -10,6 +10,7 @@ require('./src/ui-search');
 require('./src/ui-tooltip');
 require('./src/ui-paginator');
 require('./src/ui-minitags');
+require('./src/ui-checklist');
 require('./src/ui-arrow');
 
 require('./src/date-picker/date-picker');

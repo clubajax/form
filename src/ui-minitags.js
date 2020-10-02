@@ -4,39 +4,8 @@ const UiDropdown = require('./ui-dropdown');
 const emitEvent = require('./lib/emitEvent');
 require('./ui-arrow');
 require('./ui-icon');
+require('./ui-minipop');
 
-class UiContainer extends BaseComponent {
-    constructor() {
-        super();
-        this.showing = true; 
-    }
-
-    show() {
-        if (this.showing || this.readonly) {
-            return;
-        }
-        this.showing = true;
-
-        setTimeout(() => {
-            this.classList.add('open');
-        }, 1);
-        this.fire('popup-open', null, true);
-    }
-
-    hide() {
-        if (!this.showing || window.keepPopupsOpen) {
-            return;
-        }
-        this.classList.remove('open');
-        this.showing = false;
-        this.fire('popup-close', null, true);
-    }
-
-    size() {
-
-    }
-}
-BaseComponent.define('ui-container', UiContainer, {});
 
 class UiMiniTags extends UiDropdown {
     constructor() {
@@ -148,7 +117,7 @@ class UiMiniTags extends UiDropdown {
         });
 
         const listWrap = dom('div', {
-            class: 'minitag-listwrap',
+            class: 'listwrap',
             html: this.list
         });
 
@@ -157,7 +126,7 @@ class UiMiniTags extends UiDropdown {
         }
 
         this.popup = dom(
-            'ui-container',
+            'ui-minipop',
             {
                 html: listWrap,
                 class: `${this.popupClass} open`,

@@ -1,0 +1,21 @@
+ui-minipop {
+    display: none;
+    .listwrap {
+        height: 200px;
+        background-color: white;
+        overflow: auto;
+        ul {
+            border: 0;
+        }
+    }
+
+    ui-list ul li[aria-selected] {
+        background-color: white;
+        color: #ccc;
+        pointer-events: none;
+    }
+
+    &.open{
+        display: block;
+    }
+}
