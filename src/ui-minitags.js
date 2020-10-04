@@ -88,21 +88,6 @@ class UiMiniTags extends UiDropdown {
         this.setDisplay();
     }
 
-    renderApply() {
-        const applyButton = dom('button', { class: 'ui-button', html: 'Done' });
-        dom(
-            'div',
-            {
-                class: 'minitag-apply-container',
-                html: applyButton,
-            },
-            this.popup
-        );
-        this.on(applyButton, 'click', () => {
-            this.popup.hide();
-        });
-    }
-
     renderPopup() {
         const data = typeof this.data === 'function' ? this.data() : this.data;
         this.list = dom('ui-list', {
@@ -133,8 +118,6 @@ class UiMiniTags extends UiDropdown {
             },
             this
         );
-
-        this.renderApply();
 
         const clickoff = this.on('clickoff', (e) => {
             this.popup.hide();

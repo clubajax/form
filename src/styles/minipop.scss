@@ -1,5 +1,7 @@
 ui-minipop {
     display: none;
+    position: absolute;
+    z-index: 10;
     .listwrap {
         height: 200px;
         background-color: white;
@@ -17,5 +19,11 @@ ui-minipop {
 
     &.open{
         display: block;
+    }
+
+    .apply-container{
+        .ui-button{
+            width: 100%;
+        }
     }
 }

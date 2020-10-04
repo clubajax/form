@@ -1,14 +1,20 @@
 ui-checklist {
     display: block;
+    ui-input{
+        input{
+            padding: 10px;
+            border-radius: 3px;
+        }
+    }
     ui-minipop {
         .ui-list {
-            height: 200px;
+            max-height: 200px;
             overflow: auto;
             ul.list {
             }
             li {
                 ui-checkbox {
-                    // display: flex;
+                    display: flex;
                 }
             }
         }

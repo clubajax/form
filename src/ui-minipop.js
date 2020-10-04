@@ -13,6 +13,7 @@ class UiMiniPop extends BaseComponent {
             return;
         }
         this.showing = true;
+        this.size();
 
         setTimeout(() => {
             this.classList.add('open');
@@ -29,8 +30,28 @@ class UiMiniPop extends BaseComponent {
         this.fire('popup-close', null, true);
     }
 
-    size() {
+    connected() {
+        this.renderApply();
+    }
 
+    renderApply() {
+        const applyButton = dom('button', { class: 'ui-button', html: 'Done' });
+        dom(
+            'div',
+            {
+                class: 'apply-container',
+                html: applyButton,
+            },
+            this
+        );
+        this.on(applyButton, 'click', () => {
+            this.hide();
+        });
+    }
+
+    size() {
+        const w = dom.box(this.parentNode).w;
+        dom.style(this, 'width', w);
     }
 }
 

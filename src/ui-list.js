@@ -63,7 +63,7 @@ class UIList extends BaseComponent {
         };
         
         const v = getValue();
-        if (this.mult) {
+        if (this.mult && v) {
             return v.map(dom.normalize);
         }
         return dom.normalize(v);

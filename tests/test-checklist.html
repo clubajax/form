@@ -19,7 +19,7 @@
     <em>Testing</em>
     <div id="mocha"></div>
     <div id="tests">
-
+        <input autofocus/>
     </div>
     <p>
         DOM Events are sent to notify code of interesting things that have taken place. Each event is represented by an object which is based on the Event interface, and may have additional custom fields and/or functions used to get additional information about what happened. Events can represent everything from basic user interactions to automated notifications of things happening in the rendering model.
@@ -99,7 +99,8 @@ This article offers a list of events that can be sent; some are standard events 
                 test('it should render', function (done) {
                     const node = dom('ui-checklist', {
                         data: data,
-                        open: true
+                        open: true,
+                        'search-type': 'word'
                     }, body);
                     onDomReady(node, function () {
                         node.on('change', (e) => {
@@ -109,6 +110,17 @@ This article offers a list of events that can be sent; some are standard events 
                     });
                 });
 
+                test('it should render with no values', function (done) {
+                    const node = dom('ui-minitags', {
+                        data: data,
+                    }, body);
+                    onDomReady(node, function () {
+                        node.on('change', (e) => {
+                            console.log('change', e.value);
+                        })
+                        done();
+                    });
+                });
             });
         });
 
