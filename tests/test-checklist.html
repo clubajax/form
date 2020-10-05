@@ -100,7 +100,9 @@ This article offers a list of events that can be sent; some are standard events 
                     const node = dom('ui-checklist', {
                         data: data,
                         open: true,
-                        'search-type': 'word'
+                        all: true,
+                        'search-type': 'word',
+                        value: ['orange', 'blue']
                     }, body);
                     onDomReady(node, function () {
                         node.on('change', (e) => {

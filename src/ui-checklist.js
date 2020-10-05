@@ -10,13 +10,49 @@ require('./ui-checkbox');
 //      contains: match any point in string
 //      line: match start of line
 
+const ALL_NAME = 'select-all-toggle';
+
 class UiCheckList extends BaseComponent {
-    constructor() {
-        super();
+    attributeChanged(prop, value) {
+        if (prop === 'value') {
+            this.value = value;
+        }
+    }
+
+    set value(value) {
+        this._value = isNull(value) ? [] : Array.isArray(value) ? value : [value];
+        this.setValue(this._value);
+    }
+
+    get value() {
+        return this._value || [];
     }
 
     set data(data) {
         this.items = data || [];
+        this.onConnected(() => {
+            this.renderList(this.items);
+            this.setValue(this.value);
+        });
+    }
+
+    get data() {
+        return this.items;
+    }
+
+    setValue(value) {
+        const inputs = dom.queryAll(this, 'ui-checkbox');
+        if (!value) {
+            inputs.forEach((inp) => {
+                inp.checked = false;
+            });
+            this._value = [];
+            return;
+        }
+        inputs.forEach((inp) => {
+            inp.checked = value.includes(inp.name);
+        });
+        this._value = value;
     }
 
     getRegExp() {
@@ -63,23 +99,63 @@ class UiCheckList extends BaseComponent {
         });
 
         this.on(this.input.input, 'keyup', (e) => {
-            console.log('key', e.key);
             this.filterList();
+            this.input.iconNode.type = this.input.value ? 'close' : 'search';
+        });
+
+        this.on('check-all-change', () => {
+            this.toggleAll();
+        });
+
+        this.on('check-change', (e) => {
+            this.onChange();
         });
     }
 
+    toggleAll() {
+        const value = this.value;
+        const data = this.items;
+        const inputs = dom.queryAll(this, 'ui-checkbox');
+        if (value.length === data.length) {
+            // check none
+            inputs.forEach(inp => inp.checked = false);
+        } else {
+            // check all
+            inputs.forEach(inp => inp.checked = true);
+        }
+        this.onChange();
+    }
+
+    updateValues() {
+        const inputs = dom.queryAll(this, 'ui-checkbox');
+        this._value = inputs.filter((inp) => inp.checked && inp.name !== ALL_NAME).map((inp) => inp.name);
+    }
+
+    onChange() {
+        this.updateValues();
+        this.emit('change', {value: this._value});
+        
+        if (this.allCheck) {
+            const data = this.items;
+            this.allCheck.label = this._value.length === data.length ? 'Select None' : 'Select All';
+        }
+    }
+
     renderInput() {
+        if (this.input) {
+            return;
+        }
         this.input = dom(
             'ui-input',
             {
-                icon: 'close',
+                icon: 'search',
                 placeholder: 'Filter List...',
                 'event-name': 'input-change',
             },
             this
         );
 
-        if (this.open) {
+        if (this.popup && this.open) {
             setTimeout(() => {
                 this.popup.show();
             }, 30);
@@ -88,6 +164,25 @@ class UiCheckList extends BaseComponent {
 
     renderList(items) {
         dom.clean(this.list);
+        if (!items) {
+            return;
+        }
+        if (this.all) {
+            this.allCheck = dom('ui-checkbox', {
+                name: ALL_NAME,
+                label: 'Select All',
+                'event-name': 'check-all-change',
+            });
+            dom(
+                'li',
+                {
+                    class: ALL_NAME,
+                    html: this.allCheck,
+                },
+                this.list
+            );
+        }
+        const values = this._value || [];
         items.forEach((item) => {
             dom(
                 'li',
@@ -95,6 +190,8 @@ class UiCheckList extends BaseComponent {
                     html: dom('ui-checkbox', {
                         name: item.value,
                         label: item.label,
+                        'event-name': 'check-change',
+                        checked: values.includes(item.value)
                     }),
                 },
                 this.list
@@ -137,13 +234,13 @@ class UiCheckList extends BaseComponent {
             clickoff.pause();
         });
 
-        this.connectEvents();
         this.popup.hide();
     }
 
     render() {
         this.renderInput();
         this.renderPopup();
+        this.setValue(this.value);
         this.connectEvents();
     }
 
@@ -152,7 +249,11 @@ class UiCheckList extends BaseComponent {
     }
 }
 
+function isNull(value) {
+    return value === null || value === undefined;
+}
+
 module.exports = BaseComponent.define('ui-checklist', UiCheckList, {
-    bools: ['readonly', 'open'],
+    bools: ['readonly', 'open', 'all'],
     props: ['search-type'],
 });

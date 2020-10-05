@@ -1,4 +1,5 @@
 require('../src/ui-checkbox');
+require('../src/ui-checklist');
 require('../src/ui-actionbutton');
 require('../src/ui-minitags');
 require('../src/ui-arrow');

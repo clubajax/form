@@ -13,8 +13,12 @@ ui-checklist {
             ul.list {
             }
             li {
+                &.select-all-toggle{
+                    background-color: var(--chk-all);
+                }
                 ui-checkbox {
                     display: flex;
+                    
                 }
             }
         }

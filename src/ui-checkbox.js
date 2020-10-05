@@ -58,6 +58,11 @@ class CheckBox extends FormElement {
     }
 
     connected() {
+        this.connectEvents();
+        this.connected = () => {};
+    }
+
+    connectEvents() {
         this.render();
 
         this.on('keyup', (e) => {
@@ -123,5 +128,6 @@ class CheckBox extends FormElement {
 
 module.exports = BaseComponent.define('ui-checkbox', CheckBox, {
     bools: ['checked', 'check-after', 'indeterminate'],
+    props: []
     // attrs: ['value']
 });
