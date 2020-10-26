@@ -1,6 +1,6 @@
 ui-dropdown {
     display: block;
-    button.ui-button {
+    .drop-input {
         background-color: var(--drop-btn-bg);
         padding: var(--drop-btn-pad);
         max-width: 100%;
@@ -23,7 +23,7 @@ ui-dropdown {
         }
     }
     &[disabled]{
-        button.ui-button {
+        .drop-input {
             pointer-events: none;
             background-color: var(--disabled);
         }

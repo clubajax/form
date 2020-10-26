@@ -328,7 +328,7 @@
                         });
                     });
 
-                    it('should increment and decrement values - date-time', function (done) {
+                    it.skip('should increment and decrement values - date-time', function (done) {
                         const value = '12/25/2017 2:00 pm';
                         const dateTimeInput = dom('date-time-input', {value: value}, body);
                         onDomReady(dateTimeInput, function () {
@@ -351,8 +351,8 @@
                     });
                 });
 
-                describe('date input', function () {
-                    it.only('should pop up', function () {
+                describe.only('date input', function () {
+                    it('should pop up', function () {
                         const node = dom('date-input', {label: 'Opens with ui-popup', min: null, max: null}, body);
                         expect(dom.isNode(node)).to.equal(true);
                         // node.on('blur', () => {
@@ -363,7 +363,7 @@
                         });
                     });
 
-                    it.only('should disable', function () {
+                    it('should disable', function () {
                         const node = dom('date-input', {label: 'Is Disabled', disabled: true}, body);
                         expect(dom.isNode(node)).to.equal(true);
                     });
@@ -645,7 +645,7 @@
                     });
                 });
 
-                describe('date time input', function () {
+                describe.skip('date time input', function () {
                     it('should persist open with no value', function (done) {
                         const node = dom('date-time-input', {
                             label: 'Date and Time',
@@ -750,7 +750,7 @@
 
                 describe('date picker', function () {
 
-                    it.only('should render a picker (MANUAL)', function (done) {
+                    it('should render a picker (MANUAL)', function (done) {
                         const node = dom('date-picker', {label: 'manual picker', value: '12/12/2017 02:20 am'}, body);
                         ready(node, function () {
                             done();

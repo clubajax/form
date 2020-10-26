@@ -1,5 +1,6 @@
 ui-checklist {
     display: block;
+    position: relative;
     ui-input{
         input{
             padding: 10px;
@@ -18,7 +19,12 @@ ui-checklist {
                 }
                 ui-checkbox {
                     display: flex;
-                    
+                }
+                ui-icon{
+                    top: 3px;
+                }
+                .ui-label{
+                    line-height: 1.6;
                 }
             }
         }

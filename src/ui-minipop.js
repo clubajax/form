@@ -5,7 +5,7 @@ const on = require('@clubajax/on');
 class UiMiniPop extends BaseComponent {
     constructor() {
         super();
-        this.showing = true; 
+        // this.showing = true; 
     }
 
     show() {

@@ -29,6 +29,8 @@ class UiCheckList extends BaseComponent {
     }
 
     set data(data) {
+        console.log('ui set data...', data.length);
+        this.searching = false;
         this.items = data || [];
         this.onConnected(() => {
             this.renderList(this.items);
@@ -70,6 +72,17 @@ class UiCheckList extends BaseComponent {
     }
 
     filterList() {
+        if (this.external) {
+            if (!this.input.value) {
+                this.renderList([]);
+            } else {
+                this.searching = true;
+                this.renderList();
+            }
+            
+            this.fire('search', {value: this.input.value});
+            return;
+        }
         if (!this.input.value) {
             this.renderList(this.items);
             return;
@@ -93,6 +106,7 @@ class UiCheckList extends BaseComponent {
         this.on(this.input, 'click', (e) => {
             if (e.target.localName === 'ui-icon') {
                 e.stopImmediatePropagation();
+                this.filterList();
                 return;
             }
             this.popup.show();
@@ -149,7 +163,7 @@ class UiCheckList extends BaseComponent {
             'ui-input',
             {
                 icon: 'search',
-                placeholder: 'Filter List...',
+                placeholder: this.placeholder || 'Filter List...',
                 'event-name': 'input-change',
             },
             this
@@ -164,6 +178,13 @@ class UiCheckList extends BaseComponent {
 
     renderList(items) {
         dom.clean(this.list);
+        if (this.searching) {
+            dom('div', {
+                class: 'ui-loading', html: [
+                    dom('ui-icon', {type: 'spinner'}),
+                    dom('span', {html: 'Searching...'})
+            ]}, this.list);
+        }
         if (!items) {
             return;
         }
@@ -217,7 +238,6 @@ class UiCheckList extends BaseComponent {
             'ui-minipop',
             {
                 html: listWrap,
-                class: 'open',
             },
             this
         );
@@ -254,6 +274,6 @@ function isNull(value) {
 }
 
 module.exports = BaseComponent.define('ui-checklist', UiCheckList, {
-    bools: ['readonly', 'open', 'all'],
-    props: ['search-type'],
+    bools: ['readonly', 'open', 'all', 'external'],
+    props: ['search-type', 'placeholder'],
 });

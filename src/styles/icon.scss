@@ -8,6 +8,12 @@ ui-icon {
     }
 }
 
+.ui-loading{
+    padding: 10px 20px;
+    span{
+        margin-left: 10px;
+    }
+}
 @keyframes busy-spin {
     from {
         transform:rotate(0deg);
