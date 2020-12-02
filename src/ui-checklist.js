@@ -29,7 +29,6 @@ class UiCheckList extends BaseComponent {
     }
 
     set data(data) {
-        console.log('ui set data...', data.length);
         this.searching = false;
         this.items = data || [];
         this.onConnected(() => {
@@ -147,7 +146,9 @@ class UiCheckList extends BaseComponent {
 
     onChange() {
         this.updateValues();
-        this.emit('change', {value: this._value});
+        const value = this._value;
+        const items = this.data.filter(d => value.includes(d.id));
+        this.emit('change', {value, items});
         
         if (this.allCheck) {
             const data = this.items;
@@ -177,6 +178,7 @@ class UiCheckList extends BaseComponent {
     }
 
     renderList(items) {
+        dom.classList.toggle(this, 'has-data', items && items.length);
         dom.clean(this.list);
         if (this.searching) {
             dom('div', {
@@ -188,7 +190,7 @@ class UiCheckList extends BaseComponent {
         if (!items) {
             return;
         }
-        if (this.all) {
+        if (this.all && items.length) {
             this.allCheck = dom('ui-checkbox', {
                 name: ALL_NAME,
                 label: 'Select All',
@@ -252,6 +254,10 @@ class UiCheckList extends BaseComponent {
 
         this.popup.on('popup-close', () => {
             clickoff.pause();
+        });
+        
+        this.popup.on('done-click', () => {
+            this.input.value = '';
         });
 
         this.popup.hide();

@@ -75,12 +75,12 @@ class UiSearch extends BaseComponent {
     }
 
     onBusy(value) {
-        this.input.icon = value ? 'spinner' : 'search';
+        this.input.icon = this.getIcon();
     }
 
     getIcon() {
         const value = this.input ? this.input.value : this.value; 
-        return value ? (this.busy ? 'spinner' : 'close') : 'search'
+        return value ? (this.busy ? 'spinner' : 'close') : 'search';
     }
 
     setDisplay() {

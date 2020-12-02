@@ -26,6 +26,7 @@ class UiDropdown extends BaseComponent {
         this.popupClass = 'dropdown';
 
         this.destroyOnDisconnect = !this.noselfdestroy;
+        this.isAction = false;
     }
 
     onDisabled(disabled) {
@@ -107,7 +108,7 @@ class UiDropdown extends BaseComponent {
 
     connectEvents() {
         this.list.on('list-change', (e) => {
-            if (isEqual(e.detail.value, this.__value)) {
+            if (!this.isAction && isEqual(e.detail.value, this.__value)) {
                 return;
             }
             // set display, regardless of elligible event
@@ -138,12 +139,13 @@ class UiDropdown extends BaseComponent {
         this.button.innerHTML = '';
 
         const value = this.value || this.__value;
-
         const item = getItemFromList(this.data, value);
+        const hasPlaceholder = isNull(item);
+        dom.classList.toggle(this.button, 'has-placeholder', hasPlaceholder);
 
         dom(
             'span',
-            { html: isNull(item) ? this.placeholder || DEFAULT_PLACEHOLDER : item.alias || item.label },
+            { html: hasPlaceholder ? this.placeholder || DEFAULT_PLACEHOLDER : item.alias || item.label },
             this.button
         );
         if (this.icon !== 'none') {

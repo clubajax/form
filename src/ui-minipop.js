@@ -45,6 +45,7 @@ class UiMiniPop extends BaseComponent {
             this
         );
         this.on(applyButton, 'click', () => {
+            this.fire('done-click');
             this.hide();
         });
     }

@@ -1,31 +1,42 @@
 ui-checklist {
     display: block;
     position: relative;
-    ui-input{
-        input{
+    ui-input {
+        input {
             padding: 10px;
             border-radius: 3px;
         }
     }
     ui-minipop {
+        &.open {
+            display: none; // unless there are items
+        }
         .ui-list {
             max-height: 200px;
             overflow: auto;
             ul.list {
             }
             li {
-                &.select-all-toggle{
+                &.select-all-toggle {
                     background-color: var(--chk-all);
                 }
                 ui-checkbox {
                     display: flex;
                 }
-                ui-icon{
+                ui-icon {
                     top: 3px;
                 }
-                .ui-label{
+                .ui-label {
                     line-height: 1.6;
                 }
+            }
+        }
+    }
+
+    &.has-data {
+        ui-minipop {
+            &.open {
+                display: block;
             }
         }
     }

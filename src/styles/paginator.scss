@@ -80,9 +80,9 @@ ui-paginator {
         display: none;
     }
 
-    &.show-extra-status .extra-status{
-        display: inline-block;
-    }
+    // &.show-extra-status .extra-status{
+    //     display: inline-block;
+    // }
 
     &[disabled]{
         opacity: 0.4;

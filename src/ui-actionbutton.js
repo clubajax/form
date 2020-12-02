@@ -8,6 +8,7 @@ class ActionButton extends UiDropdown {
     constructor() {
         super();
         this.popupClass = 'actionbutton';
+        this.isAction = true;
     }
     setDisplay() {
         if (this.buttonRendered) {
@@ -22,22 +23,15 @@ class ActionButton extends UiDropdown {
         this.buttonRendered = true;
     }
 
-    // connected() {
-    //     super.connected();
-
-    //     let lastValue;
-    //     this.on(this['event-name'], (e) => {
-    //         console.log('change...', e.detail.value, lastValue);
-    //         // if (e.detail.value === lastValue) {
-    //         //     return true;
-    //         // }
-            
-    //         if (this.list) {
-    //             this.list.clear();
-    //         }
-    //         return true;
-    //     });
-    // }
+    connectEvents() {
+        super.connectEvents();
+        this.list.on('list-change', (e) => {
+            setTimeout(() => {
+                this.list.controller.setSelected(null);
+                this.list.lastValue = null;
+            }, 30);
+        });
+    }
 }
 
 module.exports = BaseComponent.define('ui-actionbutton', ActionButton, {

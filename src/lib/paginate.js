@@ -55,14 +55,14 @@ module.exports = (start, limit, total) => {
     let status;
     let nextEnabled;
     let prevEnabled;
-
+    let results = rndTotal === 1 ? 'Result' : 'Results';
     if (total <= limit) {
         return {
             buttons,
             buttonIndex,
             nextEnabled: false,
             prevEnabled: false,
-            status: `1-${total} of ${rndTotal}`,
+            status: `${rndTotal} ${results}`,
             next: () => {},
             prev: () => {},
             goto: () => {},
@@ -72,12 +72,13 @@ module.exports = (start, limit, total) => {
     if (total > limit) {
         buttons = calcButtons(start, limit, total);
     }
+    results = total === 1 ? 'Result' : 'Results'; 
     if (start + limit >= total) {
-        status = `${start + 1}-${total} of ${total}`;
+        status = `${total} ${results}`;
         nextEnabled = false;
         prevEnabled = true;
     } else {
-        status = `${start + 1}-${start + limit} of ${total}`;
+        status = `${total} ${results}`;
         nextEnabled = true;
         prevEnabled = true;
     }
