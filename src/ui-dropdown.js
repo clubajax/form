@@ -50,7 +50,6 @@ class UiDropdown extends BaseComponent {
         }
         this.__value = value;
 
-        // if (this.list && !this.list.getItem(value)) {
         if (this.list) {
             this.setDisplay();
         }
@@ -107,8 +106,14 @@ class UiDropdown extends BaseComponent {
     }
 
     connectEvents() {
+        this.list.on('list-click-off', (e) => {
+            this.popup.hide();
+        });
+
         this.list.on('list-change', (e) => {
             if (!this.isAction && isEqual(e.detail.value, this.__value)) {
+                this.popup.hide();
+                e.stopImmediatePropagation();
                 return;
             }
             // set display, regardless of elligible event
@@ -117,8 +122,9 @@ class UiDropdown extends BaseComponent {
             // do not emit events for initialization and
             // externally setting the value
             const value = this.value;
-            emitEvent(this, value, getItemFromList(this.data, value));
             this.lastValue = this.value;
+
+            emitEvent(this, value, getItemFromList(this.data, value));
             if (!this.mult) {
                 setTimeout(() => {
                     this.popup.hide();

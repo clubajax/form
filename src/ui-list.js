@@ -410,6 +410,8 @@ class UIList extends BaseComponent {
                 dom.classList.toggle(this, 'has-selected', !!this.value);
                 if (changed) {
                     this.emitEvent();
+                } else {
+                    this.fire('list-click-off');
                 }
             }, null, null),
         ]);
