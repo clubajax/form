@@ -31,6 +31,7 @@ class UIList extends BaseComponent {
         this.label;
         this.lastValue = null;
     }
+    
     attributeChanged(prop, value) {
         if (prop === 'value') {
             this.value = value;

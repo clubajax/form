@@ -90,7 +90,7 @@ class UiInput extends BaseComponent {
         this.on(this.input, 'change', this.emitEvent.bind(this), null);
 
         this.on('click', (e) => {
-            if (e.target.localName === 'ui-icon' && this.iconNode.type === 'close') {
+            if (e.target.localName === 'ui-icon' && (this.iconNode || {}).type === 'close') {
                 this.value = '';
                 this.fire('clear');
                 this.iconNode.type = 'search';
@@ -106,7 +106,7 @@ class UiInput extends BaseComponent {
     
     render() {
         if (this.label) {
-            this.labelNode = dom('label', {}, this);
+            this.labelNode = dom('label', {html: this.label}, this);
         }
         this.input = dom('input', {
             value: isNull(this._value) ? '' : this._value,
@@ -137,6 +137,6 @@ function isNull(value) {
 
 module.exports = BaseComponent.define('ui-input', UiInput, {
     props: ['placeholder', 'label', 'limit', 'name', 'event-name', 'align', 'icon'],
-    bools: ['disabled', 'ready', 'required', 'autofocus', 'autoselect'],
+    bools: ['disabled', 'ready', 'required', 'autofocus', 'autoselect', 'readonly'],
     attrs: ['value']
 });

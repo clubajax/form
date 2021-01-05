@@ -1,17 +1,28 @@
-@import "./colors.scss";
+@import './colors.scss';
 
-ui-input{
+ui-input {
     display: block;
     position: relative;
-    border: 1px solid var(--inp-brd); 
+    border: 1px solid var(--inp-brd);
     border-radius: 2px;
-    &.focus{
+    &.focus {
         border: 1px solid var(--focus-brd);
     }
-    label{
+    &[readonly] {
+        pointer-events: none;
+        background: white;
+        border-color: #eee;
+        input {
+            font-weight: 300;
+            &::placeholder {
+                color: var(--disabled);
+            }
+        }
+    }
+    label {
         display: block;
     }
-    input{
+    input {
         border: 0;
         background: none;
         padding: 6px;
@@ -22,23 +33,22 @@ ui-input{
             color: var(--inp-placeholder);
         }
     }
-    &.has-icon{
+    &.has-icon {
         display: flex;
         align-items: center;
-        input{
+        input {
             flex: 1;
         }
-        ui-icon{
+        ui-icon {
             flex: 0 1 32px;
             height: 32px;
             display: flex;
             justify-content: center;
             align-items: center;
             margin: 0 5px;
-            &[type="close"]{
+            &[type='close'] {
                 cursor: pointer;
             }
         }
     }
-    
 }

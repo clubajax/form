@@ -229,7 +229,7 @@ class UiDropdown extends BaseComponent {
         this.popup = dom(
             'ui-popup',
             {
-                lazy: typeof this.data !== 'function',
+                lazy: !this.noselfdestroy && typeof this.data !== 'function',
                 buttonid: this.buttonid,
                 label: this.label,
                 html: this.list,

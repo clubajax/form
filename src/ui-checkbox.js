@@ -96,8 +96,8 @@ class CheckBox extends FormElement {
             'aria-labelledby': lblId,
             'aria-checked': false,
         });
-        this.labelNode = dom('span', { html, class: 'ui-label', for: chkId, id: lblId });
-
+        this.labelNode = dom('span', {html: html, class: 'ui-label', for: chkId, id: lblId});
+        
         if (!this['check-after']) {
             this.appendChild(this.input);
             if (this.label) {
@@ -114,7 +114,8 @@ class CheckBox extends FormElement {
             this.classList.add('has-label');
         }
 
-        dom.attr(this, 'label', false);
+        // RTK FIX
+        // dom.attr(this, 'label', false);
     }
 
     disconnected() {
@@ -128,6 +129,6 @@ class CheckBox extends FormElement {
 
 module.exports = BaseComponent.define('ui-checkbox', CheckBox, {
     bools: ['checked', 'check-after', 'indeterminate'],
-    props: []
+    props: ['label']
     // attrs: ['value']
 });

@@ -11,6 +11,7 @@ require('../src/ui-search');
 require('../src/ui-tooltip');
 require('../src/ui-drawer');
 require('../src/ui-paginator');
+require('../src/ui-form');
 require('../src/date-picker/date-picker');
 require('../src/date-picker/date-input');
 

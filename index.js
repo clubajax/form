@@ -16,6 +16,7 @@ require('./src/ui-arrow');
 require('./src/date-picker/date-picker');
 require('./src/date-picker/date-input');
 require('./src/ui-drawer');
+require('./src/ui-form');
 // require('./src/date-picker/time-input');
 // require('./src/date-picker/date-range-picker');
 // require('./src/date-picker/date-range-input');

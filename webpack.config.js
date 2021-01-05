@@ -11,8 +11,10 @@ module.exports = {
         filename: 'index.js',
         libraryTarget: 'umd',
         globalObject: 'this',
-        // libraryExport: 'default',
         library: 'form',
+        umdNamedDefine: true,
+        globalObject: `(typeof self !== 'undefined' ? self : this)`
+        // libraryExport: 'default',
         // sourceMapFilename: '@clubajax/form/form.js.map',
     },
     // source map options
@@ -25,15 +27,15 @@ module.exports = {
     // eval-source-map: has wrong line numbers, fastest
     // source-map: slow, org source, external
     devtool: DEV ? 'inline-source-map' : 'source-map',
-    externals: [
-        '@clubajax/custom-elements-polyfill',
-        '@clubajax/dom',
-        '@clubajax/on',
-        '@clubajax/base-component',
-        '@clubajax/dates',
-        '@clubajax/key-nav',
-        '@clubajax/no-dash',
-    ],
+    // externals: [
+    //     '@clubajax/custom-elements-polyfill',
+    //     '@clubajax/dom',
+    //     '@clubajax/on',
+    //     '@clubajax/base-component',
+    //     '@clubajax/dates',
+    //     '@clubajax/key-nav',
+    //     '@clubajax/no-dash',
+    // ],
     module: {
         rules: [
             {
