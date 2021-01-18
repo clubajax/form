@@ -78,6 +78,10 @@ class UiSearch extends BaseComponent {
         this.input.icon = this.getIcon();
     }
 
+    onDisplayValue() { 
+        this.setDisplay();    
+    }
+
     getIcon() {
         const value = this.input ? this.input.value : this.value; 
         return value ? (this.busy ? 'spinner' : 'close') : 'search';
@@ -86,8 +90,8 @@ class UiSearch extends BaseComponent {
     setDisplay() {
         const item = this.list ? this.list.getItem(this.value) : false;
         this.__value = item ? item.value : this.__value;
-
-        this.input.value = item ? (isNull(this.value) ? '' : item.display || item.alias || item.label) : this.__value;
+        const displayValue = this['display'];
+        this.input.value = item ? (isNull(this.value) ? (displayValue || '') : item.display || item.alias || item.label) : this.__value || displayValue;
 
         if (this.popup) {
             dom.style(this.popup, {
@@ -221,5 +225,5 @@ module.exports = BaseComponent.define('ui-search', UiSearch, {
         'autoselect',
         'busy',
     ],
-    attrs: ['value'],
+    attrs: ['value', 'display'],
 });
