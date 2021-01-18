@@ -237,7 +237,7 @@ date-range-input {
     position: relative;
 
     span {
-        font-size: 12px;
+        font-size: 14px;
         color: var(--label-txt);
         display: block;
         margin-bottom: 3px;
@@ -249,9 +249,8 @@ date-range-input {
         }
     }
     input {
-        padding: 5px;
-        border-radius: 2px;
-        font-size: 13px;
+        padding: 6px;
+        font-size: 16px;
 
         border: 1px solid var(--inp-brd);
         transition: background-color 300ms ease, border-color 300ms ease;
@@ -381,12 +380,16 @@ date-time-input {
     top: 50%;
     transform: translateY(-50%);
     border: 0;
-    background: none;
+    color: #5a5a5a;
     cursor: pointer;
+    background-color: transparent;
     ui-icon {
         display: block;
         font-size: 18px;
     }
+}
+.icon-button:hover{
+    color: white;
 }
 
 .input-error {
