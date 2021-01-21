@@ -1,5 +1,6 @@
 const BaseComponent = require('@clubajax/base-component');
 const dom = require('@clubajax/dom');
+const dates = require('@clubajax/dates');
 const emitEvent = require('./lib/emitEvent');
 
 class UiForm extends BaseComponent {
@@ -20,10 +21,10 @@ class UiForm extends BaseComponent {
 
     get value() {
         const children = this.children;
-        return Object.keys(children).reduce((acc, key) => { 
-            acc[key] = children[key].value;
+        return Object.keys(children).reduce((acc, key) => {
+            acc[key] = toTimestamp(children[key].value);
             return acc;
-        }, {})
+        }, {});
     }
 
     get children() {
@@ -37,17 +38,17 @@ class UiForm extends BaseComponent {
         return this._children;
     }
 
-    clear() { 
+    clear() {
         const children = this.children;
-        return Object.keys(children).forEach((key) => { 
+        return Object.keys(children).forEach((key) => {
             children[key].value = '';
-        }, {})
+        }, {});
     }
 
     setValue(value) {
         Object.keys(value).forEach((key) => {
             if (this.children[key]) {
-                this.children[key].value = value[key];
+                this.children[key].value = fromTimestamp(value[key]);
             }
         });
     }
@@ -74,6 +75,20 @@ class UiForm extends BaseComponent {
     destroy() {
         super.destroy();
     }
+}
+
+function toTimestamp(value) {
+    if (dates.isDate(value)) {
+        return dates.toTimestamp(dates.toDate(value));
+    }
+    return value;
+}
+
+function fromTimestamp(value) {
+    if (dates.isTimestamp(value)) {
+        return dates.format(dates.fromTimestamp(value), 'MM/dd/yyyy');
+    }
+    return value;
 }
 
 function isNull(value) {
