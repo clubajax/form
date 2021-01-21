@@ -135,7 +135,7 @@ class UiSearch extends BaseComponent {
         this.list.on('list-change', () => {
             this.isSelecting = true;
             this.setDisplay();
-            this.emit('change', { value: this.value });
+            this.emit('change', { value: this.value, item: this.list.getItem(this.value)  });
             setTimeout(() => {
                 this.popup.hide();
                 setTimeout(() => {
