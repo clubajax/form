@@ -32,6 +32,7 @@ class UiForm extends BaseComponent {
             this._children = dom.queryAll(this, '[name]').reduce((acc, node) => {
                 const name = dom.attr(node, 'name');
                 acc[name] = node;
+                node['event-name'] = 'input-change';
                 return acc;
             }, {});
         }
@@ -55,8 +56,7 @@ class UiForm extends BaseComponent {
 
     emitEvent(e) {
         e.stopPropagation();
-        this._value = this.input.value;
-        emitEvent(this, this._value);
+        emitEvent(this, {value: this.value});
     }
 
     connected() {
@@ -65,7 +65,13 @@ class UiForm extends BaseComponent {
     }
 
     connect() {
-        // console.log('connect form');
+        this.on('input-change', (e) => { 
+            if (e.target === this) {
+                e.stopPropagation();
+                return;
+            }
+            this.emitEvent(e);
+        })
     }
 
     disconnected() {
