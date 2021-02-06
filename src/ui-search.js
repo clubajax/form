@@ -49,6 +49,7 @@ class UiSearch extends BaseComponent {
             let updatePopup = false;
             if (this.popup && this.list) {
                 updatePopup = this.popup.showing && data.length !== this.list.data.length;
+                   
             }
             this.list.data = data;
             if (this.input.focused && !this.isSelecting && data.length) {
@@ -60,6 +61,7 @@ class UiSearch extends BaseComponent {
                     this.popup.show(updatePopup);
                 }
             }
+            this.setPopSize();
         });
         this.__data = data;
     }
@@ -87,17 +89,21 @@ class UiSearch extends BaseComponent {
         return value ? (this.busy ? 'spinner' : 'close') : 'search';
     }
 
+    setPopSize() { 
+        if (this.popup) {
+            dom.style(this.popup, {
+                'min-width': dom.box(this.input).w,
+            });
+        }
+    }
+
     setDisplay() {
         const item = this.list ? this.list.getItem(this.value) : false;
         this.__value = item ? item.value : this.__value;
         const displayValue = this['display'];
         this.input.value = item ? (isNull(this.value) ? (displayValue || '') : item.display || item.alias || item.label) : this.__value || displayValue;
 
-        if (this.popup) {
-            dom.style(this.popup, {
-                'min-width': dom.box(this.input).w,
-            });
-        }
+        this.setPopSize();
     }
 
     reset() {
@@ -195,6 +201,9 @@ class UiSearch extends BaseComponent {
             },
             document.body
         );
+
+        this.setPopSize();
+
         this.connectList();
     }
 
