@@ -6,7 +6,9 @@ ui-input {
     border: 1px solid var(--inp-brd);
     border-radius: 2px;
     &.focus {
-        border: 1px solid var(--focus-brd);
+        input {
+            border: 1px solid var(--focus-brd);
+        }
     }
     &[readonly] {
         pointer-events: none;
