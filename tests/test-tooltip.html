@@ -4,8 +4,9 @@
 <head>
     <title>Test Tooltip</title>
     <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' />
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
-        integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+        integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous"> -->
+    <link rel="stylesheet" href="./src/fontawesome/css/all.css" />
     <script src="src/test-files.js"></script>
     <style>
         html,
@@ -59,8 +60,8 @@
     <h1>Test Tooltip</h1>
     <div id="mocha"></div>
     <div id="tests">
-        <ui-icon type="search">
-            <ui-tooltip value="This icon has search functionality" align="L"/>
+        <!-- <ui-icon type="search">
+            <ui-tooltip value="This icon has search functionality" align="L" />
         </ui-icon>
         <ui-icon type="error" color="red" colour="blue">
             <ui-tooltip value="Click here to play chess" align='L' class="error" />
@@ -80,7 +81,7 @@
             <ui-tooltip align='B'>
                 I wanna ride - a rollercoaster baby baby
             </ui-tooltip>
-        </ui-icon>
+        </ui-icon> -->
     </div>
 
     <script>
@@ -110,7 +111,31 @@
 
 
                 it('should render a Tooltip', function (done) {
-                    // node = dom('ui-tooltip', {value: 'Simple tooltip'}, body);
+                    const btn = dom('button', {class: 'ui-button', html: 'Ok'});
+                    on(btn, 'click', () => {
+                        tip.close();
+                    })
+                    const component = dom('div', {
+                        class: 'component',
+                        html: [
+                            dom('ui-input', {label: 'Enter Code', value: '321'}),
+                            dom('div', {
+                                // class: 'ui-button-row',
+                                html: btn
+                            })
+                        ]
+                    })
+                    const tip = dom('ui-tooltip', {
+                        value: component,
+                        // align: 'T',
+                        class: 'large-tooltip',
+                        'use-click': true
+                    })
+                    node = dom('ui-icon', {
+                        type: "calPlus",
+                        class: 'dyn-icon',
+                        html: tip
+                    }, body)
                     done();
                 });
 

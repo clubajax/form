@@ -3,7 +3,6 @@
 ui-input {
     display: block;
     position: relative;
-    border: 1px solid var(--inp-brd);
     border-radius: 2px;
     &.focus {
         input {
@@ -25,7 +24,8 @@ ui-input {
         display: block;
     }
     input {
-        border: 0;
+        // border: 0;
+        border: 1px solid var(--inp-brd);
         background: none;
         padding: 6px;
         font-size: 16px;

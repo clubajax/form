@@ -104,18 +104,23 @@ class Paginator extends BaseComponent {
 
     setDisplayState() {
         if (!this.leftButton) {
-            return;
+            return;                                                           
         }
         const { buttonIndex } = this.pagination;
         const { start, total, limit } = this.data;
         const dropData = (this.dropData || DEFAULT_DROP_DATA).map((d) => parseInt(d.value, 10));
         const minDropValue = Math.min(...dropData);
+        
+
+        // pag (10) start:0 total:1 limit:20 minDropValue:10 false
+        // start: 10 total: 35 limit: 10 minDropValue: 10 true
+        // start:0 total:2 limit:20 min:10 false
+        // pag (10) 0 2 1 showDropdown: true showButtons: true
         const showButtons = total > limit;
-
-        // looks right. But seeing the dropdown in a few edge cases where we should not
-        const showDropdown = limit > minDropValue || showButtons;
-
-        //console.log('pag', `(${minDropValue})`, start, total, limit);
+        const showDropdown = total > limit || (limit > minDropValue && total > minDropValue);
+        console.log('pag', 'min:', minDropValue , 'start:', start, 'total:', total, 'limit:', limit, 'showDropdown:',showDropdown , 'showButtons:', showButtons);
+        
+        
         
         // NOT right. Hide the dropdown when you select 100 results
         // const showDropdown = showButtons;

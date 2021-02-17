@@ -13,6 +13,7 @@ class UiTooltip extends BaseComponent {
             this.innerHTML = '';
         }
         this.render();
+        this.connect();
     }
 
     render() {
@@ -22,12 +23,22 @@ class UiTooltip extends BaseComponent {
                 class: `ui-tooltip ${this.className}`,
                 html: this.value
             }),
-            buttonid: this.parentNode,
-            'use-hover': true,
+            buttonid: this['is-button'] ? this.parentNode.parentNode : this.parentNode,
+            'use-hover': this['use-click'] ? false : true,
             align,
             'hide-timer': this['hide-timer'],
             open: this.open
         }, document.body);
+    }
+
+    connect() { 
+        this.on('tooltip-close', () => { 
+            this.popup.hide();    
+        })
+    }
+
+    close() { 
+        this.popup.hide();
     }
 
     destroy() {
@@ -38,6 +49,7 @@ class UiTooltip extends BaseComponent {
 
 module.exports = BaseComponent.define('ui-tooltip', UiTooltip, {
     props: ['align', 'hide-timer'],
-    attrs: ['value', 'open']
+    attrs: ['value', 'open'],
+    bools: ['use-click', 'is-button']
 });
 
