@@ -39,7 +39,7 @@ class UiPopup extends BaseComponent {
         //         'ui-tooltip must be associated with a parent via the parentid'
         //     );
         // }
-        dom.attr('data-no-clickoff', true);
+        dom.attr(this, 'data-no-clickoff', true);
         this.connectEvents();
         if (!this.parentNode) {
             document.body.appendChild(this);
@@ -235,7 +235,7 @@ class UiPopup extends BaseComponent {
             this.clickoff.remove();
         }
         if (this.mq) {
-            this.mq.removeEventListener(this.handleMediaQuery);
+            this.mq.removeEventListener('change', this.handleMediaQuery);
         }
         this.destroyed = true;
         super.destroy();
