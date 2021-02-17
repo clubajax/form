@@ -236,7 +236,7 @@ class UiPopup extends BaseComponent {
             this.clickoff.remove();
         }
         if (this.mq) {
-            this.mq.removeEventListener(this.handleMediaQuery);
+            this.mq.removeEventListener('change', this.handleMediaQuery);
         }
         this.destroyed = true;
         super.destroy();
