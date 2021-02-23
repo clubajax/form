@@ -59,13 +59,13 @@
                     on.emit(btn, 'click');
                 }
 
-                it('should render an input', function (done) {
-                    node = dom('ui-input', {value: 'I read books!', icon: 'books'}, body);
+                it('should render an input with an icon', function (done) {
+                    node = dom('ui-input', {label: 'Books label', value: 'I read books!', icon: 'books'}, body);
                     done();
                 });
 
                 it('should select-all on focus', function (done) {
-                    node = dom('ui-input', {value: 'I auto select', autoselect: true}, body);
+                    node = dom('ui-input', {label: 'Autoselect', value: 'I auto select', autoselect: true}, body);
                     done();
                 });
 

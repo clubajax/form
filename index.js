@@ -7,6 +7,7 @@ require('./src/ui-list');
 require('./src/ui-popup');
 require('./src/ui-dropdown');
 require('./src/ui-search');
+require('./src/ui-searchbox');
 require('./src/ui-tooltip');
 require('./src/ui-paginator');
 require('./src/ui-minitags');

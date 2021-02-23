@@ -120,7 +120,6 @@ class UiPopup extends BaseComponent {
                 this.clickoff = on.makeMultiHandle([
                     on(this, 'clickoff', (e) => {
                         if (!e.target.hasAttribute('data-no-clickoff') && !e.target.closest('[data-no-clickoff]')) {
-                            console.log('clickoff: ', e.target);
                             this.hide();
                         }
                     }),
@@ -297,6 +296,7 @@ function positionTooltip(popup, button, align) {
         if (btn.h > pop.h) {
             return btn.y + (btn.h - pop.h) / 2;
         }
+        
         return btn.y - (pop.h - btn.h) / 2;
     }
     function midX() {
@@ -306,14 +306,25 @@ function positionTooltip(popup, button, align) {
         return btn.x - (pop.w - btn.w) / 2;
     }
     function right() {
-        style.top = midY();
-        style.left = btn.x + btn.w + GAP;
         addClass('R');
+        style.left = btn.x + btn.w + GAP;
+        if (btn.y < pop.h / 2) {
+            style.top = btn.y + (btn.h/2) - 50;
+            addClass('side50');
+        } else {
+            style.top = midY();
+        }
     }
     function left() {
-        style.top = midY();
-        style.right = win.w - btn.x + GAP;
         addClass('L');
+        style.right = win.w - btn.x + GAP;
+        if (btn.y < pop.h / 2) {
+            style.top = btn.y + (btn.h/2) - 50;
+            addClass('side50');
+        } else {
+            style.top = midY();
+            
+        }
     }
     function bottom() {
         style.left = midX();

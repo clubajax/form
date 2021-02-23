@@ -43,6 +43,9 @@ class UiForm extends BaseComponent {
         const children = this.children;
         return Object.keys(children).forEach((key) => {
             children[key].value = '';
+            if (children[key].reset) {
+                children[key].reset();
+            }
         }, {});
     }
 

@@ -40,9 +40,11 @@ class UiInput extends BaseComponent {
     onIcon(type) {
         this.iconNode.type = type;
     }
-    
+
     onLabel() {
-        this.labelNode.innerHTML = this.label;
+        if (this.label) {
+            this.labelNode.innerHTML = this.label;
+        }
     }
 
     onDisabled(value) {
@@ -73,20 +75,29 @@ class UiInput extends BaseComponent {
     }
 
     connect() {
-        this.on(this.input, 'blur', () => {
-            this.focused = false;
-            this.emit('blur');
-            this.classList.remove('focus');
-        }, null);
-        this.on(this.input, 'focus', () => {
-            this.focused = true;
-            this.emit('focus');
-            this.classList.add('focus');
-            if (this.autoselect) {
-                this.input.select();
-            }
-                
-        }, null);
+        this.on(
+            this.input,
+            'blur',
+            () => {
+                this.focused = false;
+                this.emit('blur');
+                this.classList.remove('focus');
+            },
+            null
+        );
+        this.on(
+            this.input,
+            'focus',
+            () => {
+                this.focused = true;
+                this.emit('focus');
+                this.classList.add('focus');
+                if (this.autoselect) {
+                    this.input.select();
+                }
+            },
+            null
+        );
         this.on(this.input, 'change', this.emitEvent.bind(this), null);
 
         this.on('click', (e) => {
@@ -103,19 +114,24 @@ class UiInput extends BaseComponent {
     focus() {
         this.input.focus();
     }
-    
+
     render() {
         if (this.label) {
-            this.labelNode = dom('label', {html: this.label}, this);
+            this.labelNode = dom('label', { html: this.label }, this);
         }
-        this.input = dom('input', {
-            value: isNull(this._value) ? '' : this._value,
-            readonly: this.readonly,
-            disabled: this.disabled,
-            placeholder: this.placeholder || DEFAULT_PLACEHOLDER
-        }, this);
+        const inputBorder = dom('div', { class: 'input-border' }, this);
+        this.input = dom(
+            'input',
+            {
+                value: isNull(this._value) ? '' : this._value,
+                readonly: this.readonly,
+                disabled: this.disabled,
+                placeholder: this.placeholder || DEFAULT_PLACEHOLDER,
+            },
+            inputBorder
+        );
         if (this.icon) {
-            this.iconNode = dom('ui-icon', {type: this.icon}, this);
+            this.iconNode = dom('ui-icon', { type: this.icon }, inputBorder);
             this.classList.add('has-icon');
         }
         this.setPlaceholder();
@@ -138,5 +154,5 @@ function isNull(value) {
 module.exports = BaseComponent.define('ui-input', UiInput, {
     props: ['placeholder', 'label', 'limit', 'name', 'event-name', 'align', 'icon'],
     bools: ['disabled', 'ready', 'required', 'autofocus', 'autoselect', 'readonly'],
-    attrs: ['value']
+    attrs: ['value'],
 });

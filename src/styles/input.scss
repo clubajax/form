@@ -3,39 +3,7 @@
 ui-input {
     display: block;
     position: relative;
-    border-radius: 2px;
-    &.focus {
-        input {
-            border: 1px solid var(--focus-brd);
-        }
-    }
-    &[readonly] {
-        pointer-events: none;
-        background: white;
-        border-color: #eee;
-        input {
-            font-weight: 300;
-            &::placeholder {
-                color: var(--disabled);
-            }
-        }
-    }
-    label {
-        display: block;
-    }
-    input {
-        // border: 0;
-        border: 1px solid var(--inp-brd);
-        background: none;
-        padding: 6px;
-        font-size: 16px;
-        width: 100%;
-        outline: 0;
-        &::placeholder {
-            color: var(--inp-placeholder);
-        }
-    }
-    &.has-icon {
+    .input-border {
         display: flex;
         align-items: center;
         input {
@@ -51,6 +19,42 @@ ui-input {
             &[type='close'] {
                 cursor: pointer;
             }
+        }
+        background: white;
+        border: 1px solid var(--inp-brd);
+        border-radius: 2px;
+    }
+    &.focus {
+        .input-border {
+            border: 1px solid var(--focus-brd);
+        }
+    }
+    &[readonly] {
+        pointer-events: none;
+        .input-border {
+            border-color: #eee;
+        }
+        input {
+            font-weight: 300;
+            &::placeholder {
+                color: var(--disabled);
+            }
+        }
+    }
+    label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    input {
+        border: 0;
+        background: none;
+        padding: 10px;
+        font-size: 16px;
+        width: 100%;
+        outline: 0;
+        &::placeholder {
+            color: var(--inp-placeholder);
         }
     }
 }

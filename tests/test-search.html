@@ -130,11 +130,25 @@
                     });
                 });
 
-                it.only('should use a callback for Search', function (done) {
+                it('should use a callback for Search', function (done) {
                     on(document, 'data-ready', () => {
                         setTimeout(() => {
                             node = dom('ui-search', {data: [], label: 'Simple Search', autoselect: true, placeholder: 'Type to search!'}, body);
                             node.on('search', onSearch);
+                            done();
+                        }, 100)
+
+                    });
+                });
+
+                it.only('should render a simple search box', function (done) {
+                    on(document, 'data-ready', () => {
+                        setTimeout(() => {
+                            node = dom('ui-searchbox', {label: 'Simple Box', autoselect: true, placeholder: 'Type to search!'}, body);
+                            // node.on('search', onSearch);
+                            node.on('search', (e)=> {
+                                console.log('search', e);
+                            });
                             done();
                         }, 100)
 

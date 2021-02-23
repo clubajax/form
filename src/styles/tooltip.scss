@@ -20,11 +20,19 @@
         border-style: solid;
         border-color: transparent var(--tip-brd) transparent transparent;
     }
+    &.side50:before{
+        transform: none;
+        top: 50px;
+    }
     &.L{
         &:before{
             right: 0;
             transform: translate(100%, -50%);
             border-color: transparent transparent transparent var(--tip-brd);
+        }
+        &.side50:before{
+            transform: translate(100%, 0);
+            top: 50px;
         }
     }
     &.B{
