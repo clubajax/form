@@ -118,7 +118,7 @@ class Paginator extends BaseComponent {
         // pag (10) 0 2 1 showDropdown: true showButtons: true
         const showButtons = total > limit;
         const showDropdown = total > limit || (limit > minDropValue && total > minDropValue);
-        console.log('pag', 'min:', minDropValue , 'start:', start, 'total:', total, 'limit:', limit, 'showDropdown:',showDropdown , 'showButtons:', showButtons);
+        // console.log('pag', 'min:', minDropValue , 'start:', start, 'total:', total, 'limit:', limit, 'showDropdown:',showDropdown , 'showButtons:', showButtons);
         
         
         

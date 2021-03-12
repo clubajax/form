@@ -12,7 +12,7 @@ require('./ui-icon');
 
 class CheckBox extends FormElement {
     get value() {
-        return this.indeterminate ? null : Boolean(this.checked);
+        return this.intermediate ? null : Boolean(this.checked);
     }
 
     set value(value) {
@@ -28,14 +28,14 @@ class CheckBox extends FormElement {
     }
 
     onChecked(value) {
-        if (this.indeterminate) {
-            this.indeterminate = false;
+        if (this.intermediate) {
+            this.intermediate = false;
             this.input.type = 'check';
         }
         dom.attr(this.input, 'aria-checked', `${value}`);
     }
 
-    onIndeterminate(value) {
+    onIntermediate(value) {
         if (value) {
             this.input.type = 'minus';
         }
@@ -84,7 +84,7 @@ class CheckBox extends FormElement {
     }
 
     render() {
-        const type = this.indeterminate ? 'minus' : 'check';
+        const type = this.intermediate ? 'minus' : 'check';
         const html = this.label || '';
         const chkId = this.label ? this.id || uid('checkbox') : null;
         const lblId = this.label ? this.id || uid('label') : null;
@@ -127,7 +127,7 @@ class CheckBox extends FormElement {
 }
 
 module.exports = BaseComponent.define('ui-checkbox', CheckBox, {
-    bools: ['checked', 'check-after', 'indeterminate'],
+    bools: ['checked', 'check-after', 'intermediate'],
     props: []
     // attrs: ['value']
 });

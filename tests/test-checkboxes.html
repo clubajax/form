@@ -191,7 +191,7 @@
                     });
                 });
 
-                test.only('it should emit custom events', function (done) {
+                test('it should emit custom events', function (done) {
                     const node = dom('ui-checkbox', {label: 'Emit custom events', 'event-name': 'boffo'}, body);
                     onDomReady(node, function () {
                         const events = [];
@@ -208,7 +208,7 @@
                     });
                 });
 
-                test.only('it should render with no label', function () {
+                test('it should render with no label', function () {
                     const node = dom('ui-checkbox', {value: true}, body);
                 });
 

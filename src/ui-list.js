@@ -42,7 +42,7 @@ class UIList extends BaseComponent {
     }
     
     set value(value) {
-        this.lastValue = value;
+        // this.lastValue = value;
         this.setControllerValue(value);
         this.__value = value;
     }
@@ -401,7 +401,7 @@ class UIList extends BaseComponent {
             this.on('focus', () => {
                 this.list.focus();
             }, null, null),
-            this.on('key-select', () => {
+            this.on('key-select', (e) => {
                 if (isNull(this.value)) {
                     return;
                 }

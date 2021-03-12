@@ -92,7 +92,7 @@ class UiDropdown extends BaseComponent {
 
     sizeToPopup() {
         dom.style(this.button, {
-            width: dom.box(this.popup).w + 20, // allow for dropdown arrow
+            width: this.popup.width + 20, // allow for dropdown arrow
         });
     }
 
@@ -107,6 +107,9 @@ class UiDropdown extends BaseComponent {
 
     connectEvents() {
         this.list.on('list-click-off', (e) => {
+            if (this.button.contains(e.target)) {
+                return;
+            }
             this.popup.hide();
         });
 
@@ -148,7 +151,6 @@ class UiDropdown extends BaseComponent {
         const item = getItemFromList(this.data, value);
         const hasPlaceholder = isNull(item);
         dom.classList.toggle(this.button, 'has-placeholder', hasPlaceholder);
-
         dom(
             'span',
             { html: hasPlaceholder ? this.placeholder || DEFAULT_PLACEHOLDER : item.alias || item.label },
@@ -159,7 +161,7 @@ class UiDropdown extends BaseComponent {
         }
         if (this.popup) {
             setTimeout(() => {
-                // don't resize the popup right away - wait until it closes, or it jumps
+                // don't resize the popup right away - wait until it closes, else it jumps
                 dom.style(this.popup, {
                     'min-width': dom.box(this.button).w,
                 });
