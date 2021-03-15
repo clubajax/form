@@ -12,7 +12,6 @@ class UiSearchBox extends BaseComponent {
         this.placeholder;
         this.busy;
         this.label;
-        console.log('UiSearchBox');
     }
 
     connected() {
