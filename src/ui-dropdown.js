@@ -144,6 +144,12 @@ class UiDropdown extends BaseComponent {
         });
     }
 
+    beforerender(text) {
+        console.log('beforerender');
+        // can be overwritten    
+        return text;
+    }
+
     setDisplay() {
         this.button.innerHTML = '';
 
@@ -151,9 +157,10 @@ class UiDropdown extends BaseComponent {
         const item = getItemFromList(this.data, value);
         const hasPlaceholder = isNull(item);
         dom.classList.toggle(this.button, 'has-placeholder', hasPlaceholder);
+        const text = this.beforerender(hasPlaceholder ? this.placeholder || DEFAULT_PLACEHOLDER : item.alias || item.label);
         dom(
             'span',
-            { html: hasPlaceholder ? this.placeholder || DEFAULT_PLACEHOLDER : item.alias || item.label },
+            { html: text },
             this.button
         );
         if (this.icon !== 'none') {
@@ -306,7 +313,7 @@ function getItemFromList(data, value) {
 }
 
 module.exports = BaseComponent.define('ui-dropdown', UiDropdown, {
-    props: ['icon', 'placeholder', 'label', 'limit', 'name', 'event-name', 'align', 'btn-class', 'sortdesc', 'sortasc'],
+    props: ['icon', 'placeholder', 'label', 'limit', 'name', 'event-name', 'align', 'btn-class', 'sortdesc', 'sortasc', 'beforerender'],
     bools: [
         'disabled',
         'open-when-blank',
