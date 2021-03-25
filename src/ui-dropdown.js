@@ -145,7 +145,6 @@ class UiDropdown extends BaseComponent {
     }
 
     beforerender(text) {
-        console.log('beforerender');
         // can be overwritten    
         return text;
     }
@@ -157,7 +156,10 @@ class UiDropdown extends BaseComponent {
         const item = getItemFromList(this.data, value);
         const hasPlaceholder = isNull(item);
         dom.classList.toggle(this.button, 'has-placeholder', hasPlaceholder);
-        const text = this.beforerender(hasPlaceholder ? this.placeholder || DEFAULT_PLACEHOLDER : item.alias || item.label);
+        let text = hasPlaceholder ? this.placeholder || DEFAULT_PLACEHOLDER : item.alias || item.label;
+        if (this.beforerender) {
+            text = this.beforerender(text);
+        }
         dom(
             'span',
             { html: text },
