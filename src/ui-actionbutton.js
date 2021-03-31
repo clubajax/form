@@ -3,6 +3,7 @@ const UiDropdown = require('./ui-dropdown');
 const dom = require('@clubajax/dom');
 require('./ui-icon');
 
+console.log('INCLUDED');
 
 class ActionButton extends UiDropdown {
     constructor() {
