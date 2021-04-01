@@ -253,7 +253,7 @@ class UiDropdown extends BaseComponent {
     }
 
     render() {
-        if (this.label) {
+        if (!this.isAction & this.label) {
             this.labelNode = dom('label', { html: this.label, class: 'ui-label' }, this);
         }
         this.buttonid = uid('drop-button');

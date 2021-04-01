@@ -3,14 +3,13 @@ const UiDropdown = require('./ui-dropdown');
 const dom = require('@clubajax/dom');
 require('./ui-icon');
 
-console.log('INCLUDED');
-
 class ActionButton extends UiDropdown {
     constructor() {
         super();
         this.popupClass = 'actionbutton';
         this.isAction = true;
     }
+
     setDisplay() {
         if (this.buttonRendered) {
             return;
@@ -27,6 +26,12 @@ class ActionButton extends UiDropdown {
     connectEvents() {
         super.connectEvents();
         this.list.on('list-change', (e) => {
+
+            const item = this.data.find(d => d.value === e.detail.value);
+            if (item && item.callback) {
+                item.callback(item);
+            }
+
             setTimeout(() => {
                 this.list.controller.setSelected(null);
                 this.list.lastValue = null;
