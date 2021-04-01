@@ -27,6 +27,11 @@ class UiPopup extends BaseComponent {
         });
     }
 
+    get width() { 
+        const w = dom.box(this).w;
+        return w || 100;
+    }
+
     domReady() {
         this.component = this.children[0] || {};
         this.button = dom.byId(this.buttonid);
@@ -119,7 +124,8 @@ class UiPopup extends BaseComponent {
             } else {
                 this.clickoff = on.makeMultiHandle([
                     on(this, 'clickoff', (e) => {
-                        if (!e.target.hasAttribute('data-no-clickoff') && !e.target.closest('[data-no-clickoff]')) {
+                        // if (!e.target.hasAttribute('data-no-clickoff') && !e.target.closest('[data-no-clickoff]')) {
+                        if (!e.target.hasAttribute('data-no-clickoff') && !this.button.contains(e.target)) {
                             this.hide();
                         }
                     }),
@@ -206,11 +212,15 @@ class UiPopup extends BaseComponent {
         setTimeout(() => {
             this.classList.add('open');
         }, 1);
+        this.isOpening = true;
+        setTimeout(() => {
+            this.isOpening = false;
+        }, 500);
         this.fire('popup-open');
     }
 
     hide() {
-        if (!this.showing || window.keepPopupsOpen) {
+        if (!this.showing || window.keepPopupsOpen || this.isOpening) {
             return;
         }
         this.showing = false;

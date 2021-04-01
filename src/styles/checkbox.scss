@@ -38,9 +38,10 @@ ui-checkbox {
             font-size: 11px;
         }
     }
-    &[indeterminate] {
+    &[intermediate] {
         ui-icon {
-            color: black;
+            color: white;
+            background-color: var(--chk-bg);
         }
         &:not([readonly]):hover {
             icon-check {

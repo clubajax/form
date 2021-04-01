@@ -92,7 +92,7 @@ class UiDropdown extends BaseComponent {
 
     sizeToPopup() {
         dom.style(this.button, {
-            width: dom.box(this.popup).w + 20, // allow for dropdown arrow
+            width: this.popup.width + 20, // allow for dropdown arrow
         });
     }
 
@@ -107,6 +107,9 @@ class UiDropdown extends BaseComponent {
 
     connectEvents() {
         this.list.on('list-click-off', (e) => {
+            if (this.button.contains(e.target)) {
+                return;
+            }
             this.popup.hide();
         });
 
@@ -141,6 +144,11 @@ class UiDropdown extends BaseComponent {
         });
     }
 
+    beforerender(text) {
+        // can be overwritten    
+        return text;
+    }
+
     setDisplay() {
         this.button.innerHTML = '';
 
@@ -148,10 +156,13 @@ class UiDropdown extends BaseComponent {
         const item = getItemFromList(this.data, value);
         const hasPlaceholder = isNull(item);
         dom.classList.toggle(this.button, 'has-placeholder', hasPlaceholder);
-
+        let text = hasPlaceholder ? this.placeholder || DEFAULT_PLACEHOLDER : item.alias || item.label;
+        if (this.beforerender) {
+            text = this.beforerender(text);
+        }
         dom(
             'span',
-            { html: hasPlaceholder ? this.placeholder || DEFAULT_PLACEHOLDER : item.alias || item.label },
+            { html: text },
             this.button
         );
         if (this.icon !== 'none') {
@@ -159,7 +170,7 @@ class UiDropdown extends BaseComponent {
         }
         if (this.popup) {
             setTimeout(() => {
-                // don't resize the popup right away - wait until it closes, or it jumps
+                // don't resize the popup right away - wait until it closes, else it jumps
                 dom.style(this.popup, {
                     'min-width': dom.box(this.button).w,
                 });
@@ -304,7 +315,7 @@ function getItemFromList(data, value) {
 }
 
 module.exports = BaseComponent.define('ui-dropdown', UiDropdown, {
-    props: ['icon', 'placeholder', 'label', 'limit', 'name', 'event-name', 'align', 'btn-class', 'sortdesc', 'sortasc'],
+    props: ['icon', 'placeholder', 'label', 'limit', 'name', 'event-name', 'align', 'btn-class', 'sortdesc', 'sortasc', 'beforerender'],
     bools: [
         'disabled',
         'open-when-blank',

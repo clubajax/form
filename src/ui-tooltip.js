@@ -23,7 +23,7 @@ class UiTooltip extends BaseComponent {
                 class: `ui-tooltip ${this.className}`,
                 html: this.value
             }),
-            buttonid: this['is-button'] ? this.parentNode.parentNode : this.parentNode,
+            buttonid: this.buttonid ? this.buttonid : this['is-button'] ? this.parentNode.parentNode : this.parentNode,
             'use-hover': this['use-click'] ? false : true,
             align,
             'hide-timer': this['hide-timer'],
@@ -33,7 +33,7 @@ class UiTooltip extends BaseComponent {
 
     connect() { 
         this.on('tooltip-close', () => { 
-            this.popup.hide();    
+            this.popup.hide();
         })
     }
 
@@ -48,7 +48,7 @@ class UiTooltip extends BaseComponent {
 }
 
 module.exports = BaseComponent.define('ui-tooltip', UiTooltip, {
-    props: ['align', 'hide-timer'],
+    props: ['align', 'hide-timer', 'buttonid'],
     attrs: ['value', 'open'],
     bools: ['use-click', 'is-button']
 });
