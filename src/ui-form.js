@@ -16,13 +16,19 @@ class UiForm extends BaseComponent {
 
     set value(value) {
         this._value = isNull(value) ? {} : value;
+        this.blockEvent = true;
+        setTimeout(() => {
+            this.blockEvent = false;
+        }, 30);
         this.setValue(this._value);
     }
 
     get value() {
         const children = this.children;
         return Object.keys(children).reduce((acc, key) => {
-            acc[key] = toTimestamp(children[key].value);
+            // acc[key] = toTimestamp(children[key].value);
+            acc[key] = children[key].value;
+            // console.log('    get', key, acc[key]);
             return acc;
         }, {});
     }
@@ -52,14 +58,18 @@ class UiForm extends BaseComponent {
     setValue(value) {
         Object.keys(value).forEach((key) => {
             if (this.children[key]) {
-                this.children[key].value = fromTimestamp(value[key]);
+                // this.children[key].value = fromTimestamp(value[key]);
+                this.children[key].value = value[key];
             }
         });
     }
 
     emitEvent(e) {
+        if (this.blockEvent) {
+            return;
+        }
         e.stopPropagation();
-        emitEvent(this, {value: this.value});
+        emitEvent(this, { value: this.value });
     }
 
     connected() {
@@ -68,13 +78,13 @@ class UiForm extends BaseComponent {
     }
 
     connect() {
-        this.on('input-change', (e) => { 
+        this.on('input-change', (e) => {
             if (e.target === this) {
                 e.stopPropagation();
                 return;
             }
             this.emitEvent(e);
-        })
+        });
     }
 
     disconnected() {
