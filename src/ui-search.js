@@ -20,6 +20,7 @@ class UiSearch extends BaseComponent {
         this.busy;
         this.label;
     }
+
     set value(value) {
         this.onDomReady(() => {
             if (this.list) {

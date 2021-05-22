@@ -395,8 +395,9 @@ class UIList extends BaseComponent {
             value: this.value,
         };
         this.connectHandles = on.makeMultiHandle([
-            this.on('click', () => {
+            this.on('click', (e) => {
                 this.list.focus();
+                e.stopImmediatePropagation();
             }, null, null),
             this.on('focus', () => {
                 this.list.focus();

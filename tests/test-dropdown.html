@@ -228,6 +228,14 @@
                             done();
                         });
                     });
+                    it('should should minimal items', function (done) {
+                        const data = dataNums.splice(0, 2);
+                        node = dom('ui-dropdown', {data: data, label: 'Minimal Items', placeholder: 'Select'}, body);
+                        ready(function () {
+                            expect(lis.length).to.equal(2);
+                            done();
+                        });
+                    });
                     it('should render a disabled dropdown', function (done) {
                         node = dom('ui-dropdown', {data: data, label: 'Disabled drop', disabled: true, value: 'red', placeholder: 'Select'}, body);
                         ready(function () {
