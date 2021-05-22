@@ -198,6 +198,7 @@ class UiPopup extends BaseComponent {
         if (this.showing) {
             return;
         }
+        this.children[0].disabled = false;
         this.showing = true;
         if (this.lazy) {
             this.parent.appendChild(this);
@@ -223,6 +224,7 @@ class UiPopup extends BaseComponent {
         if (!this.showing || window.keepPopupsOpen || this.isOpening) {
             return;
         }
+        this.children[0].disabled = true;
         this.showing = false;
         this.classList.remove('open');
         if (this.clickoff) {

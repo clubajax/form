@@ -36,6 +36,21 @@ class UiDropdown extends BaseComponent {
     }
 
     set value(value) {
+        // blocking an overly aggressive setting of the value
+        // this prevents a React bug, when a Select component is
+        // in a closure and the state gets updated with a stale
+        // value immediately after a new value
+        if (this.blocked) {
+            return;
+        }
+        this.blocked = true;
+        setTimeout(() => {
+            this.blocked = false;
+        }, 30);
+
+        if (this.lastValue === value) {
+            return;
+        }
         this.lastValue = value;
         if (this.list) {
             this.list.value = value;
@@ -114,7 +129,8 @@ class UiDropdown extends BaseComponent {
         });
 
         this.list.on('list-change', (e) => {
-            if (!this.isAction && isEqual(e.detail.value, this.__value)) {
+            // if (isEqual(e.detail.value, this.__value) && !this.isAction) {
+            if (isEqual(e.detail.value, this.__value)) {
                 this.popup.hide();
                 e.stopImmediatePropagation();
                 return;
@@ -128,6 +144,7 @@ class UiDropdown extends BaseComponent {
             this.lastValue = this.value;
 
             emitEvent(this, value, getItemFromList(this.data, value));
+
             if (!this.mult) {
                 setTimeout(() => {
                     this.popup.hide();
@@ -145,7 +162,7 @@ class UiDropdown extends BaseComponent {
     }
 
     beforerender(text) {
-        // can be overwritten    
+        // can be overwritten
         return text;
     }
 
@@ -160,11 +177,7 @@ class UiDropdown extends BaseComponent {
         if (this.beforerender) {
             text = this.beforerender(text);
         }
-        dom(
-            'span',
-            { html: text },
-            this.button
-        );
+        dom('span', { html: text }, this.button);
         if (this.icon !== 'none') {
             dom('ui-icon', { type: this.icon || 'caretDown' }, this.button);
         }
@@ -176,7 +189,6 @@ class UiDropdown extends BaseComponent {
                 });
             }, 500);
         }
-
     }
 
     setLazyData() {
@@ -270,8 +282,7 @@ class UiDropdown extends BaseComponent {
                 if (this.DOMSTATE !== 'domready') {
                     this.destroy();
                 }
-            }, 500)
-            
+            }, 500);
         }
     }
 
@@ -281,7 +292,6 @@ class UiDropdown extends BaseComponent {
             this.popup.destroy();
         }
         super.destroy();
-        
     }
 }
 
@@ -315,7 +325,19 @@ function getItemFromList(data, value) {
 }
 
 module.exports = BaseComponent.define('ui-dropdown', UiDropdown, {
-    props: ['icon', 'placeholder', 'label', 'limit', 'name', 'event-name', 'align', 'btn-class', 'sortdesc', 'sortasc', 'beforerender'],
+    props: [
+        'icon',
+        'placeholder',
+        'label',
+        'limit',
+        'name',
+        'event-name',
+        'align',
+        'btn-class',
+        'sortdesc',
+        'sortasc',
+        'beforerender',
+    ],
     bools: [
         'disabled',
         'open-when-blank',

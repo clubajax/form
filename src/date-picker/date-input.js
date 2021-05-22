@@ -52,12 +52,14 @@ class DateInput extends BaseComponent {
         if (value === this.strDate) {
             return;
         }
+        if (value === 'today') {
+            value = dates.format(new Date(), 'MM/dd/yyyy')
+        }
         const isInit = !this.strDate;
         value = dates.padded(value);
 
         this.strDate = dates.isValid(value) ? value : '';
         this.onDomReady(() => {
-            // this.setValue(this.strDate, isInit);
             this.setValue(this.strDate, true);
         });
     }
