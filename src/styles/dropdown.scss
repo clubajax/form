@@ -4,6 +4,7 @@ ui-dropdown {
         background-color: var(--drop-btn-bg);
         padding: var(--drop-btn-pad);
         max-width: 100%;
+        width: 100%;
         text-align: left;
         & > ui-icon {
             display: inline-block;
