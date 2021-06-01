@@ -40,7 +40,7 @@ class UIList extends BaseComponent {
     get mult() {
         return this.multitple || this['persist-multiple'];
     }
-    
+
     set value(value) {
         // this.lastValue = value;
         this.setControllerValue(value);
@@ -61,7 +61,7 @@ class UIList extends BaseComponent {
             }
             return this.__value || null;
         };
-        
+
         const v = getValue();
         if (this.mult && v) {
             return v.map(dom.normalize);
@@ -300,6 +300,10 @@ class UIList extends BaseComponent {
 
     setControllerValue(value) {
         if (this.controller) {
+            this.blocked = true;
+            setTimeout(() => {
+                this.blocked = false;
+            }, 1);
             if (Array.isArray(value)) {
                 if (!this.mult) {
                     throw new Error('Trying to set multiple values without the `multiple` attribute');
@@ -395,26 +399,41 @@ class UIList extends BaseComponent {
             value: this.value,
         };
         this.connectHandles = on.makeMultiHandle([
-            this.on('click', (e) => {
-                this.list.focus();
-                e.stopImmediatePropagation();
-            }, null, null),
-            this.on('focus', () => {
-                this.list.focus();
-            }, null, null),
-            this.on('key-select', (e) => {
-                if (isNull(this.value)) {
-                    return;
-                }
-                const changed = this.value !== this.lastValue;
-                this.lastValue = this.value;
-                dom.classList.toggle(this, 'has-selected', !!this.value);
-                if (changed) {
-                    this.emitEvent();
-                } else {
-                    this.fire('list-click-off');
-                }
-            }, null, null),
+            this.on(
+                'click',
+                (e) => {
+                    this.list.focus();
+                    e.stopImmediatePropagation();
+                },
+                null,
+                null
+            ),
+            this.on(
+                'focus',
+                () => {
+                    this.list.focus();
+                },
+                null,
+                null
+            ),
+            this.on(
+                'key-select',
+                (e) => {
+                    if (isNull(this.value) || this.blocked) {
+                        return;
+                    }
+                    const changed = this.value !== this.lastValue;
+                    this.lastValue = this.value;
+                    dom.classList.toggle(this, 'has-selected', !!this.value);
+                    if (changed) {
+                        this.emitEvent();
+                    } else {
+                        this.fire('list-click-off');
+                    }
+                },
+                null,
+                null
+            ),
         ]);
 
         this.controller = keys(this.list, options);
