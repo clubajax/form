@@ -253,6 +253,7 @@ class UiDropdown extends BaseComponent {
             'ui-popup',
             {
                 lazy: !this.noselfdestroy && typeof this.data !== 'function',
+                'max-height': this.maxheight || dom.style(this, 'max-height'), 
                 buttonid: this.buttonid,
                 label: this.label,
                 html: this.list,
@@ -337,6 +338,7 @@ module.exports = BaseComponent.define('ui-dropdown', UiDropdown, {
         'sortdesc',
         'sortasc',
         'beforerender',
+        'maxheight'
     ],
     bools: [
         'disabled',

@@ -41,6 +41,16 @@
             top: 150px;
             right: 100px;
         }
+        .top-middle{
+            position: absolute;
+            top: 40%;
+            /* bottom: 50px; */
+            left: 50%;
+            /* max-height: 300px; */
+        }
+        .max-test{
+            max-height: 300px;
+        }
     </style>
 </head>
 
@@ -48,9 +58,9 @@
     <h1>Test Dropdown</h1>
     <div id="mocha"></div>
     <div id="tests">
-        <input autofocus />
+        <!-- <input autofocus /> -->
     </div>
-    <input />
+    <!-- <input /> -->
     <script>
 
         mocha.setup('bdd');
@@ -214,8 +224,8 @@
                 }
 
                 describe('render', function () {
-                    it('should render a dropdown', function (done) {
-                        node = dom('ui-dropdown', {data: data, label: 'Simple drop', placeholder: 'Select'}, body);
+                    it.only('should render a dropdown', function (done) {
+                        node = dom('ui-dropdown', {data: data, label: 'Simple drop', placeholder: 'Select', class: 'xmax-test'}, body);
                         ready(function () {
                             expect(lis.length).to.equal(4);
                             done();
@@ -294,6 +304,14 @@
                     it('should handle long lists', function (done) {
                         node = dom('ui-dropdown', {data: dataLongList, label: 'Long List', placeholder: 'Pick...', class: 'top-right'}, body);
                         ready(function () {
+                            expect(lis.length).to.equal(64);
+                            done();
+                        });
+                    });
+                    it.only('should restrict the height of long lists', function (done) {
+                        node = dom('ui-dropdown', {data: dataLongList, label: 'Long List', placeholder: 'Pick...', class: 'top-middle', xmaxheight: 200}, body);
+                        ready(function () {
+                            console.log('node', node);
                             expect(lis.length).to.equal(64);
                             done();
                         });

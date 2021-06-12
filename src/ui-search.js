@@ -50,7 +50,6 @@ class UiSearch extends BaseComponent {
             let updatePopup = false;
             if (this.popup && this.list) {
                 updatePopup = this.popup.showing && data.length !== this.list.data.length;
-                   
             }
             this.list.data = data;
             if (this.input.focused && !this.isSelecting && data.length) {
@@ -81,16 +80,16 @@ class UiSearch extends BaseComponent {
         this.input.icon = this.getIcon();
     }
 
-    onDisplayValue() { 
-        this.setDisplay();    
+    onDisplayValue() {
+        this.setDisplay();
     }
 
     getIcon() {
-        const value = this.input ? this.input.value : this.value; 
+        const value = this.input ? this.input.value : this.value;
         return value ? (this.busy ? 'spinner' : 'close') : 'search';
     }
 
-    setPopSize() { 
+    setPopSize() {
         if (this.popup) {
             dom.style(this.popup, {
                 'min-width': dom.box(this.input).w,
@@ -102,7 +101,11 @@ class UiSearch extends BaseComponent {
         const item = this.list ? this.list.getItem(this.value) : false;
         this.__value = item ? item.value : this.__value;
         const displayValue = this['display'];
-        this.input.value = item ? (isNull(this.value) ? (displayValue || '') : item.display || item.alias || item.label) : this.__value || displayValue;
+        this.input.value = item
+            ? isNull(this.value)
+                ? displayValue || ''
+                : item.display || item.alias || item.label
+            : this.__value || displayValue;
 
         this.setPopSize();
     }
@@ -142,7 +145,7 @@ class UiSearch extends BaseComponent {
         this.list.on('list-change', () => {
             this.isSelecting = true;
             this.setDisplay();
-            this.emit('change', { value: this.value, item: this.list.getItem(this.value)  });
+            this.emit('change', { value: this.value, item: this.list.getItem(this.value) });
             setTimeout(() => {
                 this.popup.hide();
                 setTimeout(() => {
@@ -167,7 +170,7 @@ class UiSearch extends BaseComponent {
                 placeholder: this.placeholder || DEFAULT_PLACEHOLDER,
                 icon: this.getIcon(),
                 autoselect: this.autoselect,
-                disabled: this.disabled
+                disabled: this.disabled,
             },
             this
         );
@@ -195,10 +198,11 @@ class UiSearch extends BaseComponent {
         this.popup = dom(
             'ui-popup',
             {
+                'max-height': this.maxheight,
                 buttonid: this.buttonid,
                 label: this.label,
                 html: this.list,
-                lazy: true
+                lazy: true,
             },
             document.body
         );
@@ -224,7 +228,7 @@ function isNull(value) {
 }
 
 module.exports = BaseComponent.define('ui-search', UiSearch, {
-    props: ['placeholder', 'label', 'limit', 'name', 'event-name', 'align', 'btn-class'],
+    props: ['placeholder', 'label', 'limit', 'name', 'event-name', 'align', 'btn-class', 'maxheight'],
     bools: [
         'disabled',
         'open-when-blank',

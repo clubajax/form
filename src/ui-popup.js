@@ -14,7 +14,7 @@ class UiPopup extends BaseComponent {
         this.buttonid;
         this.label;
 
-        this.noHideOnBlur = true
+        this.noHideOnBlur = true;
     }
 
     onOpen(value) {
@@ -27,7 +27,7 @@ class UiPopup extends BaseComponent {
         });
     }
 
-    get width() { 
+    get width() {
         const w = dom.box(this).w;
         return w || 100;
     }
@@ -35,6 +35,8 @@ class UiPopup extends BaseComponent {
     domReady() {
         this.component = this.children[0] || {};
         this.button = dom.byId(this.buttonid);
+        const h = this['max-height'];
+        this.maxHeight =  h === 'none' || !h ? 0 : h;
 
         // need to determine if this is a tooltip or not
         // throws errors in REact
@@ -92,23 +94,28 @@ class UiPopup extends BaseComponent {
             this
         );
         dom.queryAll(this, '.ui-button-row .ui-button').forEach((button, i) => {
-            this.mobileEvents = this.on(button, 'click', () => {
-                if (i === 1) {
-                    if (this.component.emitEvent) {
-                        this.component.blockEvent = false;
-                        this.component.emitEvent();
-                        this.component.blockEvent = true;
+            this.mobileEvents = this.on(
+                button,
+                'click',
+                () => {
+                    if (i === 1) {
+                        if (this.component.emitEvent) {
+                            this.component.blockEvent = false;
+                            this.component.emitEvent();
+                            this.component.blockEvent = true;
+                        }
+                    } else if (this.component.reset) {
+                        this.component.reset();
                     }
-                } else if (this.component.reset) {
-                    this.component.reset();
-                }
-                this.hide();
-            }, null);
+                    this.hide();
+                },
+                null
+            );
         });
     }
 
     removeMobileButtons() {
-        dom.queryAll(this, '.ui-button-row .ui-button').forEach(button => {
+        dom.queryAll(this, '.ui-button-row .ui-button').forEach((button) => {
             dom.destroy(button);
         });
         dom.destroy(this.labelNode);
@@ -131,21 +138,36 @@ class UiPopup extends BaseComponent {
                     }),
                     onScroll(this.hide.bind(this), this),
                 ]);
-                this.on(this.button, 'click', (e) => {
-                    this.show();
-                }, null);
-                if (!this.noHideOnBlur) {
-                    this.on(this.button, 'blur', (e) => {
-                        this.hide();
-                    }, null);
-                }
-                this.on(this.button, 'keydown', e => {
-                    if (e.key === 'Enter' && !this.showing) {
-                        // prevent key-nav from detecting Enter when not open
-                        e.preventDefault();
+                this.on(
+                    this.button,
+                    'click',
+                    (e) => {
                         this.show();
-                    }
-                }, null);
+                    },
+                    null
+                );
+                if (!this.noHideOnBlur) {
+                    this.on(
+                        this.button,
+                        'blur',
+                        (e) => {
+                            this.hide();
+                        },
+                        null
+                    );
+                }
+                this.on(
+                    this.button,
+                    'keydown',
+                    (e) => {
+                        if (e.key === 'Enter' && !this.showing) {
+                            // prevent key-nav from detecting Enter when not open
+                            e.preventDefault();
+                            this.show();
+                        }
+                    },
+                    null
+                );
             }
         }
     }
@@ -157,7 +179,7 @@ class UiPopup extends BaseComponent {
             clearTimeout(timer);
             this.show();
         };
-        const hide = immediate => {
+        const hide = (immediate) => {
             if (immediate === true) {
                 this.hide();
                 return;
@@ -174,6 +196,17 @@ class UiPopup extends BaseComponent {
         this.on('mouseleave', hide, null, null);
         this.clickOff = onScroll(hide);
         this.clickOff.resume();
+    }
+
+    connectWindowEvents(enable) {
+        if (this.winResize) {
+            this.winResize.remove();
+        }
+        if (enable) {
+            this.winResize = this.on(window, 'resize', () => {
+                this.hide();
+            });
+        }
     }
 
     handleMediaQuery(event) {
@@ -218,6 +251,7 @@ class UiPopup extends BaseComponent {
             this.isOpening = false;
         }, 500);
         this.fire('popup-open');
+        this.connectWindowEvents(true);
     }
 
     hide() {
@@ -235,11 +269,12 @@ class UiPopup extends BaseComponent {
             if (this.lazy && this.parentNode) {
                 this.parentNode.removeChild(this);
             }
-        }, 500)
+        }, 500);
+        this.connectWindowEvents();
     }
 
     position() {
-        position(this, this.button, this.align);    
+        position(this, this.button, this.align);
     }
 
     destroy() {
@@ -283,20 +318,7 @@ function positionTooltip(popup, button, align) {
     const style = {};
 
     LOG &&
-        console.log(
-            'align:',
-            align,
-            '\nbutton:',
-            button,
-            '\npopup:',
-            popup,
-            '\nwin',
-            win,
-            '\npop',
-            pop,
-            '\nbtn',
-            btn
-        );
+        console.log('align:', align, '\nbutton:', button, '\npopup:', popup, '\nwin', win, '\npop', pop, '\nbtn', btn);
 
     function addClass(cls) {
         if (tooltip) {
@@ -379,9 +401,7 @@ function positionTooltip(popup, button, align) {
             } else if (fitB()) {
                 bottom();
             } else {
-                console.warn(
-                    'Button is too tall to fit a tooltip above or below it'
-                );
+                console.warn('Button is too tall to fit a tooltip above or below it');
             }
             break;
         default:
@@ -390,9 +410,7 @@ function positionTooltip(popup, button, align) {
             } else if (fitT()) {
                 top();
             } else {
-                console.warn(
-                    'Button is too tall to fit a tooltip above or below it'
-                );
+                console.warn('Button is too tall to fit a tooltip above or below it');
             }
     }
 
@@ -408,9 +426,9 @@ function position(popup, button, align) {
     }
     clearPosition(popup);
     const LOG = window.debugPopups;
-
     const GAP = 5;
     const MIN_BOT_SPACE = 200;
+    const MAX = popup.maxHeight || Infinity;
 
     const style = {};
     const bodyPad = dom.style(document.body, 'padding-left');
@@ -425,27 +443,7 @@ function position(popup, button, align) {
     const rightSpace = win.w - btn.x;
     const leftSpace = btn.x + btn.w;
 
-    LOG &&
-        console.log(
-            '\nbutton:',
-            button,
-            '\npopup:',
-            popup,
-            '\nwin',
-            win,
-            '\npop',
-            pop,
-            '\nbtn',
-            btn,
-            '\ntopSpace',
-            topSpace,
-            '\nbotSpace',
-            botSpace,
-            '\nleftSpace',
-            leftSpace,
-            '\nrightSpace',
-            rightSpace
-        );
+    // console.log('pop', topSpace, botSpace, MAX);
 
     // position left/right & width
     if (align === 'right' || (leftSpace > pop.w && leftSpace > rightSpace)) {
@@ -469,24 +467,44 @@ function position(popup, button, align) {
     }
 
     // position top/bottom & height
-    if (pop.h > topSpace && pop.h > botSpace) {
-        if (botSpace < MIN_BOT_SPACE || topSpace > botSpace * 1.5) {
+    const popH = MAX < pop.h ? MAX : pop.h;
+    if (popH > topSpace && popH > botSpace) {
+        // not enough room for the top or bottom
+        // if (botSpace < MIN_BOT_SPACE || topSpace > botSpace * 1.5) {
+        if (botSpace < topSpace) {
+            // console.log('force top');
             // force top
-            style.maxHeight = topSpace - GAP * 2;
+            const h = topSpace - GAP * 2;
+            style.maxHeight = MAX < h ? MAX : h;
             style.bottom = win.h - btn.y;
-            style.top = '';
+            style.top = 'auto';
             style.overflow = 'auto';
         } else {
+            // console.log('force bottom');
             // force bottom
-            style.maxHeight = botSpace - GAP * 2;
+            const h = botSpace - GAP * 2;
+            style.maxHeight = MAX < h ? MAX : h;
             style.overflow = 'auto';
         }
-    } else if (botSpace < pop.h) {
+    } else if (botSpace < popH) {
+        // console.log(' * top');
         // top
-        style.top = '';
+        style.top = 'auto';
         style.bottom = win.h - btn.y;
+        if (MAX <= pop.h) {
+            style.maxHeight = popH;
+            style.height = popH;
+            style.overflow = 'auto';
+        }
+    } else {
+        // console.log('bottom', MAX);
+        if (MAX <= popH) {
+            style.overflow = 'auto';
+            style.maxHeight = popH;
+        }
     }
 
+    // console.log('style', style);
     dom.style(popup, style);
 }
 
@@ -512,7 +530,8 @@ function onScroll(hide, popup) {
         },
     };
 }
+
 module.exports = BaseComponent.define('ui-popup', UiPopup, {
-    props: ['buttonid', 'label', 'align', 'use-hover'],
+    props: ['buttonid', 'label', 'align', 'use-hover', 'max-height'],
     bools: ['open', 'lazy'],
 });
