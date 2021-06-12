@@ -166,6 +166,7 @@ class UiSearch extends BaseComponent {
             {
                 id: buttonid,
                 'event-name': 'input-change',
+                'no-border': this['no-border'],
                 class: 'search-input',
                 placeholder: this.placeholder || DEFAULT_PLACEHOLDER,
                 icon: this.getIcon(),
@@ -238,6 +239,7 @@ module.exports = BaseComponent.define('ui-search', UiSearch, {
         'autofocus',
         'autoselect',
         'busy',
+        'no-border'
     ],
     attrs: ['value', 'display'],
 });

@@ -119,7 +119,10 @@ class UiInput extends BaseComponent {
         if (this.label) {
             this.labelNode = dom('label', { html: this.label }, this);
         }
-        const inputBorder = dom('div', { class: 'input-border' }, this);
+        let pNode = this;
+        if (!this['no-border']) {
+            pNode = dom('div', { class: 'input-border' }, this);
+        }
         this.input = dom(
             'input',
             {
@@ -128,10 +131,10 @@ class UiInput extends BaseComponent {
                 disabled: this.disabled,
                 placeholder: this.placeholder || DEFAULT_PLACEHOLDER,
             },
-            inputBorder
+            pNode
         );
         if (this.icon) {
-            this.iconNode = dom('ui-icon', { type: this.icon }, inputBorder);
+            this.iconNode = dom('ui-icon', { type: this.icon }, pNode);
             this.classList.add('has-icon');
         }
         this.setPlaceholder();
@@ -153,6 +156,6 @@ function isNull(value) {
 
 module.exports = BaseComponent.define('ui-input', UiInput, {
     props: ['placeholder', 'label', 'limit', 'name', 'event-name', 'align', 'icon'],
-    bools: ['disabled', 'ready', 'required', 'autofocus', 'autoselect', 'readonly'],
+    bools: ['disabled', 'ready', 'required', 'autofocus', 'autoselect', 'readonly', 'no-border'],
     attrs: ['value'],
 });
