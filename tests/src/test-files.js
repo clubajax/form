@@ -1,11 +1,13 @@
 const isIE = false;
 window['no-native-shim'] = !isIE;
 const files = '<link rel="stylesheet" href="../node_modules/mocha/mocha.css">' +
-	'<link rel="stylesheet" href="/dist/form.css" />' +
-	'<script src="../node_modules/mocha/mocha.js"></script>' +
-    '<script src="../node_modules/chai/chai.js"></script>' +
-    '<script src="../node_modules/chai-spies/chai-spies.js"></script>' +
-    '<script src="../node_modules/@clubajax/dates/src/dates.js"></script>' +
+'<script src="../node_modules/mocha/mocha.js"></script>' +
+'<script src="../node_modules/chai/chai.js"></script>' +
+'<script src="../node_modules/chai-spies/chai-spies.js"></script>' +
+
+'<script src="../node_modules/@clubajax/dates/src/dates.js"></script>' +
+
+    '<link rel="stylesheet" href="/dist/form.css" />' +
 	(isIE ? '<script src="./src/polyfills.js"></script>' : '') +
 	'<script src="../dist/vendor.js"></script>' +
 	'<script src="../dist/dev.js"></script>' +

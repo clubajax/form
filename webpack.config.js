@@ -1,10 +1,17 @@
 const path = require('path');
+const args = require('minimist')(process.argv.slice(2));
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
-const DEV = false;
+const DEV = args.mode === 'development';
+const DIST = path.resolve(__dirname, '../build');
+const ROOT = __dirname;
+
+console.log('DEV:::', DEV);
 
 module.exports = {
-    mode: 'production',
+    mode: !DEV ? 'production' : 'development',
     entry: './build-profiles/webpack-index.js',
     output: {
         path: path.resolve(__dirname, './build'),
@@ -13,7 +20,7 @@ module.exports = {
         globalObject: 'this',
         library: 'form',
         umdNamedDefine: true,
-        globalObject: `(typeof self !== 'undefined' ? self : this)`
+        globalObject: `(typeof self !== 'undefined' ? self : this)`,
         // libraryExport: 'default',
         // sourceMapFilename: '@clubajax/form/form.js.map',
     },
@@ -75,5 +82,28 @@ module.exports = {
             // chunkFilename: '[id].css',
             ignoreOrder: false, // Enable to remove warnings about conflicting order
         }),
+        new HtmlWebpackPlugin({
+            title: 'Form Library',
+            filename: 'index.html',
+            template: path.join(ROOT, 'tests/index.html'),
+        }),
+        new CopyPlugin({
+            patterns: [
+                { from: 'tests/src', to: 'asset/src' },
+                { from: './node_modules/mocha/mocha.css', to: 'asset/mocha.css' },
+                { from: './node_modules/mocha/mocha.js', to: 'asset/mocha.js' },
+                { from: './node_modules/chai/chai.js', to: 'asset/chai.js' },
+                { from: './node_modules/chai-spies/chai-spies.js', to: 'asset/chai-spies.js' },
+            ],
+        }),
     ],
+    devServer: {
+        contentBase: DIST,
+        compress: false,
+        progress: false,
+        hot: true,
+        index: 'index.html',
+        port: 9004,
+        publicPath: 'http://localhost:9004/',
+    },
 };
