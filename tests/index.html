@@ -6,6 +6,7 @@
     <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' />
     <link rel="stylesheet" href="asset/src/fontawesome/all.css" />
     <link rel="stylesheet" href="asset/mocha.css" />
+    <script src="asset/src/test-shim.js"></script>
     <script src="asset/mocha.js"></script>
     <script src="asset/chai.js"></script>
     <script src="asset/chai-spies.js"></script>
@@ -26,12 +27,16 @@
 <body>
     <h1>Tests</h1>
     <div id="mocha"></div>
-    <div id="tests">
+    <div id="app">
 
     </div>
 
     <script>
-
+        // TODO
+        // DEV needs to export to /dist, not /build, or else it will show up in jk-gink (without the css)
+        // NO REACT
+        // load test files based on search query (to reload page)
+        
         // mocha.run();
 
     </script>
