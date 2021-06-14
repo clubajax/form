@@ -5,16 +5,17 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 
 const DEV = args.mode === 'development';
-const DIST = path.resolve(__dirname, '../build');
+const distFolder = DEV ? './dist' : './build';
 const ROOT = __dirname;
+const DIST = path.resolve(ROOT, distFolder);
 
 console.log('DEV:::', DEV);
 
 module.exports = {
-    mode: !DEV ? 'production' : 'development',
-    entry: './build-profiles/webpack-index.js',
+    mode: DEV ? 'development' : 'production',
+    entry: DEV ? './tests/index.js' : './build-profiles/webpack-index.js',
     output: {
-        path: path.resolve(__dirname, './build'),
+        path: DIST,
         filename: 'index.js',
         libraryTarget: 'umd',
         globalObject: 'this',
@@ -85,15 +86,16 @@ module.exports = {
         new HtmlWebpackPlugin({
             title: 'Form Library',
             filename: 'index.html',
-            template: path.join(ROOT, 'tests/index.html'),
+            template: path.join(ROOT, 'index.html'),
         }),
         new CopyPlugin({
             patterns: [
-                { from: 'tests/src', to: 'asset/src' },
-                { from: './node_modules/mocha/mocha.css', to: 'asset/mocha.css' },
-                { from: './node_modules/mocha/mocha.js', to: 'asset/mocha.js' },
-                { from: './node_modules/chai/chai.js', to: 'asset/chai.js' },
-                { from: './node_modules/chai-spies/chai-spies.js', to: 'asset/chai-spies.js' },
+                { from: 'tests', to: 'tests' },
+                { from: 'assets', to: 'assets/src' },
+                { from: './node_modules/mocha/mocha.css', to: 'assets/mocha.css' },
+                { from: './node_modules/mocha/mocha.js', to: 'assets/mocha.js' },
+                { from: './node_modules/chai/chai.js', to: 'assets/chai.js' },
+                { from: './node_modules/chai-spies/chai-spies.js', to: 'assets/chai-spies.js' },
             ],
         }),
     ],

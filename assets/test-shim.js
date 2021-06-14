@@ -28,10 +28,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     
 	chai.Assertion.prototype.assert = function (expr, msg, negateMsg, expected, _actual, showDiff) {
-
 		if (!chai.util.test(this, arguments)) {
 			msg = chai.util.getMessage(this, arguments);
-			let e;
+            let e;
 
 			e = new CustomError(msg);
 			if (e.stack) {

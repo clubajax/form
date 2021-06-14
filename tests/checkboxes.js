@@ -1,3 +1,11 @@
+window.dom = require('@clubajax/dom');
+window.on = require('@clubajax/on');
+require('@clubajax/base-component');
+
+
+mocha.setup('tdd');
+mocha.allowUncaught();
+
 suite('CheckBox', function () {
     this.timeout(3000);
     const
@@ -63,8 +71,11 @@ suite('CheckBox', function () {
     suite('ui-checkbox', function () {
 
         test('it should have an indeterminate setting', function (done) {
+            console.log('run...');
             const node = dom('ui-checkbox', {label: 'Set Check', name: 'check-1', indeterminate: true}, body);
+            console.log('built...', body);
             onDomReady(node, function () {
+                console.log('ready...');
                 expect(iconIs(node)).to.equal('minus');
                 testInt(node);
                 expect(node.value).to.equal(null);
@@ -111,16 +122,19 @@ suite('CheckBox', function () {
         test('it should get and set via `click`', function (done) {
             const node = dom('ui-checkbox', {label: 'Set by click'}, body);
             onDomReady(node, function () {
-                console.log('node.value', node.value);
-                expect(node.value).to.equal(false);
-                testOff(node);
-                click(node);
-                expect(node.value).to.equal(true);
-                expect(getColor(node)).to.equal(CHK_CLR);
-                click(node);
-                expect(node.value).to.equal(false);
-                testOff(node);
-                done();
+                setTimeout(() => {
+                    
+                    console.log('node.value', node.value);
+                    expect(node.value).to.equal(false);
+                    testOff(node);
+                    click(node);
+                    expect(node.value).to.equal(true);
+                    expect(getColor(node)).to.equal(CHK_CLR);
+                    click(node);
+                    expect(node.value).to.equal(false);
+                    testOff(node);
+                    done();
+                }, 100)
             });
         });
 
@@ -225,3 +239,5 @@ suite('CheckBox', function () {
         }); 
     });
 });
+
+mocha.run();
