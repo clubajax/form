@@ -128,7 +128,7 @@ class CheckBox extends FormElement {
 }
 
 module.exports = BaseComponent.define('ui-checkbox', CheckBox, {
-    bools: ['checked', 'check-after', 'indeterminate'],
+    bools: ['checked', 'check-after', 'intermediate'],
     props: ['label']
     // attrs: ['value']
 });
