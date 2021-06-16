@@ -29,14 +29,14 @@
     </div>
     <script>
 
-        mocha.setup('bdd');
+        mocha.setup('tdd');
 
-        describe('UiPaginator', function () {
+        suite('UiPaginator', function () {
 
             this.timeout(3000);
 
             const
-                describe = window.describe,
+                suite = window.suite,
                 test = window.test,
                 dom = window.dom,
                 on = window.on,
@@ -45,20 +45,20 @@
                 paginate = window.paginate,
                 body = dom.byId('tests');
 
-            describe('ui-paginator', function () {
+            suite('ui-paginator', function () {
 
-                describe.only('util', function () {
+                suite.only('util', function () {
                     function check(p, desc, btns) {
                         console.log(p.status, p.buttons.join(','));
                         expect(p.status).to.equal(desc);
                         expect(p.buttons.join(',')).to.equal(btns);
                     }
-                    it('should calculate small totals', function () {
+                    test('should calculate small totals', function () {
                         check(paginate(0, 10, 21), '1-10 of 21', '1,2,3');
                         check(paginate(0, 10, 17), '1-10 of 17', '1,2');
                     });
 
-                    it('should calculate 10/100 based', function () {
+                    test('should calculate 10/100 based', function () {
                         check(paginate(0, 10, 100), '1-10 of 100', '1,2,3,0,10');
                         check(paginate(10, 10, 100), '11-20 of 100', '1,2,3,4,0,10');
                         check(paginate(20, 10, 100), '21-30 of 100', '1,2,3,4,5,0,10');
@@ -71,7 +71,7 @@
                         check(paginate(90, 10, 100), '91-100 of 100', '1,0,8,9,10');
 
                     });
-                    it('should calculate 10/1000 based', function () {
+                    test('should calculate 10/1000 based', function () {
                         check(paginate(0, 10, 1000), '1-10 of 1000', '1,2,3,0,100');
                         check(paginate(10, 10, 1000), '11-20 of 1000', '1,2,3,4,0,100');
                         check(paginate(20, 10, 1000), '21-30 of 1000', '1,2,3,4,5,0,100');
@@ -87,13 +87,13 @@
                         check(paginate(990, 10, 1000), '991-1000 of 1000', '1,0,98,99,100');
                     });
 
-                    it('should calculate odd totals', function () {
+                    test('should calculate odd totals', function () {
                         check(paginate(80, 10, 91), '81-90 of 91', '1,0,7,8,9,10');
                         check(paginate(90, 10, 91), '91-91 of 91', '1,0,8,9,10');
                         check(paginate(100, 10, 101), '101-101 of 101', '1,0,9,10,11');
                     });
 
-                    it('should not allow an odd start', function () {
+                    test('should not allow an odd start', function () {
                         let error;
                         try {
                             paginate(20, 15, 90);
@@ -103,11 +103,11 @@
                         expect(error).to.be.ok;
                     });
 
-                    it('should calculate odd limits', function () {
+                    test('should calculate odd limits', function () {
                         check(paginate(30, 15, 90), '31-45 of 90', '1,2,3,4,5,6');
                     });
 
-                    it.only('should navigate', function () {
+                    test.only('should navigate', function () {
                         let p;
 
                         p = paginate(0, 10, 100);
@@ -168,26 +168,26 @@
                 function getStatusText() {
                     return dom.query(node, '.main-status').textContent;
                 }
-                function dropShowing(){
+                function dropShowing() {
                     return dom.style(node.limitDrop, 'display') !== 'none';
                 }
-                function getDropText(){
+                function getDropText() {
                     if (!dropShowing()) {
                         return '';
                     }
                     const label = dom.query(node, '.dropdown-label').textContent;
                     return `${label} ${node.limitDrop.value} `;
                 }
-                function getTextContent(){
+                function getTextContent() {
                     const extra = extraStatusShowing() ? dom.query(node, '.extra-status').textContent : '';
                     const leftText = leftShowing() ? '<' : '';
-                    const rightText = rightShowing() ? '>' : ''; 
+                    const rightText = rightShowing() ? '>' : '';
                     return `${extra}${getDropText()}${getStatusText()}${leftText}${node.pageNumbers.textContent}${rightText}`;
                 }
-                function leftShowing(){
+                function leftShowing() {
                     return dom.style(getButton('left'), 'display') !== 'none';
                 }
-                function rightShowing(){
+                function rightShowing() {
                     return dom.style(getButton('right'), 'display') !== 'none';
                 }
                 function getButton(index) {
@@ -200,8 +200,8 @@
                     return dom.query(node, `.ui-button.page-number[data-value="${index}"]`);
                 }
 
-                describe('render', function () {
-                    it('should render a paginator - first page', function (done) {
+                suite('render', function () {
+                    test('should render a paginator - first page', function (done) {
                         node = dom('ui-paginator', {
                             data: {
                                 start: 0,
@@ -217,7 +217,7 @@
                             done();
                         });
                     });
-                    it('should render a paginator - last page', function (done) {
+                    test('should render a paginator - last page', function (done) {
                         node = dom('ui-paginator', {
                             data: {
                                 start: 90,
@@ -233,7 +233,7 @@
                             done();
                         });
                     });
-                    it('should emit events [MANUAL]', function (done) {
+                    test('should emit events [MANUAL]', function (done) {
                         node = dom('ui-paginator', {
                             data: {
                                 start: 10,
@@ -246,7 +246,7 @@
                             done();
                         });
                     });
-                    it('should rerender when receiving new data', function (done) {
+                    test('should rerender when receiving new data', function (done) {
                         node = dom('ui-paginator', {
                             data: {
                                 start: 0,
@@ -285,11 +285,11 @@
                             expect(getButton(10).disabled).to.equal(true);
                             expect(extraStatusShowing()).to.equal(false);
                             expect(getStatusText()).to.equal('91-100 of 100');
-                            
+
                             done();
                         });
                     });
-                    it('should disable', function (done) {
+                    test('should disable', function (done) {
                         node = dom('ui-paginator', {
                             data: {
                                 start: 0,
@@ -305,7 +305,7 @@
                             done();
                         });
                     });
-                    it('should render only the status', function (done) {
+                    test('should render only the status', function (done) {
                         node = dom('ui-paginator', {
                             data: {
                                 start: 0,
@@ -319,7 +319,7 @@
                             done();
                         });
                     });
-                    it('should render partial status', function (done) {
+                    test('should render partial status', function (done) {
                         node = dom('ui-paginator', {
                             data: {
                                 start: 0,
@@ -337,9 +337,7 @@
             });
         });
 
-        if (!/puppeteer/.test(location.hash)) {
-            mocha.run();
-        }
+        mocha.run();
 
     </script>
 

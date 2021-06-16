@@ -86,14 +86,14 @@
 
     <script>
 
-        mocha.setup('bdd');
+        mocha.setup('tdd');
 
-        describe('UiTooltip', function () {
+        suite('UiTooltip', function () {
 
             this.timeout(3000);
 
             const
-                describe = window.describe,
+                suite = window.suite,
                 test = window.test,
                 dom = window.dom,
                 on = window.on,
@@ -102,7 +102,7 @@
                 body = dom.byId('tests')
 
 
-            describe('ui-tooltip', function () {
+            suite('ui-tooltip', function () {
                 let node, btn;
 
                 function ready(cb) {
@@ -110,7 +110,7 @@
                 }
 
 
-                it('should render a Tooltip', function (done) {
+                test('should render a Tooltip', function (done) {
                     const btn = dom('button', {class: 'ui-button', html: 'Ok'});
                     on(btn, 'click', () => {
                         tip.close();
@@ -142,9 +142,7 @@
             });
         });
 
-        if (!/puppeteer/.test(location.hash)) {
-            mocha.run();
-        }
+        mocha.run();
 
     </script>
 

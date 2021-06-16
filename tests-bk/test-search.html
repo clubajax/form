@@ -146,7 +146,7 @@
                         setTimeout(() => {
                             node = dom('ui-searchbox', {label: 'Simple Box', autoselect: true, placeholder: 'Type to search!'}, body);
                             // node.on('search', onSearch);
-                            node.on('search', (e)=> {
+                            node.on('search', (e) => {
                                 console.log('search', e);
                             });
                             done();
@@ -158,9 +158,7 @@
             });
         });
 
-        if (!/puppeteer/.test(location.hash)) {
-            mocha.run();
-        }
+        mocha.run();
 
     </script>
 

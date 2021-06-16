@@ -4,6 +4,7 @@ const arrowKeys = require('./lib/arrowKeys');
 require('./ui-minipop');
 require('./ui-input');
 require('./ui-checkbox');
+require('./ui-minitags');
 
 // search-type:
 //      word(default) match start of all words

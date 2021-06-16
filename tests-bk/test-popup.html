@@ -53,7 +53,7 @@
 
         .bigtext-box {
             width: 150px;
-            
+
         }
 
         .big-ui-popup {
@@ -154,12 +154,12 @@ For example, checking if a Nodes is a SVGElement in a different context, you can
                     onDomReady(node, cb);
                 }
 
-                function click(){
+                function click() {
                     on.emit(btn, 'click');
                 }
 
                 function clickoff(cb) {
-                    setTimeout(function() {
+                    setTimeout(function () {
                         on.emit(document.body, 'click');
                         cb();
                     }, 110);
@@ -176,7 +176,7 @@ For example, checking if a Nodes is a SVGElement in a different context, you can
                 }
                 function bottom() {
                     const box = getSizes(node);
-                    return box.pop.y > box.btn.y + box.btn.h; 
+                    return box.pop.y > box.btn.y + box.btn.h;
                 }
                 function top() {
                     const box = getSizes(node);
@@ -194,10 +194,10 @@ For example, checking if a Nodes is a SVGElement in a different context, you can
                 it('should render a popup left-aligned', function (done) {
                     btn = dom('button', {id: 'b1', html: 'Left'}, body);
                     popup(btn);
-                    ready(function() {
+                    ready(function () {
                         click();
-                        expect(bottom()).to.equal(true);  
-                        expect(left()).to.equal(true);  
+                        expect(bottom()).to.equal(true);
+                        expect(left()).to.equal(true);
                         clickoff(done);
                     });
                 });
@@ -261,9 +261,7 @@ For example, checking if a Nodes is a SVGElement in a different context, you can
             });
         });
 
-        if (!/puppeteer/.test(location.hash)) {
-            mocha.run();
-        }
+        mocha.run();
 
     </script>
 

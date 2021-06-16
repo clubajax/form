@@ -11,6 +11,38 @@ const DIST = path.resolve(ROOT, distFolder);
 
 console.log('DEV:::', DEV);
 
+
+let plugins = [
+    new MiniCssExtractPlugin({
+        // Options similar to the same options in webpackOptions.output
+        // all options are optional
+        filename: 'form.css',
+        // chunkFilename: '[id].css',
+        ignoreOrder: false, // Enable to remove warnings about conflicting order
+    }),
+];
+
+if (DEV) {
+    plugins = [
+        ...plugins,
+        new HtmlWebpackPlugin({
+            title: 'Form Library',
+            filename: 'index.html',
+            template: path.join(ROOT, 'index.html'),
+        }),
+        new CopyPlugin({
+            patterns: [
+                { from: 'tests', to: 'tests' },
+                { from: 'assets', to: 'assets/src' },
+                { from: './node_modules/mocha/mocha.css', to: 'assets/mocha.css' },
+                { from: './node_modules/mocha/mocha.js', to: 'assets/mocha.js' },
+                { from: './node_modules/chai/chai.js', to: 'assets/chai.js' },
+                { from: './node_modules/chai-spies/chai-spies.js', to: 'assets/chai-spies.js' },
+            ],
+        }),
+    ];
+}
+
 module.exports = {
     mode: DEV ? 'development' : 'production',
     entry: DEV ? './tests/index.js' : './build-profiles/webpack-index.js',
@@ -75,30 +107,7 @@ module.exports = {
             },
         ],
     },
-    plugins: [
-        new MiniCssExtractPlugin({
-            // Options similar to the same options in webpackOptions.output
-            // all options are optional
-            filename: 'form.css',
-            // chunkFilename: '[id].css',
-            ignoreOrder: false, // Enable to remove warnings about conflicting order
-        }),
-        new HtmlWebpackPlugin({
-            title: 'Form Library',
-            filename: 'index.html',
-            template: path.join(ROOT, 'index.html'),
-        }),
-        new CopyPlugin({
-            patterns: [
-                { from: 'tests', to: 'tests' },
-                { from: 'assets', to: 'assets/src' },
-                { from: './node_modules/mocha/mocha.css', to: 'assets/mocha.css' },
-                { from: './node_modules/mocha/mocha.js', to: 'assets/mocha.js' },
-                { from: './node_modules/chai/chai.js', to: 'assets/chai.js' },
-                { from: './node_modules/chai-spies/chai-spies.js', to: 'assets/chai-spies.js' },
-            ],
-        }),
-    ],
+    plugins,
     devServer: {
         contentBase: DIST,
         compress: false,

@@ -68,17 +68,18 @@ module.exports = (start, limit, total) => {
             goto: () => {},
         };
     }
-
     if (total > limit) {
         buttons = calcButtons(start, limit, total);
     }
+    const last = start + limit > total ? total : start + limit;
     results = total === 1 ? 'Result' : 'Results'; 
-    if (start + limit >= total) {
+    if (start + limit > total && total < limit) {
         status = `${total} ${results}`;
         nextEnabled = false;
         prevEnabled = true;
     } else {
-        status = `${total} ${results}`;
+        // status = `${total} ${results}`;
+        status = `${start + 1}-${last} of ${total}`;
         nextEnabled = true;
         prevEnabled = true;
     }

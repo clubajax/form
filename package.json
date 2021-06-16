@@ -1,6 +1,6 @@
 {
   "name": "@clubajax/form",
-  "version": "0.9.50",
+  "version": "0.9.52",
   "description": "Web Components for Forms",
   "main": "build/index.js",
   "repository": "https://github.com/clubajax/form.git",
@@ -10,7 +10,7 @@
   "scripts": {
     "start": "grunt dev",
     "prebuild": "rimraf build",
-    "web": "npm run build && webpack serve --mode development --config ./webpack.config.js",
+    "web": "webpack serve --mode development --config ./webpack.config.js",
     "build": "webpack --mode production --config ./webpack.config.js && node ./scripts/deploy.js",
     "quick-build": "webpack --mode production --config ./webpack.config.js",
     "rtk-build": "webpack --mode production --config ./webpack.config.js && node ./scripts/rtk-copy.js",

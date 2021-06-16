@@ -75,12 +75,12 @@
 
     <script>
 
-        window.mocha.setup('bdd');
+        window.mocha.setup('tdd');
 
-        describe('DatePicker', function () {
+        suite('DatePicker', function () {
             this.timeout(3000);
 
-            const describe = window.describe,
+            const suite = window.suite,
                 util = window.getDatePickerUtil(),
                 // dates = window.dates,
                 dom = window.dom,
@@ -171,10 +171,10 @@
             // FIXME: 
             //  time-input blur does not close calendar
 
-            describe('tests', function () {
+            suite('tests', function () {
                 // return
-                describe('utils', function () {
-                    it('should validate date and time strings', function () {
+                suite('utils', function () {
+                    test('should validate date and time strings', function () {
                         const DATE = '12/25/2017';
                         const TIME = '02:30 am';
                         const DATETIME = DATE + ' ' + TIME;
@@ -190,7 +190,7 @@
 
                     });
 
-                    it('should convert a time string to seconds', function () {
+                    test('should convert a time string to seconds', function () {
                         expect(util.timeToSeconds('12:01 am')).to.equal(60);
                         expect(util.timeToSeconds('12:01 pm')).to.equal(43260);
                         expect(util.timeToSeconds('01:01 am')).to.equal(3660);
@@ -199,14 +199,14 @@
                         expect(util.timeToSeconds('11:30 pm')).to.equal(84600);
                     });
 
-                    it('should compare times', function () {
+                    test('should compare times', function () {
                         expect(util.is('12:01 am').less('12:02 am')).to.equal(true);
                         expect(util.is('12:01 am').less('12:01 pm')).to.equal(true);
                         expect(util.is('12:03 am').greater('12:02 am')).to.equal(true);
                         expect(util.is('12:01 pm').greater('12:01 am')).to.equal(true);
                     });
 
-                    it('should round', function () {
+                    test('should round', function () {
                         // round up
                         expect(util.round(1, 15)).to.equal(15);
                         expect(util.round(9, 15)).to.equal(15);
@@ -223,7 +223,7 @@
                         expect(util.round(11, 10, true)).to.equal(10);
                     });
 
-                    it('should increment minutes', function () {
+                    test('should increment minutes', function () {
                         // no rounding
                         expect(util.incMinutes('00:00 am', 1)).to.equal('00:01 am');
                         expect(util.incMinutes('00:30 am', -1)).to.equal('00:29 am');
@@ -246,9 +246,9 @@
                     });
                 });
 
-                describe('input keys', function () {
+                suite('input keys', function () {
 
-                    it('should edit a selection - date', function (done) {
+                    test('should edit a selection - date', function (done) {
                         const value = '12/25/2017 2:00 pm';
                         const node = dom('date-input', {value: value}, body);
                         onDomReady(node, function () {
@@ -262,7 +262,7 @@
                         });
                     });
 
-                    it('should edit a selection - time', function (done) {
+                    test('should edit a selection - time', function (done) {
                         const value = '12/25/2017 2:00 pm';
                         const node = dom('time-input', {value: value}, body);
                         onDomReady(node, function () {
@@ -276,7 +276,7 @@
                         });
                     });
 
-                    it('should edit a selection - date/time', function (done) {
+                    test('should edit a selection - date/time', function (done) {
                         const value = '12/25/2017 1:11 pm';
                         const node = dom('date-time-input', {value: value}, body);
                         onDomReady(node, function () {
@@ -301,7 +301,7 @@
                         });
                     });
 
-                    it('should increment and decrement values - date', function (done) {
+                    test('should increment and decrement values - date', function (done) {
                         const value = '12/25/2017 2:00 pm';
                         const dateInput = dom('date-input', {value: value}, body);
                         onDomReady(dateInput, function () {
@@ -314,7 +314,7 @@
                         });
                     });
 
-                    it('should increment and decrement values - time', function (done) {
+                    test('should increment and decrement values - time', function (done) {
                         const value = '12/25/2017 2:00 pm';
                         const timeInput = dom('time-input', {value: value}, body);
                         onDomReady(timeInput, function () {
@@ -328,7 +328,7 @@
                         });
                     });
 
-                    it.skip('should increment and decrement values - date-time', function (done) {
+                    test.skip('should increment and decrement values - date-time', function (done) {
                         const value = '12/25/2017 2:00 pm';
                         const dateTimeInput = dom('date-time-input', {value: value}, body);
                         onDomReady(dateTimeInput, function () {
@@ -351,8 +351,8 @@
                     });
                 });
 
-                describe.only('date input', function () {
-                    it('should pop up', function () {
+                suite.only('date input', function () {
+                    test('should pop up', function () {
                         const node = dom('date-input', {label: 'Opens with ui-popup', min: null, max: null}, body);
                         expect(dom.isNode(node)).to.equal(true);
                         // node.on('blur', () => {
@@ -363,12 +363,12 @@
                         });
                     });
 
-                    it('should disable', function () {
+                    test('should disable', function () {
                         const node = dom('date-input', {label: 'Is Disabled', disabled: true}, body);
                         expect(dom.isNode(node)).to.equal(true);
                     });
 
-                    it('should handle arrow keys', function (done) {
+                    test('should handle arrow keys', function (done) {
                         const node = dom('date-input', {
                             label: 'handle arrow keys',
                             value: '12/25/2017',
@@ -395,7 +395,7 @@
 
                     });
 
-                    it('should handle input starting blank', function (done) {
+                    test('should handle input starting blank', function (done) {
                         const node = dom('date-input', {
                             label: 'input starting blank'
                         }, body);
@@ -413,7 +413,7 @@
                         })
                     });
 
-                    it('should handle min and max', function (done) {
+                    test('should handle min and max', function (done) {
                         const node = dom('date-input', {
                             label: 'min and max',
                             value: '12/25/2017',
@@ -443,7 +443,7 @@
 
                     });
 
-                    it('should handle big dates', function (done) {
+                    test('should handle big dates', function (done) {
                         const node = dom('date-input', {
                             label: 'big dates',
                             value: '12/31/2099',
@@ -472,12 +472,12 @@
 
                     });
 
-                    it('should open to the top left', function () {
+                    test('should open to the top left', function () {
                         const node = dom('date-input', {label: 'open to top left', class: 'BR'}, body);
                         expect(dom.isNode(node)).to.equal(true);
                     });
 
-                    it.skip('should submit in a form (MANUAL)', function (done) {
+                    test.skip('should submit in a form (MANUAL)', function (done) {
 
                         // click submit, view result in URL
 
@@ -499,7 +499,7 @@
 
                     });
 
-                    it.skip('should select dates and not lose focus (NOT WORKING)', function (done) {
+                    test.skip('should select dates and not lose focus (NOT WORKING)', function (done) {
 
                         // problems with focus
                         const node = dom('date-input', {
@@ -524,8 +524,8 @@
                     });
                 });
 
-                describe('time input', function () {
-                    it('should handle clearing the input and re-typing', function (done) {
+                suite('time input', function () {
+                    test('should handle clearing the input and re-typing', function (done) {
                         const node = dom('time-input', {label: 'clear retype', step: 15}, body);
                         ready(node, function () {
                             let emitted;
@@ -552,7 +552,7 @@
                             done();
                         });
                     });
-                    it('should handle valid and invalid from blank', function (done) {
+                    test('should handle valid and invalid from blank', function (done) {
                         const node = dom('time-input', {label: 'valid and invalid from blank', step: 15}, body);
                         ready(node, function () {
                             let emitted;
@@ -578,7 +578,7 @@
                         });
                     });
 
-                    it('should handle valid and invalid from value', function (done) {
+                    test('should handle valid and invalid from value', function (done) {
                         const node = dom('time-input', {label: 'valid and invalid from value', value: '12:34am', step: 15, required: true}, body);
                         ready(node, function () {
                             let emitted = '';
@@ -600,7 +600,7 @@
                         });
                     });
 
-                    it('should handle arrow keys', function (done) {
+                    test('should handle arrow keys', function (done) {
                         const node = dom('time-input', {label: 'handle arrow keys - time', value: '12:34am', step: 15, required: true}, body);
                         ready(node, function () {
 
@@ -619,7 +619,7 @@
                         });
                     });
 
-                    it('should handle min and max', function (done) {
+                    test('should handle min and max', function (done) {
                         const time = '02:00 am';
                         const node = dom('time-input', {label: 'min and max time', value: time, step: 15, min: '01:30 am', max: '02:30 am'}, body);
                         ready(node, function () {
@@ -645,8 +645,8 @@
                     });
                 });
 
-                describe.skip('date time input', function () {
-                    it('should persist open with no value', function (done) {
+                suite.skip('date time input', function () {
+                    test('should persist open with no value', function (done) {
                         const node = dom('date-time-input', {
                             label: 'Date and Time',
                             //value: '03/27/2018 10:00 am',
@@ -673,7 +673,7 @@
                         });
                     });
 
-                    it('should persist open (and stay open)', function (done) {
+                    test('should persist open (and stay open)', function (done) {
                         const node = dom('date-time-input', {
                             label: 'Date and Time',
                             value: '03/27/2018 10:00 am',
@@ -704,7 +704,7 @@
                         });
                     });
 
-                    it('should add a time to the picker and handle keys, min/max', function (done) {
+                    test('should add a time to the picker and handle keys, min/max', function (done) {
                         const dateStr = '12/12/2017 02:20 am';
                         const max = '12/26/2017 12:00 am';
                         const node = dom('date-time-input', {label: 'Enter Date and Time', value: dateStr, min: dateStr, max: max}, body);
@@ -736,7 +736,7 @@
                         });
                     });
 
-                    it('should handle complex focus', function (done) {
+                    test('should handle complex focus', function (done) {
                         const dateStr = '12/12/2017 02:20 am';
                         const min = '12/08/2017 02:20 am';
                         const node = dom('date-time-input', {label: 'Enter Date and Time', value: dateStr, min: min}, body);
@@ -748,16 +748,16 @@
                     });
                 });
 
-                describe('date picker', function () {
+                suite('date picker', function () {
 
-                    it('should render a picker (MANUAL)', function (done) {
+                    test('should render a picker (MANUAL)', function (done) {
                         const node = dom('date-picker', {label: 'manual picker', value: '12/12/2017 02:20 am'}, body);
                         ready(node, function () {
                             done();
                         });
                     });
 
-                    it('should add a time to the picker', function (done) {
+                    test('should add a time to the picker', function (done) {
                         const node = dom('date-picker', {label: 'add a time to the picker', time: true, value: '12/12/2017 02:20 am'}, body);
                         ready(node, function () {
                             let emitted;
@@ -775,7 +775,7 @@
                         });
                     });
 
-                    it('should allow `now` as a min', function (done) {
+                    test('should allow `now` as a min', function (done) {
                         const date = new Date();
                         const dateStr = dates.format(date, 'MM/dd/yyyy');
                         const node = dom('date-picker', {label: 'now as a min', min: 'now', value: dateStr}, body);
@@ -792,7 +792,7 @@
                         });
                     });
 
-                    it('should allow `now` as a max', function (done) {
+                    test('should allow `now` as a max', function (done) {
                         const date = new Date();
                         const dateStr = dates.format(date, 'MM/dd/yyyy');
                         const node = dom('date-picker', {label: 'now as a max', max: 'now', value: dateStr}, body);
@@ -809,12 +809,12 @@
                         });
                     });
 
-                    it('should not allow selection before min or after max', function () {
+                    test('should not allow selection before min or after max', function () {
                         const node = dom('date-picker', {label: 'block selection', min: '07/05/2017', max: '07/19/2017', value: '07/01/2017'}, body);
                         expect(dom.isNode(node)).to.equal(true);
                     });
 
-                    it('should handle min and max with time', function (done) {
+                    test('should handle min and max with time', function (done) {
                         const value = '12/12/2017 04:30 am';
                         const min = '12/12/2017 05:30 am';
                         const max = '12/13/2017 07:30 am';
@@ -841,8 +841,8 @@
                     });
                 });
 
-                describe('date range inputs', function () {
-                    it('should load a date range input', function (done) {
+                suite('date range inputs', function () {
+                    test('should load a date range input', function (done) {
                         const node = dom('date-range-input', {label: 'load date range input', value: '01/10/2017 - 02/14/2017'}, body);
                         expect(dom.isNode(node)).to.equal(true);
                         ready(node, function () {
@@ -850,7 +850,7 @@
                         });
                     });
 
-                    it('should load date range inputs', function (done) {
+                    test('should load date range inputs', function (done) {
                         const node = dom('date-range-inputs', {'left-label': 'Start Date', 'right-label': 'End Date', value: '01/10/2017 - 02/14/2017'}, body);
                         expect(dom.isNode(node)).to.equal(true);
 
@@ -867,7 +867,7 @@
                         });
                     });
 
-                    it('should load date range inputs with no value', function (done) {
+                    test('should load date range inputs with no value', function (done) {
                         const node = dom('date-range-inputs', {'left-label': 'Start Date', 'right-label': 'End Date', required: true, placeholder: 'Date here'}, body);
                         expect(dom.isNode(node)).to.equal(true);
 
@@ -887,19 +887,19 @@
 
                 });
 
-                describe('date range', function () {
+                suite('date range', function () {
 
-                    it('should load a range calendar', function () {
+                    test('should load a range calendar', function () {
                         const node = dom('date-picker', {'range-picker': true}, body);
                         expect(dom.isNode(node)).to.equal(true);
                     });
 
-                    it('should load a date range picker', function () {
+                    test('should load a date range picker', function () {
                         const node = dom('date-range-picker', {}, body);
                         expect(dom.isNode(node)).to.equal(true);
                     });
 
-                    it('should open the other picker if range is (auto-set) the same - MANUAL TEST', function (done) {
+                    test('should open the other picker if range is (auto-set) the same - MANUAL TEST', function (done) {
                         const node = dom('date-range-inputs', {'left-label': 'Start Date', 'right-label': 'End Date', value: '02/10/2017 - 02/14/2017'}, body);
                         const b1 = dom('button', {html: 'clear'}, body);
                         const b2 = dom('button', {html: 'value.set'}, body);
@@ -930,7 +930,7 @@
                         });
                     });
 
-                    it('should open the other picker if range is (auto-set) the same (no initial value) - MANUAL TEST', function (done) {
+                    test('should open the other picker if range is (auto-set) the same (no initial value) - MANUAL TEST', function (done) {
                         const node = dom('date-range-inputs', {'left-label': 'Start Date', 'right-label': 'End Date'}, body);
 
                         expect(dom.isNode(node)).to.equal(true);
