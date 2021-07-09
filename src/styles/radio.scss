@@ -18,7 +18,7 @@ ui-radio{
         position: relative;
         display: inline-block;
         vertical-align: middle;
-        border: 1px solid $brd;
+        border: var(--chk-brd);
         border-radius: 50%;
         width: $size;
         height: $size;
@@ -28,7 +28,7 @@ ui-radio{
             position: absolute;
             border-radius: 50%;
             display: inline-block;
-            background-color: $slt;
+            background-color: var(--chk-bg);
             width: 0;
             height: 0;
             left: 50%;
@@ -37,20 +37,22 @@ ui-radio{
             transition: width 100ms ease-in, height 100ms ease-in;
         }
         &:hover{
-            background-color: $hvr;
+            // background-color: $hvr;
+            background-color: var(--chk-hvr);
         }
     }
     &[checked]{
         .radio-button{
             color: black;
             &:after{
-                width: 80%;
-                height: 80%;
+                width: $size - 4px;
+                height: $size - 4px;
             }
         }
         &:not([readonly]):hover{
             icon-check{
-                background-color: $hvr;
+                // background-color: $hvr;
+                background-color: var(--chk-hvr);
             }
         }
     }
@@ -62,7 +64,8 @@ ui-radio{
             font-style: italic;
         }
         .radio-button{
-            background-color: $btn-dsbl;
+            // background-color: $btn-dsbl;
+            background-color: var(--label-dsbl);
         }
     }
     &[readonly]{
@@ -74,8 +77,10 @@ ui-radio{
     &:focus{
         outline: 0;
         .radio-button{
-            border: 1px solid $focus-dk;
-            box-shadow: 0 0 5px $focus;
+            // border: 1px solid $focus-dk;
+            // color: var(--chk-focus-txt);
+            box-shadow: 0 0 5px var(--chk-focus-txt);
+            border: 1px solid var(--chk-focus-brd);
         }
     }
 }
@@ -93,17 +98,18 @@ ui-radio-buttons{
     }
     button.btn{
         outline: 0;
-        border: 1px solid $brd;
+        border: var(--btn-brd);
         background-color: white;
         cursor: pointer;
         &[checked="true"] {
-            background-color: $slt;
+            background-color: var(--chk-bg);
             color: white;
             &:focus{
                 box-shadow: inset 0 0 10px rgb(180, 216, 250);
             }
             &:hover{
-                background-color: $slt;
+                // background-color: $slt;
+                background-color: var(--chk-bg);
             }
         }
         border-right-width: 0;
@@ -119,7 +125,8 @@ ui-radio-buttons{
             box-shadow: inset 0 0 10px rgba(130,190,250,1) ;
         }
         &:hover{
-            background-color: $hvr;
+            // background-color: $hvr;
+            background-color: var(--chk-hvr);
         }
     }
 

@@ -6,7 +6,7 @@ const on = require('@clubajax/on');
 
 require('../src/styles/main.scss');
 
-const components = ['checkbox', 'actionbutton', 'checklist', 'drawer', 'dropdown', 'minitags', 'input', 'list', 'popup', 'search', 'tooltip', 'paginator', 'date'];
+const components = ['checkbox', 'radio-buttons', 'actionbutton', 'checklist', 'drawer', 'dropdown', 'minitags', 'input', 'list', 'popup', 'search', 'tooltip', 'paginator', 'date'];
 
 const nav = document.querySelector('nav');
 components.forEach((name) => {
@@ -14,7 +14,6 @@ components.forEach((name) => {
 });
 on(nav, 'click', function (e) {
     if (e.target.localName === 'a') {
-        console.log('target', e.target);
         document.location.search = e.target.innerHTML;
     }
 });

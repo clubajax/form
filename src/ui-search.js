@@ -80,7 +80,7 @@ class UiSearch extends BaseComponent {
         this.input.icon = this.getIcon();
     }
 
-    onDisplayValue() {
+    onDisplay() {
         this.setDisplay();
     }
 
@@ -98,6 +98,7 @@ class UiSearch extends BaseComponent {
     }
 
     setDisplay() {
+        
         const item = this.list ? this.list.getItem(this.value) : false;
         this.__value = item ? item.value : this.__value;
         const displayValue = this['display'];
@@ -229,7 +230,7 @@ function isNull(value) {
 }
 
 module.exports = BaseComponent.define('ui-search', UiSearch, {
-    props: ['placeholder', 'label', 'limit', 'name', 'event-name', 'align', 'btn-class', 'maxheight'],
+    props: ['placeholder', 'label', 'limit', 'name', 'event-name', 'align', 'btn-class', 'maxheight', 'display'],
     bools: [
         'disabled',
         'open-when-blank',
@@ -241,5 +242,5 @@ module.exports = BaseComponent.define('ui-search', UiSearch, {
         'busy',
         'no-border'
     ],
-    attrs: ['value', 'display'],
+    attrs: ['value'],
 });

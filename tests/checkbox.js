@@ -228,7 +228,7 @@ suite('CheckBox', function () {
             });
         });
 
-        test('it should appear as a smaller radio button (VISUAL)', function () {
+        test.only('it should appear as a smaller radio button (VISUAL)', function () {
             const node = dom('ui-checkbox', {label: 'Radio Button', 'is-radio': true, class: 'small'}, body);
         }); 
     });

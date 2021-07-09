@@ -8,11 +8,13 @@ const DEFAULT_PLACEHOLDER = 'Enter text...';
 class UiInput extends BaseComponent {
     constructor() {
         super();
-        this.readonly;
-        this.disabled;
-        this.placeholder;
-        this.icon;
-        this.label;
+        this.readonly = false;
+        this.disabled = false;
+        this.placeholder = null;
+        this.icon = null;
+        this.label = null;
+
+        console.log('INPUT');
     }
 
     attributeChanged(prop, value) {
@@ -38,7 +40,9 @@ class UiInput extends BaseComponent {
     }
 
     onIcon(type) {
-        this.iconNode.type = type;
+        if (this.iconNode && type) {
+            this.iconNode.type = type;
+        }
     }
 
     onLabel() {

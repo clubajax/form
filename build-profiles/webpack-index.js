@@ -1,4 +1,7 @@
+require('../src/ui-icon');
 require('../src/ui-checkbox');
+require('../src/ui-radio');
+require('../src/ui-radio-buttons');
 require('../src/ui-checklist');
 require('../src/ui-actionbutton');
 require('../src/ui-minitags');
@@ -12,7 +15,6 @@ require('../src/ui-searchbox');
 require('../src/ui-tooltip');
 require('../src/ui-drawer');
 require('../src/ui-paginator');
-require('../src/ui-actionbutton');
 require('../src/ui-form');
 require('../src/date-picker/date-picker');
 require('../src/date-picker/date-input');

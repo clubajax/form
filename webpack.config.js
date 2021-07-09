@@ -50,7 +50,6 @@ module.exports = {
         path: DIST,
         filename: 'index.js',
         libraryTarget: 'umd',
-        globalObject: 'this',
         library: 'form',
         umdNamedDefine: true,
         globalObject: `(typeof self !== 'undefined' ? self : this)`,
