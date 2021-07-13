@@ -236,11 +236,17 @@ class UiPopup extends BaseComponent {
         if (this.lazy) {
             this.parent.appendChild(this);
         }
+        
+        if (!this.isMobile) {
+            const isSet = position(this, this.button, this.align);
+            if (!isSet) {
+                this.showing = false;
+                return;
+            }
+        }
+        
         if (this.clickoff) {
             this.clickoff.resume();
-        }
-        if (!this.isMobile) {
-            position(this, this.button, this.align);
         }
 
         setTimeout(() => {
@@ -422,7 +428,7 @@ function position(popup, button, align) {
         // TODO: may want to use TRBL for dropdowns
         // consider checking for a tooltip node instead
         positionTooltip(popup, button, align);
-        return;
+        return true;
     }
     clearPosition(popup);
     const LOG = window.debugPopups;
@@ -443,7 +449,9 @@ function position(popup, button, align) {
     const rightSpace = win.w - btn.x;
     const leftSpace = btn.x + btn.w;
 
-    // console.log('pop', topSpace, botSpace, MAX);
+    if (pop.h < 10) {
+        return false;
+    }
 
     // position left/right & width
     if (align === 'right' || (leftSpace > pop.w && leftSpace > rightSpace)) {
@@ -504,8 +512,8 @@ function position(popup, button, align) {
         }
     }
 
-    // console.log('style', style);
     dom.style(popup, style);
+    return true;
 }
 
 function onScroll(hide, popup) {

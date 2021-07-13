@@ -13,8 +13,6 @@ class UiInput extends BaseComponent {
         this.placeholder = null;
         this.icon = null;
         this.label = null;
-
-        console.log('INPUT');
     }
 
     attributeChanged(prop, value) {
@@ -42,6 +40,11 @@ class UiInput extends BaseComponent {
     onIcon(type) {
         if (this.iconNode && type) {
             this.iconNode.type = type;
+        } else if (type) {
+            if (this.icon) {
+                this.iconNode = dom('ui-icon', { type }, this);
+                this.classList.add('has-icon');
+            }
         }
     }
 
@@ -106,6 +109,8 @@ class UiInput extends BaseComponent {
 
         this.on('click', (e) => {
             if (e.target.localName === 'ui-icon' && (this.iconNode || {}).type === 'close') {
+                e.preventDefault();
+                e.stopImmediatePropagation();
                 this.value = '';
                 this.fire('clear');
                 this.iconNode.type = 'search';

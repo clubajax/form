@@ -61,7 +61,9 @@ class UiSearch extends BaseComponent {
                     this.popup.show(updatePopup);
                 }
             }
-            this.setPopSize();
+            if (data.length) {
+                this.setPopSize();
+            }
         });
         this.__data = data;
     }
@@ -98,7 +100,6 @@ class UiSearch extends BaseComponent {
     }
 
     setDisplay() {
-        
         const item = this.list ? this.list.getItem(this.value) : false;
         this.__value = item ? item.value : this.__value;
         const displayValue = this['display'];
@@ -146,7 +147,7 @@ class UiSearch extends BaseComponent {
         this.list.on('list-change', () => {
             this.isSelecting = true;
             this.setDisplay();
-            this.emit('change', { value: this.value, item: this.list.getItem(this.value) });
+            this.emit('change', {value: this.value, item: this.list.getItem(this.value)});
             setTimeout(() => {
                 this.popup.hide();
                 setTimeout(() => {
