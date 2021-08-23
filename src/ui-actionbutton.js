@@ -21,6 +21,15 @@ class ActionButton extends UiDropdown {
             this.button.appendChild(dom('ui-icon', {html: this.label}));            
         }
         this.buttonRendered = true;
+
+        // handle react
+        if (this.className) {
+            const cls = this.className;
+            dom.attr(this, 'classname', null)
+            this.removeAttribute('classname')
+            this.className = '';
+            this.button.className = cls;
+        }
     }
 
     connectEvents() {

@@ -202,6 +202,7 @@ class DateInput extends BaseComponent {
         this.popup.hide();
         this.showing = false;
         this.picker.onHide();
+        this.icon.focus();
     }
 
     focus() {
@@ -289,6 +290,7 @@ class DateInput extends BaseComponent {
                 isMeta = false;
             }
             if (isPaste) {
+                console.log('PASTE', this.input.value);
                 isPaste = false;
                 this.setValue(this.input.value);
             } else {
@@ -299,7 +301,8 @@ class DateInput extends BaseComponent {
             if (e.key === 'Meta') {
                 isMeta = true;
             }
-            if (e.key.toLowerCase() === 'v' && isMeta) {
+            if (!e.key || e.key.toLowerCase() === 'v' && isMeta) {
+                // no key means native autocomplete
                 isPaste = true;
             }
         }, null);

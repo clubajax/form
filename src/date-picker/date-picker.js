@@ -35,11 +35,11 @@ class DatePicker extends BaseComponent {
         return `
 <div class="calendar" ref="calNode">
 <div class="cal-header" ref="headerNode">
+    <button class="cal-lft" ref="lftMoNode" tabindex="0" aria-label="Previous Month"></button>
 	<button class="cal-yr-lft" ref="lftYrNode" tabindex="0" aria-label="Previous Year"></button>
-	<button class="cal-lft" ref="lftMoNode" tabindex="0" aria-label="Previous Month"></button>
 	<label class="cal-month" ref="monthNode"></label>	
-	<button class="cal-rgt" ref="rgtMoNode" tabindex="0"  aria-label="Next Month"></button>
 	<button class="cal-yr-rgt" ref="rgtYrNode" tabindex="0" aria-label="Next Year"></button>
+	<button class="cal-rgt" ref="rgtMoNode" tabindex="0"  aria-label="Next Month"></button>
 </div>
 <div class="cal-container" ref="container"></div>
 <div class="cal-footer" ref="calFooter">
@@ -246,6 +246,10 @@ class DatePicker extends BaseComponent {
             now.classList.remove('selected');
         }
         node.classList.add('selected');
+    }
+
+    focus() {
+        this.focusDay();
     }
 
     focusDay() {

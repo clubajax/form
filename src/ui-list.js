@@ -382,12 +382,7 @@ class UIList extends BaseComponent {
         this.connect = function () {};
     }
 
-    clear() {
-        this.blockEvent = true;
-        this.controller.setSelected(null);
-
-        this.blockEvent = false;
-    }
+    
 
     connectController() {
         const options = {
@@ -423,14 +418,17 @@ class UIList extends BaseComponent {
                     if (isNull(this.value) || this.blocked) {
                         return;
                     }
-                    const changed = this.value !== this.lastValue;
-                    this.lastValue = this.value;
+                    // was doing the following, but this would prevent selecting the same
+                    // value never resets
+                    // const changed = this.value !== this.lastValue;
+                    // this.lastValue = this.value;
+                    
                     dom.classList.toggle(this, 'has-selected', !!this.value);
-                    if (changed) {
+                    // if (changed) {
                         this.emitEvent();
-                    } else {
-                        this.fire('list-click-off');
-                    }
+                    // } else {
+                    //     this.fire('list-click-off');
+                    // }
                 },
                 null,
                 null
@@ -460,6 +458,14 @@ class UIList extends BaseComponent {
 
     reset() {
         this.value = this.__value;
+    }
+
+    clear() {
+        this.blockEvent = true;
+        this.controller.setSelected(null);
+        this.blockEvent = false;
+        this.value = null;
+        this.lastValue = null;
     }
 
     editRowRemove() {

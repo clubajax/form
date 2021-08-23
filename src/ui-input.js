@@ -12,7 +12,9 @@ class UiInput extends BaseComponent {
         this.disabled = false;
         this.placeholder = null;
         this.icon = null;
-        this.label = null;
+        // this.label = null;
+
+        this.destroyOnDisconnect = !this.noselfdestroy;
     }
 
     attributeChanged(prop, value) {
@@ -151,7 +153,13 @@ class UiInput extends BaseComponent {
     }
 
     disconnected() {
-        this.destroy();
+        if (!this.noselfdestroy) {
+            setTimeout(() => {
+                if (this.DOMSTATE !== 'domready') {
+                    this.destroy();
+                }
+            }, 500);
+        }
     }
 
     destroy() {
@@ -165,6 +173,6 @@ function isNull(value) {
 
 module.exports = BaseComponent.define('ui-input', UiInput, {
     props: ['placeholder', 'label', 'limit', 'name', 'event-name', 'align', 'icon'],
-    bools: ['disabled', 'ready', 'required', 'autofocus', 'autoselect', 'readonly', 'no-border'],
+    bools: ['disabled', 'ready', 'required', 'autofocus', 'autoselect', 'readonly', 'no-border', 'noselfdestroy'],
     attrs: ['value'],
 });

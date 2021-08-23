@@ -15,6 +15,7 @@ const map = {
     search: 'fas fa-search',
     spinner: 'fas fa-sync-alt',
     close: 'far fa-times-circle',
+    
     calendar: 'far fa-calendar-alt',
     calPlus: 'fas fa-calendar-plus',
     calMinus: 'fas fa-calendar-minus',

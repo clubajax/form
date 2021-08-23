@@ -66,6 +66,7 @@ class UiSearchBox extends BaseComponent {
                 icon: this.getIcon(),
                 autoselect: this.autoselect,
                 disabled: this.disabled,
+                'no-border': true
             },
             this
         );

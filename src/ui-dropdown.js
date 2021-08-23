@@ -115,6 +115,11 @@ class UiDropdown extends BaseComponent {
         this.list.reset();
     }
 
+    clear() {
+        this.list.clear();
+        this.__value = null;
+    }
+
     connected() {
         this.render();
         this.connected = () => {};
@@ -127,6 +132,10 @@ class UiDropdown extends BaseComponent {
             }
             this.popup.hide();
         });
+
+        this.on(this.button, 'blur', (e) => {
+            this.emit('blur', {...e});
+         })
 
         this.list.on('list-change', (e) => {
             // if (isEqual(e.detail.value, this.__value) && !this.isAction) {

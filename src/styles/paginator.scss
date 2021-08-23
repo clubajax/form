@@ -21,7 +21,7 @@ ui-paginator {
         display: flex;
         flex-direction: row;
         .page-number {
-            font-size: 10px;
+            font-size: 26px;
             &:disabled{
                 background-color: var(--primary);
                 color: white;

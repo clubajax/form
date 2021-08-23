@@ -28,7 +28,6 @@ class UiForm extends BaseComponent {
         return Object.keys(children).reduce((acc, key) => {
             // acc[key] = toTimestamp(children[key].value);
             acc[key] = children[key].value;
-            // console.log('    get', key, acc[key]);
             return acc;
         }, {});
     }
@@ -49,8 +48,8 @@ class UiForm extends BaseComponent {
         const children = this.children;
         return Object.keys(children).forEach((key) => {
             children[key].value = '';
-            if (children[key].reset) {
-                children[key].reset();
+            if (children[key].clear) {
+                children[key].clear();
             }
         }, {});
     }

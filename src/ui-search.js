@@ -16,9 +16,12 @@ const DEFAULT_PLACEHOLDER = 'Begin typing...';
 class UiSearch extends BaseComponent {
     constructor() {
         super();
-        this.placeholder;
-        this.busy;
-        this.label;
+        // this.placeholder = '';
+        // this.busy = false;
+        // this.label = '';
+        // this.readonly = false;
+        // this.disabled = false;
+        // this.autoselect = false;
     }
 
     set value(value) {
@@ -75,6 +78,12 @@ class UiSearch extends BaseComponent {
     onDisabled(value) {
         if (this.input) {
             this.input.disabled = value;
+        }
+    }
+
+    onReadonly(value) {
+        if (this.input) {
+            this.input.readonly = value;
         }
     }
 
@@ -139,7 +148,7 @@ class UiSearch extends BaseComponent {
         });
 
         this.input.on('clear', () => {
-            this.fire('search', { value: '' });
+            this.emit('change', { value: '' });
         });
     }
 
@@ -174,6 +183,7 @@ class UiSearch extends BaseComponent {
                 icon: this.getIcon(),
                 autoselect: this.autoselect,
                 disabled: this.disabled,
+                readonly: this.readonly
             },
             this
         );
@@ -234,6 +244,7 @@ module.exports = BaseComponent.define('ui-search', UiSearch, {
     props: ['placeholder', 'label', 'limit', 'name', 'event-name', 'align', 'btn-class', 'maxheight', 'display'],
     bools: [
         'disabled',
+        'readonly',
         'open-when-blank',
         'allow-new',
         'required',
