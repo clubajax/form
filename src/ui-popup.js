@@ -36,7 +36,7 @@ class UiPopup extends BaseComponent {
         this.component = this.children[0] || {};
         this.button = dom.byId(this.buttonid);
         const h = this['max-height'];
-        this.maxHeight =  h === 'none' || !h ? 0 : h;
+        this.maxHeight = h === 'none' || !h ? 0 : h;
 
         // need to determine if this is a tooltip or not
         // throws errors in REact
@@ -91,7 +91,7 @@ class UiPopup extends BaseComponent {
                     }),
                 ],
             },
-            this
+            this,
         );
         dom.queryAll(this, '.ui-button-row .ui-button').forEach((button, i) => {
             this.mobileEvents = this.on(
@@ -109,7 +109,7 @@ class UiPopup extends BaseComponent {
                     }
                     this.hide();
                 },
-                null
+                null,
             );
         });
     }
@@ -144,7 +144,7 @@ class UiPopup extends BaseComponent {
                     (e) => {
                         this.show();
                     },
-                    null
+                    null,
                 );
                 if (!this.noHideOnBlur) {
                     this.on(
@@ -153,7 +153,7 @@ class UiPopup extends BaseComponent {
                         (e) => {
                             this.hide();
                         },
-                        null
+                        null,
                     );
                 }
                 this.on(
@@ -166,7 +166,7 @@ class UiPopup extends BaseComponent {
                             this.show();
                         }
                     },
-                    null
+                    null,
                 );
             }
         }
@@ -221,13 +221,14 @@ class UiPopup extends BaseComponent {
             this.isMobile = false;
             this.classList.remove('is-mobile');
             if (this.button) {
+                // no align options for mobile (?)
                 position(this, this.button);
             }
             this.removeMobileButtons();
         }
     }
 
-    show(updatePosition) {
+    show() {
         if (this.showing) {
             return;
         }
@@ -236,15 +237,18 @@ class UiPopup extends BaseComponent {
         if (this.lazy) {
             this.parent.appendChild(this);
         }
-        
+
         if (!this.isMobile) {
-            const isSet = position(this, this.button, this.align);
+            const isSet = position(this, this.button, this.align, {
+                xPos: this['x-pos'] || 0,
+                yPos: this['y-pos'] || 0,
+            });
             if (!isSet) {
                 this.showing = false;
                 return;
             }
         }
-        
+
         if (this.clickoff) {
             this.clickoff.resume();
         }
@@ -310,7 +314,8 @@ function clearPosition(popup, tooltip) {
     });
 }
 
-function positionTooltip(popup, button, align) {
+function positionTooltip(popup, button, align, options) {
+    console.log('positionTooltip');
     const LOG = window.debugPopups;
     const tooltip = dom.query(popup, '.ui-tooltip');
     clearPosition(popup, tooltip);
@@ -336,7 +341,7 @@ function positionTooltip(popup, button, align) {
         if (btn.h > pop.h) {
             return btn.y + (btn.h - pop.h) / 2;
         }
-        
+
         return btn.y - (pop.h - btn.h) / 2;
     }
     function midX() {
@@ -349,7 +354,7 @@ function positionTooltip(popup, button, align) {
         addClass('R');
         style.left = btn.x + btn.w + GAP;
         if (btn.y < pop.h / 2) {
-            style.top = btn.y + (btn.h/2) - 50;
+            style.top = btn.y + btn.h / 2 - 50;
             addClass('side50');
         } else {
             style.top = midY();
@@ -359,11 +364,10 @@ function positionTooltip(popup, button, align) {
         addClass('L');
         style.right = win.w - btn.x + GAP;
         if (btn.y < pop.h / 2) {
-            style.top = btn.y + (btn.h/2) - 50;
+            style.top = btn.y + btn.h / 2 - 50;
             addClass('side50');
         } else {
             style.top = midY();
-            
         }
     }
     function bottom() {
@@ -420,14 +424,17 @@ function positionTooltip(popup, button, align) {
             }
     }
 
+    console.log('options.yPos', options.yPos);
+    style.top += options.yPos;
+    style.left += options.xPos;
     dom.style(popup, style);
 }
 
-function position(popup, button, align) {
+function position(popup, button, align, options) {
     if (align && align.length === 1) {
         // TODO: may want to use TRBL for dropdowns
         // consider checking for a tooltip node instead
-        positionTooltip(popup, button, align);
+        positionTooltip(popup, button, align, options);
         return true;
     }
     clearPosition(popup);
@@ -527,7 +534,7 @@ function onScroll(hide, popup) {
                     }
                     hide(true);
                 },
-                true
+                true,
             );
         },
         pause: () => {
@@ -540,6 +547,6 @@ function onScroll(hide, popup) {
 }
 
 module.exports = BaseComponent.define('ui-popup', UiPopup, {
-    props: ['buttonid', 'label', 'align', 'use-hover', 'max-height'],
+    props: ['buttonid', 'label', 'align', 'use-hover', 'max-height', 'x-pos', 'y-pos'],
     bools: ['open', 'lazy'],
 });

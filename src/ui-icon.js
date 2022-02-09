@@ -7,7 +7,9 @@ class UiIcon extends BaseComponent {
         if (!missingStylesheet()) {
             console.warn('Icon stylesheet missing');
         }
-        this.className = iconMap[type] || type;
+        
+        dom.classList.add(this, iconMap[type] || type);
+
     }
     onColor(value) {
         // why doesn't this work?

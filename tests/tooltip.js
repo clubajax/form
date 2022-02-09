@@ -37,9 +37,10 @@ suite('UiTooltip', function () {
             });
             const tip = dom('ui-tooltip', {
                 value: component,
-                // align: 'T',
+                align: 'B',
                 class: 'large-tooltip',
                 'use-click': true,
+                'y-pos': -10
             });
             node = dom(
                 'ui-icon',
@@ -50,6 +51,10 @@ suite('UiTooltip', function () {
                 },
                 body
             );
+
+            setTimeout(() => { 
+                on.emit(node, 'click')
+            }, 300)
             done();
         });
     });

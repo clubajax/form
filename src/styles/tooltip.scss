@@ -1,5 +1,6 @@
 // this is a className, not a node name
 .ui-tooltip {
+    position: relative;
     background-color: var(--tip-bg);
     color: var(--tip-txt);
     box-shadow: var(--tip-shadow);
@@ -7,36 +8,58 @@
     font-size: var(--tip-txt-size);
     border-radius: var(--tip-brd-rad);
     border: 1px solid var(--tip-brd);
-    &:before {
-        // R
-        content: ' ';
-        width: 0;
-        height: 0;
+    .tooltip-arrow {
         position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        right: 100%;
-        border-width: var(--tip-arrow-size);
-        border-style: solid;
-        border-color: transparent var(--tip-brd) transparent transparent;
+        transform: translate(-50%, -100%);
+        top: 0;
+        left: 50%;
+        // border: 1px solid blue;
+        width: calc(var(--tip-arrow-size) * 2);
+        height: var(--tip-arrow-size);
+        overflow: hidden;
+        &:before {
+            content: ' ';
+            position: absolute;
+            top: 50%;
+            left: 25%;
+            transform: rotate(45deg);
+            width: var(--tip-arrow-size);
+            height: var(--tip-arrow-size);
+            background-color: white;
+            box-shadow: 0 0 5px rgba(0,0,0,0.3);
+        }
     }
-    &.side50:before{
+    // &:before {
+    //     // R
+    //     content: ' ';
+    //     width: 0;
+    //     height: 0;
+    //     position: absolute;
+    //     top: 50%;
+    //     transform: translateY(-50%);
+    //     right: 100%;
+    //     border-width: var(--tip-arrow-size);
+    //     border-style: solid;
+    //     border-color: transparent var(--tip-brd) transparent transparent;
+    //     // box-shadow: 2px 2px 2px rgba(0,0,0,0.5);
+    // }
+    &.side50:before {
         transform: none;
         top: 50px;
     }
-    &.L{
-        &:before{
+    &.L {
+        &:before {
             right: 0;
             transform: translate(100%, -50%);
             border-color: transparent transparent transparent var(--tip-brd);
         }
-        &.side50:before{
+        &.side50:before {
             transform: translate(100%, 0);
             top: 50px;
         }
     }
-    &.B{
-        &:before{
+    &.B {
+        &:before {
             right: auto;
             left: 50%;
             top: 0;
@@ -44,8 +67,8 @@
             border-color: transparent transparent var(--tip-brd) transparent;
         }
     }
-    &.T{
-        &:before{
+    &.T {
+        &:before {
             top: auto;
             right: auto;
             left: 50%;
@@ -54,25 +77,25 @@
             border-color: var(--tip-brd) transparent transparent transparent;
         }
     }
-    &.error{
+    &.error {
         background-color: var(--tip-bg-error);
         color: var(--tip-txt-error);
         border: 1px solid var(--tip-brd-error);
         &:before {
             border-color: transparent var(--tip-brd-error) transparent transparent;
         }
-        &.L{
-            &:before{
+        &.L {
+            &:before {
                 border-color: transparent transparent transparent var(--tip-brd-error);
             }
         }
-        &.B{
-            &:before{
+        &.B {
+            &:before {
                 border-color: transparent transparent var(--tip-brd-error) transparent;
             }
         }
-        &.T{
-            &:before{
+        &.T {
+            &:before {
                 border-color: var(--tip-brd-error) transparent transparent transparent;
             }
         }

@@ -18,26 +18,36 @@ class UiTooltip extends BaseComponent {
 
     render() {
         const align = this.align || 'R';
-        this.popup = dom('ui-popup', {
-            html: dom('div', {
-                class: `ui-tooltip ${this.className}`,
-                html: this.value
-            }),
-            buttonid: this.buttonid ? this.buttonid : this['is-button'] ? this.parentNode.parentNode : this.parentNode,
-            'use-hover': this['use-click'] ? false : true,
-            align,
-            'hide-timer': this['hide-timer'],
-            open: this.open
-        }, document.body);
+        this.popup = dom(
+            'ui-popup',
+            {
+                html: dom('div', {
+                    class: `ui-tooltip ${this.className}`,
+                    html: [dom('div', { class: 'tooltip-arrow' }), this.value],
+                }),
+                buttonid: this.buttonid
+                    ? this.buttonid
+                    : this['is-button']
+                    ? this.parentNode.parentNode
+                    : this.parentNode,
+                'use-hover': this['use-click'] ? false : true,
+                align,
+                'hide-timer': this['hide-timer'],
+                'y-pos': this['y-pos'],
+                'x-pos': this['x-pos'],
+                open: this.open,
+            },
+            document.body,
+        );
     }
 
-    connect() { 
-        this.on('tooltip-close', () => { 
+    connect() {
+        this.on('tooltip-close', () => {
             this.popup.hide();
-        })
+        });
     }
 
-    close() { 
+    close() {
         this.popup.hide();
     }
 
@@ -48,8 +58,7 @@ class UiTooltip extends BaseComponent {
 }
 
 module.exports = BaseComponent.define('ui-tooltip', UiTooltip, {
-    props: ['align', 'hide-timer', 'buttonid'],
+    props: ['align', 'hide-timer', 'buttonid', 'y-pos', 'x-pos'],
     attrs: ['value', 'open'],
-    bools: ['use-click', 'is-button']
+    bools: ['use-click', 'is-button'],
 });
-
