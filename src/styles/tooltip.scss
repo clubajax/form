@@ -57,11 +57,15 @@
     }
     &.L {
         .tooltip-arrow {
+            height: calc(var(--tip-arrow-size) * 2);
+            width: var(--tip-arrow-size);
             left: auto;
             right: 0;
+            top: 50%;
             transform: translate(100%, -50%);
             &::before {
-                // top: -50%;
+                top: 25%;
+                left: -50%;
             }
         }
     }

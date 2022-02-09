@@ -107,6 +107,56 @@ suite('UiTooltip', function () {
                 on.emit(btn, 'click')
             }, 300)
         })
+
+        test.only('should render a Tooltip left aligned', () => { 
+            const btn = dom(
+                'button',
+                {
+                    id: 'left',
+                    class: 'ui-button btn-left',
+                    html: 'Left',
+                },
+                body
+            );
+            const tip = dom('ui-tooltip', {
+                value: 'This is left aligned',
+                align: 'L',
+                class: 'large-tooltip',
+                'use-click': true,
+                buttonid: 'left'
+                // 'y-pos': -10
+            }, document.body);
+            
+
+            setTimeout(() => { 
+                on.emit(btn, 'click')
+            }, 300)
+        })
+
+        test.only('should render a Tooltip bottom aligned', () => { 
+            const btn = dom(
+                'button',
+                {
+                    id: 'bottom',
+                    class: 'ui-button btn-bottom',
+                    html: 'Bottom',
+                },
+                body
+            );
+            const tip = dom('ui-tooltip', {
+                value: 'This is bottom aligned',
+                align: 'B',
+                class: 'large-tooltip',
+                'use-click': true,
+                buttonid: 'bottom'
+                // 'y-pos': -10
+            }, document.body);
+            
+
+            setTimeout(() => { 
+                on.emit(btn, 'click')
+            }, 300)
+        })
     });
 });
 
