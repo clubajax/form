@@ -6,6 +6,10 @@ class UiTooltip extends BaseComponent {
     constructor() {
         super();
         this.open;
+        console.log('tip', this.buttonid);
+    }
+    connected() { 
+        console.log('connect');
     }
     domReady() {
         if (!this.value && this.innerHTML.length) {
@@ -17,6 +21,7 @@ class UiTooltip extends BaseComponent {
     }
 
     render() {
+        console.log('this.buttonid', this.buttonid);
         const align = this.align || 'R';
         this.popup = dom(
             'ui-popup',

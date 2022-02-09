@@ -4,6 +4,7 @@ import '../src/ui-form';
 import on from '@clubajax/on';
 import dom from '@clubajax/dom';
 import '../src/styles/main.scss';
+import './test.scss';
 
 const components = ['checkbox', 'radio-buttons', 'actionbutton', 'checklist', 'drawer', 'dropdown', 'minitags', 'input', 'list', 'popup', 'search', 'tooltip', 'paginator', 'date'];
 

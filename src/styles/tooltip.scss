@@ -8,6 +8,7 @@
     font-size: var(--tip-txt-size);
     border-radius: var(--tip-brd-rad);
     border: 1px solid var(--tip-brd);
+    // .B default
     .tooltip-arrow {
         position: absolute;
         transform: translate(-50%, -100%);
@@ -26,7 +27,42 @@
             width: var(--tip-arrow-size);
             height: var(--tip-arrow-size);
             background-color: white;
-            box-shadow: 0 0 5px rgba(0,0,0,0.3);
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+        }
+    }
+    &.T {
+        .tooltip-arrow {
+            top: auto;
+            bottom: 0;
+            left: 50%;
+            transform: translate(-50%, 100%);
+            &::before {
+                top: -50%;
+            }
+        }
+    }
+    &.R {
+        .tooltip-arrow {
+            height: calc(var(--tip-arrow-size) * 2);
+            width: var(--tip-arrow-size);
+            left: 0;
+            top: 50%;
+            transform: translate(-100%, -50%);
+            &::before {
+                top: 25%;
+                left: auto;
+                right: -50%;
+            }
+        }
+    }
+    &.L {
+        .tooltip-arrow {
+            left: auto;
+            right: 0;
+            transform: translate(100%, -50%);
+            &::before {
+                // top: -50%;
+            }
         }
     }
     // &:before {
@@ -67,16 +103,7 @@
             border-color: transparent transparent var(--tip-brd) transparent;
         }
     }
-    &.T {
-        &:before {
-            top: auto;
-            right: auto;
-            left: 50%;
-            bottom: 0;
-            transform: translate(-50%, 100%);
-            border-color: var(--tip-brd) transparent transparent transparent;
-        }
-    }
+
     &.error {
         background-color: var(--tip-bg-error);
         color: var(--tip-txt-error);
