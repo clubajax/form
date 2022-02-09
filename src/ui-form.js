@@ -51,13 +51,12 @@ class UiForm extends BaseComponent {
             if (children[key].clear) {
                 children[key].clear();
             }
-        }, {});
+        });
     }
 
     setValue(value) {
         Object.keys(value).forEach((key) => {
             if (this.children[key]) {
-                // this.children[key].value = fromTimestamp(value[key]);
                 this.children[key].value = value[key];
             }
         });

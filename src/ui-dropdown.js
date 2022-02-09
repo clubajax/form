@@ -40,7 +40,13 @@ class UiDropdown extends BaseComponent {
         // this prevents a React bug, when a Select component is
         // in a closure and the state gets updated with a stale
         // value immediately after a new value
-        if (this.blocked) {
+        //
+        // since above fix, added last condition
+        // to prevent being set twice, the first one a blank initialization
+        const log = false; //['location', 'belt_rank'].includes(this.name);
+        log && console.log('\nset.value', value);
+        if (this.blocked || this.lastValue === value || (!value && !this.blocked)) {
+            log && console.log('blocked', value, this.blocked, this.lastValue === value);
             return;
         }
         this.blocked = true;
@@ -48,16 +54,15 @@ class UiDropdown extends BaseComponent {
             this.blocked = false;
         }, 30);
 
-        if (this.lastValue === value) {
-            return;
-        }
         this.lastValue = value;
         if (this.list) {
             this.list.value = value;
+            log && console.log('list.value', value);
         } else {
             this.onDomReady(() => {
                 setTimeout(() => {
                     if (this.list && !this.list.lazyDataFN) {
+                        log && console.log('dom.list.value', value);
                         this.list.value = value;
                     }
                 }, 1);
@@ -66,7 +71,10 @@ class UiDropdown extends BaseComponent {
         this.__value = value;
 
         if (this.list) {
+            log && console.log('display', value);
             this.setDisplay();
+        } else {
+            log && console.log('no display list', value);
         }
     }
 
@@ -118,6 +126,8 @@ class UiDropdown extends BaseComponent {
     clear() {
         this.list.clear();
         this.__value = null;
+        this.lastValue = null;
+        this.setDisplay();
     }
 
     connected() {
@@ -191,7 +201,8 @@ class UiDropdown extends BaseComponent {
             dom('ui-icon', { type: this.icon || 'caretDown' }, this.button);
         }
         if (this.popup) {
-            setTimeout(() => {
+            clearTimeout(this.popTmr);
+            this.popTmr = setTimeout(() => {
                 // don't resize the popup right away - wait until it closes, else it jumps
                 dom.style(this.popup, {
                     'min-width': dom.box(this.button).w,

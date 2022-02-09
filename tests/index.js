@@ -1,9 +1,10 @@
 require('../src/ui-arrow');
 require('../src/ui-searchbox');
 require('../src/ui-form');
-const dom = require('@clubajax/dom');
-const on = require('@clubajax/on');
+// import on from'@clubajax/on';
+// import dom from'@clubajax/dom';
 
+console.log('dom', dom);
 require('../src/styles/main.scss');
 
 const components = ['checkbox', 'radio-buttons', 'actionbutton', 'checklist', 'drawer', 'dropdown', 'minitags', 'input', 'list', 'popup', 'search', 'tooltip', 'paginator', 'date'];

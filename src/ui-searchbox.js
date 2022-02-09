@@ -9,7 +9,7 @@ const DEFAULT_PLACEHOLDER = 'Begin typing...';
 class UiSearchBox extends BaseComponent {
     constructor() {
         super();
-        this.placeholder;
+        // this.placeholder;
         this.busy;
         this.label;
     }

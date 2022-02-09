@@ -68,8 +68,17 @@ class UiInput extends BaseComponent {
         }
     }
 
-    setPlaceholder() {
-        // dom.classList.toggle(this, 'has-placeholder')
+    onPlaceholder(value) {
+        this.setPlaceholder(value);
+    }
+
+    setPlaceholder(value) {
+        if (value) {
+            dom.classList.toggle(this, 'has-placeholder');
+            if (this.input) {
+                this.input.placeholder = value;
+            }
+        }
     }
 
     emitEvent(e) {

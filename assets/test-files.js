@@ -6,6 +6,8 @@ const files = '<link rel="stylesheet" href="../node_modules/mocha/mocha.css">' +
 '<script src="../node_modules/chai-spies/chai-spies.js"></script>' +
 
 '<script src="../node_modules/@clubajax/dates/src/dates.js"></script>' +
+'<script src="../node_modules/@clubajax/on/src/on.js"></script>' +
+'<script src="../node_modules/@clubajax/dom/src/dom.js"></script>' +
 
     '<link rel="stylesheet" href="/dist/form.css" />' +
 	(isIE ? '<script src="./src/polyfills.js"></script>' : '') +

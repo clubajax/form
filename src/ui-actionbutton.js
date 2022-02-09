@@ -11,17 +11,6 @@ class ActionButton extends UiDropdown {
     }
 
     setDisplay() {
-        if (this.buttonRendered) {
-            return;
-        }
-        if (this.icon) {
-            this.button.appendChild(dom('ui-icon', {type: this.icon}));
-        }
-        if (this.label) {
-            this.button.appendChild(dom('ui-icon', {html: this.label}));            
-        }
-        this.buttonRendered = true;
-
         // handle react
         if (this.className) {
             const cls = this.className;
@@ -30,6 +19,24 @@ class ActionButton extends UiDropdown {
             this.className = '';
             this.button.className = cls;
         }
+
+        if (this['btn-class']) {
+            this.button.className = this['btn-class'];
+        }
+
+        if (this.buttonRendered) {
+            return;
+        }
+        if (this.icon && !this['icon-after']) {
+            this.button.appendChild(dom('ui-icon', {type: this.icon}));
+        }
+        if (this.label) {
+            this.button.appendChild(dom('span', {html: this.label}));            
+        }
+        if (this.icon && this['icon-after']) {
+            this.button.appendChild(dom('ui-icon', {type: this.icon}));
+        }
+        this.buttonRendered = true;
     }
 
     connectEvents() {
@@ -50,5 +57,6 @@ class ActionButton extends UiDropdown {
 }
 
 module.exports = BaseComponent.define('ui-actionbutton', ActionButton, {
-    props: ['icon']
+    props: ['icon', 'btn-class'],
+    bools: ['icon-after']
 });

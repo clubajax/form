@@ -93,6 +93,7 @@ class UiSearch extends BaseComponent {
 
     onDisplay() {
         this.setDisplay();
+        this.input.icon = this.getIcon();
     }
 
     getIcon() {
@@ -111,12 +112,8 @@ class UiSearch extends BaseComponent {
     setDisplay() {
         const item = this.list ? this.list.getItem(this.value) : false;
         this.__value = item ? item.value : this.__value;
-        const displayValue = this['display'];
-        this.input.value = item
-            ? isNull(this.value)
-                ? displayValue || ''
-                : item.display || item.alias || item.label
-            : this.__value || displayValue;
+        const displayValue = this['display'] || (item ? item.display || item.alias || item.label : '');
+        this.input.value = displayValue;
 
         this.setPopSize();
     }
@@ -132,12 +129,16 @@ class UiSearch extends BaseComponent {
     }
 
     connectInput() {
+        let timer;
         this.input.on('keyup', (e) => {
-            // meta handles paste
-            if (on.isAlphaNumeric(e.key) || e.key === 'Backspace' || e.key === 'Delete' || e.key === 'Meta') {
-                this.fire('search', { value: this.input.value });
-            }
-        });
+            clearTimeout(timer);
+            setTimeout(() => {
+                // meta handles paste
+                if (on.isAlphaNumeric(e.key) || e.key === 'Backspace' || e.key === 'Delete' || e.key === 'Meta') {
+                    this.fire('search', { value: this.input.value });
+                }
+            });
+        }, 300)
 
         this.input.on('focus', () => {
             this.classList.add('is-focused');
