@@ -270,6 +270,13 @@ date-range-input {
             pointer-events: none;
         }
     }
+    &[readonly] {
+        .date-input-wrapper{
+        input[readonly] {
+            pointer-events: none;
+            background-color: #eee;
+        }}
+    }
     &.invalid {
         .input-wrapper input,
         input {
@@ -388,7 +395,7 @@ date-time-input {
         font-size: 18px;
     }
 }
-.icon-button:hover{
+.icon-button:hover {
     color: white;
 }
 

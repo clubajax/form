@@ -27,7 +27,17 @@
             width: var(--tip-arrow-size);
             height: var(--tip-arrow-size);
             background-color: white;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+        }
+    }
+    &.shift-left {
+        .tooltip-arrow {
+            left: 75%;
+        }
+    }
+    &.shift-right {
+        .tooltip-arrow {
+            left: 25%;
         }
     }
     &.T {

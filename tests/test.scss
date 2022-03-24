@@ -173,3 +173,16 @@ ui-radio.small span{
     left: 500px;
     top: 100px;
 }
+
+.ui-button.btn-bottom-shift{
+    position: relative;
+    top: 150px;
+    left: 100%;
+    transform: translateX(-100%);
+}
+
+.ui-button.btn-bottom-shift-left{
+    position: relative;
+    top: 150px;
+    left: 25px;
+}

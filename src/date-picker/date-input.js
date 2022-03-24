@@ -78,6 +78,12 @@ class DateInput extends BaseComponent {
         }
     }
 
+    onReadonly(value) {
+        if (this.input) {
+            this.input.readonly = value;
+        }
+    }
+
     onLabel(value) {
         this.labelNode.innerHTML = value;
     }
@@ -243,11 +249,13 @@ class DateInput extends BaseComponent {
         this.input.setAttribute('type', 'text');
         this.input.setAttribute('placeholder', this.placeholder || defaultPlaceholder);
         this.input.setAttribute('disabled', this.disabled || null);
+        this.input.setAttribute('readonly', this.readonly || null);
         if (this.labelId) {
             this.input.setAttribute('id', this.labelId);
         }
 
         dom.attr(this.input, 'disabled', this.disabled);
+        dom.attr(this.input, 'readonly', this.readonly);
 
         if (this.name) {
             this.input.setAttribute('name', this.name);
@@ -325,7 +333,7 @@ class DateInput extends BaseComponent {
 }
 
 module.exports = BaseComponent.define('date-input', DateInput, {
-    bools: ['required', 'disabled', 'time', 'static'],
+    bools: ['required', 'disabled', 'readonly', 'time', 'static'],
     props: ['label', 'name', 'placeholder', 'mask', 'min', 'max', 'time', 'validation', 'labelId'],
     attrs: ['value'],
 });

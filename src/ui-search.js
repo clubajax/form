@@ -149,7 +149,10 @@ class UiSearch extends BaseComponent {
         });
 
         this.input.on('clear', () => {
-            this.emit('change', { value: '' });
+            this.emit('change', {value: ''});
+            if (this.popup) {
+                this.popup.hide();
+            }
         });
     }
 

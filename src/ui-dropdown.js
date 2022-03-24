@@ -29,9 +29,15 @@ class UiDropdown extends BaseComponent {
         this.isAction = false;
     }
 
-    onDisabled(disabled) {
+    onDisabled(value) {
         this.onDomReady(() => {
-            dom.attr(this.button, 'tabindex', disabled ? '-1' : false);
+            dom.attr(this.button, 'tabindex', value ? '-1' : false);
+        });
+    }
+
+    onReadonly(value) {
+        this.onDomReady(() => {
+            dom.attr(this, 'readonly', value ? 'true' : null);
         });
     }
 
@@ -373,6 +379,7 @@ module.exports = BaseComponent.define('ui-dropdown', UiDropdown, {
         'multiple',
         'persist-multiple',
         'noselfdestroy',
+        'readonly'
     ],
     attrs: ['value'],
 });

@@ -38,14 +38,6 @@ class UiPopup extends BaseComponent {
         const h = this['max-height'];
         this.maxHeight = h === 'none' || !h ? 0 : h;
 
-        // need to determine if this is a tooltip or not
-        // throws errors in REact
-        // if (!this.button) {
-        //     console.log('this.destroyed', this.destroyed);
-        //     throw new Error(
-        //         'ui-tooltip must be associated with a parent via the parentid'
-        //     );
-        // }
         dom.attr(this, 'data-no-clickoff', true);
         this.connectEvents();
         if (!this.parentNode) {
@@ -228,8 +220,11 @@ class UiPopup extends BaseComponent {
         }
     }
 
-    show() {
+    show(resize) {
         if (this.showing) {
+            if (resize) {
+                this.position(true);
+            }
             return;
         }
         this.children[0].disabled = false;
@@ -242,6 +237,7 @@ class UiPopup extends BaseComponent {
             const isSet = position(this, this.button, this.align, {
                 xPos: this['x-pos'] || 0,
                 yPos: this['y-pos'] || 0,
+                shift: this.shift,
             });
             if (!isSet) {
                 this.showing = false;
@@ -283,7 +279,13 @@ class UiPopup extends BaseComponent {
         this.connectWindowEvents();
     }
 
-    position() {
+    position(resize) {
+        if (resize) {
+            clearPosition(this);
+            setTimeout(() => {
+                position(this, this.button, this.align);
+            }, 100);
+        }
         position(this, this.button, this.align);
     }
 
@@ -315,7 +317,6 @@ function clearPosition(popup, tooltip) {
 }
 
 function positionTooltip(popup, button, align, options) {
-    console.log('positionTooltip');
     const LOG = window.debugPopups;
     const tooltip = dom.query(popup, '.ui-tooltip');
     clearPosition(popup, tooltip);
@@ -424,9 +425,19 @@ function positionTooltip(popup, button, align, options) {
             }
     }
 
-    console.log('options.yPos', options.yPos);
     style.top += options.yPos;
     style.left += options.xPos;
+
+    if (options.shift) {
+        if (style.left < pop.w) {
+            style.left += pop.w * 0.25;
+            tooltip.classList.add('shift-right');
+        } else {
+            style.left -= pop.w * 0.25;
+            tooltip.classList.add('shift-left');
+        }
+    }
+
     dom.style(popup, style);
 }
 
@@ -439,6 +450,7 @@ function position(popup, button, align, options) {
     }
     clearPosition(popup);
     const LOG = window.debugPopups;
+    LOG && console.log('position...');
     const GAP = 5;
     const MIN_BOT_SPACE = 200;
     const MAX = popup.maxHeight || Infinity;
@@ -487,36 +499,36 @@ function position(popup, button, align, options) {
         // not enough room for the top or bottom
         // if (botSpace < MIN_BOT_SPACE || topSpace > botSpace * 1.5) {
         if (botSpace < topSpace) {
-            // console.log('force top');
             // force top
             const h = topSpace - GAP * 2;
             style.maxHeight = MAX < h ? MAX : h;
             style.bottom = win.h - btn.y;
             style.top = 'auto';
             style.overflow = 'auto';
+            LOG && console.log('force.top', style);
         } else {
-            // console.log('force bottom');
             // force bottom
             const h = botSpace - GAP * 2;
             style.maxHeight = MAX < h ? MAX : h;
             style.overflow = 'auto';
+            LOG && console.log('force.bottom', style);
         }
     } else if (botSpace < popH) {
-        // console.log(' * top');
         // top
         style.top = 'auto';
         style.bottom = win.h - btn.y;
         if (MAX <= pop.h) {
             style.maxHeight = popH;
-            style.height = popH;
+            // style.height = popH;
             style.overflow = 'auto';
         }
+        LOG && console.log('top', style);
     } else {
-        // console.log('bottom', MAX);
         if (MAX <= popH) {
             style.overflow = 'auto';
             style.maxHeight = popH;
         }
+        LOG && console.log('bottom', style);
     }
 
     dom.style(popup, style);
@@ -548,5 +560,5 @@ function onScroll(hide, popup) {
 
 module.exports = BaseComponent.define('ui-popup', UiPopup, {
     props: ['buttonid', 'label', 'align', 'use-hover', 'max-height', 'x-pos', 'y-pos'],
-    bools: ['open', 'lazy'],
+    bools: ['open', 'lazy', 'shift'],
 });

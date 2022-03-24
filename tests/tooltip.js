@@ -20,7 +20,7 @@ suite('UiTooltip', function () {
             onDomReady(node, cb);
         }
 
-        test('should render a Tooltip component', function (done) {
+        test.skip('should render a Tooltip component', function (done) {
             const btn = dom('button', { class: 'ui-button', html: 'Ok' });
             on(btn, 'click', () => {
                 tip.close();
@@ -58,7 +58,7 @@ suite('UiTooltip', function () {
             done();
         });
 
-        test.only('should render a Tooltip top aligned', () => { 
+        test('should render a Tooltip top aligned', () => { 
             const btn = dom(
                 'button',
                 {
@@ -83,7 +83,7 @@ suite('UiTooltip', function () {
             }, 300)
         })
 
-        test.only('should render a Tooltip right aligned', () => { 
+        test('should render a Tooltip right aligned', () => { 
             const btn = dom(
                 'button',
                 {
@@ -108,7 +108,7 @@ suite('UiTooltip', function () {
             }, 300)
         })
 
-        test.only('should render a Tooltip left aligned', () => { 
+        test('should render a Tooltip left aligned', () => { 
             const btn = dom(
                 'button',
                 {
@@ -133,7 +133,7 @@ suite('UiTooltip', function () {
             }, 300)
         })
 
-        test.only('should render a Tooltip bottom aligned', () => { 
+        test('should render a Tooltip bottom aligned', () => { 
             const btn = dom(
                 'button',
                 {
@@ -149,6 +149,58 @@ suite('UiTooltip', function () {
                 class: 'large-tooltip',
                 'use-click': true,
                 buttonid: 'bottom'
+                // 'y-pos': -10
+            }, document.body);
+            
+
+            setTimeout(() => { 
+                on.emit(btn, 'click')
+            }, 300)
+        })
+
+        test('should render a Tooltip bottom shifted left', () => { 
+            const btn = dom(
+                'button',
+                {
+                    id: 'bottom-shift',
+                    class: 'ui-button btn-bottom-shift',
+                    html: 'Bottom Shift',
+                },
+                body
+            );
+            const tip = dom('ui-tooltip', {
+                value: 'This is bottom shifted',
+                align: 'B',
+                shift: true,
+                class: 'large-tooltip',
+                'use-click': true,
+                buttonid: 'bottom-shift'
+                // 'y-pos': -10
+            }, document.body);
+            
+
+            setTimeout(() => { 
+                on.emit(btn, 'click')
+            }, 300)
+        })
+
+        test('should render a Tooltip bottom shifted right', () => { 
+            const btn = dom(
+                'button',
+                {
+                    id: 'bottom-shift-left',
+                    class: 'ui-button btn-bottom-shift-left',
+                    html: 'Bottom Shift',
+                },
+                body
+            );
+            const tip = dom('ui-tooltip', {
+                value: 'This is bottom shifted',
+                align: 'B',
+                shift: true,
+                class: 'large-tooltip',
+                'use-click': true,
+                buttonid: 'bottom-shift-left'
                 // 'y-pos': -10
             }, document.body);
             
