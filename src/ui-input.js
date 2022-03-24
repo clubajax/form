@@ -65,6 +65,7 @@ class UiInput extends BaseComponent {
     onReadonly(value) {
         if (this.input) {
             this.input.readonly = value;
+            dom.attr(this.input, 'tabindex', value ? '-1' : false);
         }
     }
 
@@ -101,7 +102,7 @@ class UiInput extends BaseComponent {
                 this.emit('blur');
                 this.classList.remove('focus');
             },
-            null
+            null,
         );
         this.on(
             this.input,
@@ -114,7 +115,7 @@ class UiInput extends BaseComponent {
                     this.input.select();
                 }
             },
-            null
+            null,
         );
         this.on(this.input, 'change', this.emitEvent.bind(this), null);
 
@@ -151,14 +152,16 @@ class UiInput extends BaseComponent {
                 disabled: this.disabled,
                 placeholder: this.placeholder || DEFAULT_PLACEHOLDER,
             },
-            pNode
+            pNode,
         );
         if (this.icon) {
             this.iconNode = dom('ui-icon', { type: this.icon }, pNode);
             this.classList.add('has-icon');
         }
         this.setPlaceholder();
+
         this.connect();
+
     }
 
     disconnected() {
