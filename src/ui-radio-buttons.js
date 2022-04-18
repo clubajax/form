@@ -14,7 +14,7 @@ class RadioButtons extends FormElement {
 		this.radios = [];
 	}
 
-	set data (items) {
+    set data(items) {
 		this.items = items;
 		if (this.DOMSTATE === 'domready') {
 			this.render();
@@ -69,7 +69,7 @@ class RadioButtons extends FormElement {
 	setValue(value, silent) {
 		this.onDomReady(() => {
 			const isChk = this.type === 'checks';
-			value = unDef(value) ? [] : Array.isArray(value) ? value : value.split(',');
+            value = toArray(value);
 			this.radios.forEach((radio) => {
 				const radioValue = isChk ? radio.name : radio.value;
 				if (radioValue === 0) {
@@ -220,6 +220,11 @@ class RadioButtons extends FormElement {
 		});
 	}
 
+}
+
+
+function toArray(value) { 
+    return unDef(value) ? [] : Array.isArray(value) ? value : typeof value === 'string' ? value.split(',') : [value];
 }
 
 function sort (value) {
