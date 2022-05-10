@@ -46,7 +46,7 @@ if (DEV) {
             if (percentage === 1) {
                 setTimeout(() => {
                     if (DEV) {
-                        log('\n\npage is served from http://localhost:9004\nstarting server...');
+                        log('\n\npage is served from http://localhost:8300\nstarting server...');
                     }
                 }, 30);
             }
@@ -141,12 +141,14 @@ module.exports = {
     },
     plugins,
     devServer: {
-        contentBase: DIST,
-        compress: false,
-        progress: false,
         hot: true,
-        index: 'index.html',
-        port: 9004,
-        publicPath: 'http://localhost:9004/',
+        compress: false,
+        hot: true,
+        host: '0.0.0.0',
+        port: 8300,
+        client: {
+            progress: true,
+            reconnect: 5,
+        },
     },
 };
