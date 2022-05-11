@@ -1,6 +1,6 @@
 {
   "name": "@clubajax/form",
-  "version": "0.9.84",
+  "version": "0.9.85",
   "description": "Web Components for Forms",
   "main": "build/index.js",
   "repository": "https://github.com/clubajax/form.git",
@@ -26,8 +26,6 @@
     "@babel/plugin-proposal-class-properties": "^7.14.5",
     "@clubajax/custom-elements-polyfill": "^0.9.4",
     "minimist": "^1.2.6",
-
-
     "@babel/core": "^7.17.10",
     "@babel/preset-env": "^7.17.10",
     "@clubajax/node-file-managment": "^0.1.3",

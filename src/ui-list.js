@@ -31,7 +31,7 @@ class UIList extends BaseComponent {
         this.label;
         this.lastValue = null;
     }
-    
+
     attributeChanged(prop, value) {
         if (prop === 'value') {
             this.value = value;
@@ -382,8 +382,6 @@ class UIList extends BaseComponent {
         this.connect = function () {};
     }
 
-    
-
     connectController() {
         const options = {
             canSelectNone: this.getAttribute('can-select-none'),
@@ -402,7 +400,7 @@ class UIList extends BaseComponent {
                     e.stopImmediatePropagation();
                 },
                 null,
-                null
+                null,
             ),
             this.on(
                 'focus',
@@ -410,28 +408,25 @@ class UIList extends BaseComponent {
                     this.list.focus();
                 },
                 null,
-                null
+                null,
             ),
             this.on(
                 'key-select',
                 (e) => {
-                    if (isNull(this.value) || this.blocked) {
+                    console.log('key-select.event', e);
+                    if (isNull(e.detail.value) || isNull(this.value) || this.blocked) {
                         return;
                     }
                     // was doing the following, but this would prevent selecting the same
                     // value never resets
                     // const changed = this.value !== this.lastValue;
                     // this.lastValue = this.value;
-                    
+
                     dom.classList.toggle(this, 'has-selected', !!this.value);
-                    // if (changed) {
-                        this.emitEvent();
-                    // } else {
-                    //     this.fire('list-click-off');
-                    // }
+                    this.emitEvent();
                 },
                 null,
-                null
+                null,
             ),
         ]);
 
@@ -560,7 +555,7 @@ class UIList extends BaseComponent {
                         }),
                     ],
                 },
-                this
+                this,
             );
             this.on(this.editNode, 'click', 'button', (e) => {
                 const node = e.target.closest('button');
@@ -610,7 +605,7 @@ function createInput(node, item, isEdit, callback) {
         {
             value: fromHtml(value),
         },
-        node
+        node,
     );
 
     input.onDomReady(() => {
