@@ -155,7 +155,7 @@ class UiDropdown extends BaseComponent {
 
         this.list.on('list-change', (e) => {
             // if (isEqual(e.detail.value, this.__value) && !this.isAction) {
-            if (isEqual(e.detail.value, this.__value)) {
+            if (!this.isAction && isEqual(e.detail.value, this.__value)) {
                 this.popup.hide();
                 e.stopImmediatePropagation();
                 return;
