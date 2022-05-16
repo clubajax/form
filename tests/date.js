@@ -14,6 +14,10 @@ suite('DatePicker', function () {
         body = dom.byId('tests');
 
     function ready(node, cb) {
+        if (!node) {
+            console.log('ERROR: No node!!');
+            return;
+        }
         node.onDomReady(function () {
             setTimeout(cb, 30);
         });
@@ -270,7 +274,7 @@ suite('DatePicker', function () {
             });
         });
 
-        suite.only('date input', function () {
+        suite('date input', function () {
             test('should pop up', function () {
                 const node = dom('date-input', { label: 'Opens with ui-popup', min: null, max: null }, body);
                 expect(dom.isNode(node)).to.equal(true);
@@ -295,7 +299,7 @@ suite('DatePicker', function () {
                         value: '12/25/2017',
                         min: '12/24/2017',
                     },
-                    body
+                    body,
                 );
 
                 ready(node, function () {
@@ -322,7 +326,7 @@ suite('DatePicker', function () {
                     {
                         label: 'input starting blank',
                     },
-                    body
+                    body,
                 );
                 ready(node, function () {
                     key(node, 1, 0);
@@ -347,7 +351,7 @@ suite('DatePicker', function () {
                         min: '12/24/2017',
                         max: '12/26/2017',
                     },
-                    body
+                    body,
                 );
 
                 ready(node, function () {
@@ -380,7 +384,7 @@ suite('DatePicker', function () {
                         // min: '12/24/2017',
                         // max: '12/26/2017'
                     },
-                    body
+                    body,
                 );
 
                 ready(node, function () {
@@ -436,7 +440,7 @@ suite('DatePicker', function () {
                         label: 'Date',
                         value: '12/25/2017',
                     },
-                    body
+                    body,
                 );
                 ready(node, function () {
                     // const time = 1000;
@@ -513,7 +517,7 @@ suite('DatePicker', function () {
                 const node = dom(
                     'time-input',
                     { label: 'valid and invalid from value', value: '12:34am', step: 15, required: true },
-                    body
+                    body,
                 );
                 ready(node, function () {
                     let emitted = '';
@@ -539,7 +543,7 @@ suite('DatePicker', function () {
                 const node = dom(
                     'time-input',
                     { label: 'handle arrow keys - time', value: '12:34am', step: 15, required: true },
-                    body
+                    body,
                 );
                 ready(node, function () {
                     expect(node.value).to.equal('12:34 am');
@@ -562,7 +566,7 @@ suite('DatePicker', function () {
                 const node = dom(
                     'time-input',
                     { label: 'min and max time', value: time, step: 15, min: '01:30 am', max: '02:30 am' },
-                    body
+                    body,
                 );
                 ready(node, function () {
                     let err;
@@ -597,7 +601,7 @@ suite('DatePicker', function () {
                         min: 'now',
                         static: true,
                     },
-                    body
+                    body,
                 );
                 ready(node, function () {
                     node.on('validation', function (e) {
@@ -624,7 +628,7 @@ suite('DatePicker', function () {
                         value: '03/27/2018 10:00 am',
                         static: true,
                     },
-                    body
+                    body,
                 );
                 ready(node, function () {
                     expect(showing(node)).to.equal(true);
@@ -656,7 +660,7 @@ suite('DatePicker', function () {
                 const node = dom(
                     'date-time-input',
                     { label: 'Enter Date and Time', value: dateStr, min: dateStr, max: max },
-                    body
+                    body,
                 );
                 ready(node, function () {
                     let err;
@@ -709,7 +713,7 @@ suite('DatePicker', function () {
                 const node = dom(
                     'date-picker',
                     { label: 'add a time to the picker', time: true, value: '12/12/2017 02:20 am' },
-                    body
+                    body,
                 );
                 ready(node, function () {
                     let emitted;
@@ -765,7 +769,7 @@ suite('DatePicker', function () {
                 const node = dom(
                     'date-picker',
                     { label: 'block selection', min: '07/05/2017', max: '07/19/2017', value: '07/01/2017' },
-                    body
+                    body,
                 );
                 expect(dom.isNode(node)).to.equal(true);
             });
@@ -779,7 +783,7 @@ suite('DatePicker', function () {
                 const node = dom(
                     'date-picker',
                     { label: 'time min max', time: true, value: value, min: min, max: max },
-                    body
+                    body,
                 );
                 ready(node, function () {
                     let error = node.timeInput.validationError;
@@ -801,24 +805,26 @@ suite('DatePicker', function () {
             });
         });
 
-        suite('date range inputs', function () {
-            test('should load a date range input', function (done) {
-                const node = dom(
-                    'date-range-input',
-                    { label: 'load date range input', value: '01/10/2017 - 02/14/2017' },
-                    body
-                );
-                expect(dom.isNode(node)).to.equal(true);
-                ready(node, function () {
-                    done();
-                });
+        suite.only('date range inputs', function () {
+            test.only('should load a date range input', function (done) {
+                setTimeout(() => {
+                    const node = dom(
+                        'date-range-input',
+                        { label: 'load date range input', value: '01/10/2017 - 02/14/2017' },
+                        body,
+                    );
+                    expect(dom.isNode(node)).to.equal(true);
+                    ready(node, function () {
+                        done();
+                    });
+                }, 100);
             });
 
             test('should load date range inputs', function (done) {
                 const node = dom(
                     'date-range-inputs',
                     { 'left-label': 'Start Date', 'right-label': 'End Date', value: '01/10/2017 - 02/14/2017' },
-                    body
+                    body,
                 );
                 expect(dom.isNode(node)).to.equal(true);
 
@@ -839,7 +845,7 @@ suite('DatePicker', function () {
                 const node = dom(
                     'date-range-inputs',
                     { 'left-label': 'Start Date', 'right-label': 'End Date', required: true, placeholder: 'Date here' },
-                    body
+                    body,
                 );
                 expect(dom.isNode(node)).to.equal(true);
 
@@ -873,7 +879,7 @@ suite('DatePicker', function () {
                 const node = dom(
                     'date-range-inputs',
                     { 'left-label': 'Start Date', 'right-label': 'End Date', value: '02/10/2017 - 02/14/2017' },
-                    body
+                    body,
                 );
                 const b1 = dom('button', { html: 'clear' }, body);
                 const b2 = dom('button', { html: 'value.set' }, body);

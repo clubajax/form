@@ -24,5 +24,9 @@ components.forEach((name) => {
     if (current === name) {
         require('../src/ui-' + name);
         require('./' + name);
+
+        if (current === 'date') {
+            require('../src/date-picker/date-range-input');
+        }
     }
 });

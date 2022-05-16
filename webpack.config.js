@@ -80,8 +80,11 @@ module.exports = {
     mode: DEV ? 'development' : 'production',
     entry: DEV ? './tests/index.js' : './build-profiles/webpack-index.js',
     output: {
-        path: DIST,
+        // NOTE! 
+        // In dev, files are dynamically loaded in tests/index.js
+        // date stuff is special
         filename: 'index.js',
+        path: DIST,
         libraryTarget: 'umd',
         library: 'form',
         umdNamedDefine: true,
