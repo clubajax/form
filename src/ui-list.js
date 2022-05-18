@@ -413,7 +413,6 @@ class UIList extends BaseComponent {
             this.on(
                 'key-select',
                 (e) => {
-                    console.log('key-select.event', e);
                     if (isNull(e.detail.value) || isNull(this.value) || this.blocked) {
                         return;
                     }
