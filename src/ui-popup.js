@@ -264,7 +264,9 @@ class UiPopup extends BaseComponent {
         if (!this.showing || window.keepPopupsOpen || this.isOpening) {
             return;
         }
-        this.children[0].disabled = true;
+        if (this.children && this.children[0]) {
+            this.children[0].disabled = true;
+        }
         this.showing = false;
         this.classList.remove('open');
         if (this.clickoff) {
