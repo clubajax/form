@@ -36,6 +36,9 @@ class UiDropdown extends BaseComponent {
     }
 
     onReadonly(value) {
+        if (!!value === !!dom.attr(this, 'readonly')) {
+            return;
+        }
         this.onDomReady(() => {
             dom.attr(this, 'readonly', value ? 'true' : null);
         });
@@ -150,8 +153,8 @@ class UiDropdown extends BaseComponent {
         });
 
         this.on(this.button, 'blur', (e) => {
-            this.emit('blur', {...e});
-         })
+            this.emit('blur', { ...e });
+        });
 
         this.list.on('list-change', (e) => {
             // if (isEqual(e.detail.value, this.__value) && !this.isAction) {
@@ -237,7 +240,7 @@ class UiDropdown extends BaseComponent {
                 () => {
                     this.setLazyData();
                 },
-                null
+                null,
             );
             this.once(
                 this.button,
@@ -247,7 +250,7 @@ class UiDropdown extends BaseComponent {
                         this.setLazyData();
                     }
                 },
-                null
+                null,
             );
         }
     }
@@ -279,13 +282,13 @@ class UiDropdown extends BaseComponent {
             'ui-popup',
             {
                 lazy: !this.noselfdestroy && typeof this.data !== 'function',
-                'max-height': this.maxheight || dom.style(this, 'max-height'), 
+                'max-height': this.maxheight || dom.style(this, 'max-height'),
                 buttonid: this.buttonid,
                 label: this.label,
                 html: this.list,
                 class: this.popupClass,
             },
-            document.body
+            document.body,
         );
 
         this.connectEvents();
@@ -364,7 +367,7 @@ module.exports = BaseComponent.define('ui-dropdown', UiDropdown, {
         'sortdesc',
         'sortasc',
         'beforerender',
-        'maxheight'
+        'maxheight',
     ],
     bools: [
         'disabled',
@@ -379,7 +382,7 @@ module.exports = BaseComponent.define('ui-dropdown', UiDropdown, {
         'multiple',
         'persist-multiple',
         'noselfdestroy',
-        'readonly'
+        'readonly',
     ],
     attrs: ['value'],
 });
