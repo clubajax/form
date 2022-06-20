@@ -40,6 +40,11 @@
             left: 25%;
         }
     }
+    &.I {
+        .tooltip-arrow {
+            display: none;
+        }
+    }
     &.T {
         .tooltip-arrow {
             top: auto;

@@ -383,6 +383,11 @@ function positionTooltip(popup, button, align, options) {
         style.top = btn.y - pop.h - GAP;
         addClass('T');
     }
+    function forceFit() {
+        style.left = midX();
+        style.top = win.h - pop.h;
+        addClass('I');
+    }
 
     const fitR = () => btn.x + btn.w + pop.w + GAP < win.w;
     const fitL = () => btn.x - pop.w - GAP > 0;
@@ -415,6 +420,7 @@ function positionTooltip(popup, button, align, options) {
                 bottom();
             } else {
                 console.warn('Button is too tall to fit a tooltip above or below it');
+                forceFit();
             }
             break;
         default:
@@ -424,6 +430,7 @@ function positionTooltip(popup, button, align, options) {
                 top();
             } else {
                 console.warn('Button is too tall to fit a tooltip above or below it');
+                forceFit();
             }
     }
 
