@@ -705,8 +705,9 @@ suite('DatePicker', function () {
         });
 
         suite('date picker', function () {
-            test('should render a picker (MANUAL)', function (done) {
-                const node = dom('date-picker', { label: 'manual picker', value: '12/12/2017 02:20 am' }, body);
+            test.only('should render a picker (MANUAL)', function (done) {
+                const wrap = dom('div', { class: 'picker-wrapper' }, body);
+                const node = dom('date-picker', { label: 'manual picker', value: '11/11/2020 02:20 am' }, wrap);
                 ready(node, function () {
                     done();
                 });
@@ -808,7 +809,7 @@ suite('DatePicker', function () {
             });
         });
 
-        suite.only('date range inputs', function () {
+        suite('date range inputs', function () {
             test('should load a date range input', function (done) {
                 const node = dom(
                     'date-range-input',
@@ -822,7 +823,7 @@ suite('DatePicker', function () {
                 });
             });
 
-            test.only('should load date range inputs', function (done) {
+            test('should load date range inputs', function (done) {
                 const node = dom(
                     'date-range-inputs',
                     { 'left-label': 'Start Date', 'right-label': 'End Date', value: '01/10/2017 - 02/14/2017' },

@@ -31,15 +31,49 @@ class DatePicker extends BaseComponent {
         this.rgtYrNode;
     }
 
+    getYearSelectorTemplate() {
+        if (!this._yearSelectorTemplate) {
+            const yr = this.current.getFullYear();
+            console.log('yr', yr);
+            let options = '';
+            const yearRange = 10;
+            for (let i = yr - yearRange; i < yr + yearRange + 1; i++) {
+                options += `<option value="${i}">${i}</option>`;
+            }
+            this._yearSelectorTemplate = `
+        <select ref="yearSelector" class="year-selector" tabindex="0" aria-label="Select Year">${options}</select>
+        `;
+        }
+        return this._yearSelectorTemplate;
+    }
     get templateString() {
+        const selector = `
+        <select ref="monthSelector" class="month-selector" tabindex="0" aria-label="Select Month">
+            <option value="1">January</option>
+            <option value="2">February</option>
+            <option value="3">March</option>
+            <option value="4">April</option>
+            <option value="5">May</option>
+            <option value="6">June</option>
+            <option value="7">July</option>
+            <option value="8">August</option>
+            <option value="9">September</option>
+            <option value="10">October</option>
+            <option value="11">Novemeber</option>
+            <option value="12">December</option>
+        </select>`;
+
         return `
 <div class="calendar" ref="calNode">
 <div class="cal-header" ref="headerNode">
-    <button class="cal-lft" ref="lftMoNode" tabindex="0" aria-label="Previous Month"><ui-icon type="angleLeft"/></button>
-	<button class="cal-yr-lft" ref="lftYrNode" tabindex="0" aria-label="Previous Year"><ui-icon type="anglesLeft"/></button>
-	<label class="cal-month" ref="monthNode"></label>	
-	<button class="cal-yr-rgt" ref="rgtYrNode" tabindex="0" aria-label="Next Year"><ui-icon type="anglesRight"/></button>
-	<button class="cal-rgt" ref="rgtMoNode" tabindex="0"  aria-label="Next Month"><ui-icon type="angleRight"/></button>
+    <button class="nav mo prev" ref="lftMoNode" tabindex="0" aria-label="Previous Month"><ui-icon type="angleLeft"/></button>
+	<button class="nav yr prev" ref="lftYrNode" tabindex="0" aria-label="Previous Year"><ui-icon type="anglesLeft"/></button>
+    <div class="selectors">
+        <div class="select-wrapper">${selector}<label class="cal-month" ref="monthNode"></label></div>
+        <div class="select-wrapper">${this.getYearSelectorTemplate()}<label class="cal-year" ref="yearNode"></label></div>	
+	</div>
+    <button class="nav yr next" ref="rgtYrNode" tabindex="0" aria-label="Next Year"><ui-icon type="anglesRight"/></button>
+	<button class="nav mo next" ref="rgtMoNode" tabindex="0"  aria-label="Next Month"><ui-icon type="angleRight"/></button>
 </div>
 <div class="cal-container" ref="container"></div>
 <div class="cal-footer" ref="calFooter">
@@ -141,8 +175,10 @@ class DatePicker extends BaseComponent {
     setAriaMonthYearAlert(enabled) {
         if (enabled) {
             this.monthNode.setAttribute('role', 'alert');
+            this.yearNode.setAttribute('role', 'alert');
         } else {
             this.monthNode.removeAttribute('role', 'alert');
+            this.yearNode.removeAttribute('role', 'alert');
         }
     }
 
@@ -303,8 +339,18 @@ class DatePicker extends BaseComponent {
         this.render();
     }
 
+    onSelectMonth(e) {
+        this.current.setMonth(parseInt(e.target.value, 10) - 1);
+        this.render();
+    }
+
     onClickYear(direction) {
         this.current.setFullYear(this.current.getFullYear() + direction);
+        this.render();
+    }
+
+    onSelectYear(e) {
+        this.current.setFullYear(parseInt(e.target.value, 10));
         this.render();
     }
 
@@ -468,7 +514,6 @@ class DatePicker extends BaseComponent {
             isSelected,
             isToday,
             hasSelected,
-            defaultDateSelector,
             minmax,
             isHighlighted,
             nextMonth = 0,
@@ -483,7 +528,11 @@ class DatePicker extends BaseComponent {
             highlighted = d.getDate(),
             dateObj = dates.add(new Date(d.getFullYear(), d.getMonth(), 1), dateNum);
 
-        this.monthNode.innerHTML = dates.getMonthName(d) + ' ' + d.getFullYear();
+        this.monthNode.innerHTML = dates.getMonthName(d);
+        this.yearNode.innerHTML = d.getFullYear();
+
+        this.monthSelector.value = d.getMonth() + 1;
+        this.yearSelector.value = d.getFullYear();
 
         for (i = 0; i < 7; i++) {
             dom('div', { html: dates.days.abbr[i], class: 'day-of-week' }, node);
@@ -516,10 +565,6 @@ class DatePicker extends BaseComponent {
                     css += ' highlighted';
                     isHighlighted = true;
                 }
-
-                // if (tx === defaultDate) {
-                // 	defaultDateSelector = util.toAriaLabel(dateObj);
-                // }
             } else if (dateNum < 0) {
                 // previous month
                 tx = daysInPrevMonth + dateNum + 1;
@@ -676,6 +721,13 @@ class DatePicker extends BaseComponent {
 
         this.on(this.rgtYrNode, 'click', () => {
             this.onClickYear(1);
+        });
+
+        this.on(this.monthSelector, 'change', (e) => {
+            this.onSelectMonth(e);
+        });
+        this.on(this.yearSelector, 'change', (e) => {
+            this.onSelectYear(e);
         });
 
         this.on(this.footerLink, 'click', () => {

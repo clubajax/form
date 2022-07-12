@@ -3,6 +3,10 @@ ui-dropdown {
     margin-bottom: 20px;
 }
 
+.picker-wrapper {
+    width: 300px;
+    height: 350px;
+}
 .abs-mid {
     position: absolute;
     top: 300px;
@@ -21,14 +25,14 @@ ui-dropdown {
     top: 150px;
     right: 100px;
 }
-.top-middle{
+.top-middle {
     position: absolute;
     top: 40%;
     /* bottom: 50px; */
     left: 50%;
     /* max-height: 300px; */
 }
-.max-test{
+.max-test {
     max-height: 300px;
 }
 
@@ -70,7 +74,6 @@ button:hover {
 
 .bigtext-box {
     width: 150px;
-    
 }
 
 .big-ui-popup {
@@ -99,31 +102,31 @@ button:hover {
 }
 
 /* tooltip styles */
-ui-icon[type="error"] {
+ui-icon[type='error'] {
     position: absolute;
     right: 50px;
     top: 100px;
 }
 
-ui-icon[type="books"] {
+ui-icon[type='books'] {
     position: absolute;
     left: 200px;
     top: 350px;
 }
 
-ui-icon[type="file-video"] {
+ui-icon[type='file-video'] {
     position: absolute;
     left: 500px;
     top: 300px;
 }
 
-ui-icon[type="file-powerpoint"] {
+ui-icon[type='file-powerpoint'] {
     position: absolute;
     left: 500px;
     top: 500px;
 }
 
-ui-icon[type="folder"] {
+ui-icon[type='folder'] {
     position: absolute;
     left: 200px;
     top: 700px;
@@ -137,51 +140,51 @@ ui-icon[type="folder"] {
 ui-radio {
     margin-bottom: 5px;
 }
-ui-radio.small .radio-button{
+ui-radio.small .radio-button {
     width: 20px;
     height: 20px;
 }
-ui-radio.small span{
+ui-radio.small span {
     font-size: 13px;
 }
 
-.a11y{
+.a11y {
     margin-bottom: 20px;
 }
-.dyn-icon{
+.dyn-icon {
     position: relative;
     left: 300px;
 }
 
-.ui-button.btn-top{
+.ui-button.btn-top {
     position: relative;
     left: 200px;
     top: 50px;
 }
-.ui-button.btn-right{
+.ui-button.btn-right {
     position: relative;
     left: 300px;
     top: 50px;
 }
-.ui-button.btn-left{
+.ui-button.btn-left {
     position: relative;
     left: 400px;
     top: 100px;
 }
-.ui-button.btn-bottom{
+.ui-button.btn-bottom {
     position: relative;
     left: 500px;
     top: 100px;
 }
 
-.ui-button.btn-bottom-shift{
+.ui-button.btn-bottom-shift {
     position: relative;
     top: 150px;
     left: 100%;
     transform: translateX(-100%);
 }
 
-.ui-button.btn-bottom-shift-left{
+.ui-button.btn-bottom-shift-left {
     position: relative;
     top: 150px;
     left: 25px;
