@@ -271,8 +271,12 @@ suite('DatePicker', function () {
         });
 
         suite('date input', function () {
-            test('should pop up', function () {
-                const node = dom('date-input', { label: 'Opens with ui-popup', min: null, max: null }, body);
+            test.only('should pop up', function () {
+                const node = dom(
+                    'date-input',
+                    { label: 'Opens with ui-popup', min: null, max: null, value: '11/20/1964' },
+                    body,
+                );
                 expect(dom.isNode(node)).to.equal(true);
                 // node.on('blur', () => {
                 //     console.log('test.blur');
@@ -282,10 +286,9 @@ suite('DatePicker', function () {
                 });
 
                 ready(node, () => {
-                    const btn = dom.query(node, 'button');
-                    console.log('btn', btn);
-                    // open(btn);
-                    on.emit(btn, 'click');
+                    // const btn = dom.query(node, 'button');
+                    // console.log('btn', btn);
+                    // on.emit(btn, 'click');
                 });
             });
 
@@ -705,7 +708,7 @@ suite('DatePicker', function () {
         });
 
         suite('date picker', function () {
-            test.only('should render a picker (MANUAL)', function (done) {
+            test('should render a picker (MANUAL)', function (done) {
                 const wrap = dom('div', { class: 'picker-wrapper' }, body);
                 const node = dom('date-picker', { label: 'manual picker', value: '11/11/2020 02:20 am' }, wrap);
                 ready(node, function () {

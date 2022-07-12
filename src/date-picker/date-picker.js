@@ -34,7 +34,6 @@ class DatePicker extends BaseComponent {
     getYearSelectorTemplate() {
         if (!this._yearSelectorTemplate) {
             const yr = this.current.getFullYear();
-            console.log('yr', yr);
             let options = '';
             const yearRange = 10;
             for (let i = yr - yearRange; i < yr + yearRange + 1; i++) {
