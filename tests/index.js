@@ -6,7 +6,22 @@ import dom from '@clubajax/dom';
 import '../src/styles/main.scss';
 import './test.scss';
 
-const components = ['checkbox', 'radio-buttons', 'actionbutton', 'checklist', 'drawer', 'dropdown', 'minitags', 'input', 'list', 'popup', 'search', 'tooltip', 'paginator', 'date'];
+const components = [
+    'checkbox',
+    'radio-buttons',
+    'actionbutton',
+    'checklist',
+    'drawer',
+    'dropdown',
+    'minitags',
+    'input',
+    'list',
+    'popup',
+    'search',
+    'tooltip',
+    'paginator',
+    'date',
+];
 
 const nav = document.querySelector('nav');
 components.forEach((name) => {
@@ -24,5 +39,11 @@ components.forEach((name) => {
     if (current === name) {
         require('../src/ui-' + name);
         require('./' + name);
+        if (name === 'date') {
+            require('../src/date-picker/date-range-input');
+            require('../src/date-picker/date-range-inputs');
+            require('../src/date-picker/icon-calendar');
+        }
+        console.log('COMP', name);
     }
 });

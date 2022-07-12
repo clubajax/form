@@ -19,7 +19,7 @@ const FLASH_TIME = 1000;
 // create a separate DIST for calendar
 //
 // TODO:
-//      disabled, read only
+//      mask: select middle two numbers, delete (should show 11/XX/1111)
 //      clean up unused properties
 //      now for value (not just min & max)
 // change 'static' property name
@@ -53,7 +53,7 @@ class DateInput extends BaseComponent {
             return;
         }
         if (value === 'today') {
-            value = dates.format(new Date(), 'MM/dd/yyyy')
+            value = dates.format(new Date(), 'MM/dd/yyyy');
         }
         const isInit = !this.strDate;
         value = dates.padded(value);
@@ -293,27 +293,36 @@ class DateInput extends BaseComponent {
         let isMeta;
         let isPaste;
         this.on(this.input, 'keypress', util.stopEvent, null);
-        this.on(this.input, 'keyup', (e) => {
-            if (e.key === 'Meta') {
-                isMeta = false;
-            }
-            if (isPaste) {
-                console.log('PASTE', this.input.value);
-                isPaste = false;
-                this.setValue(this.input.value);
-            } else {
-                onKey.call(this, e, this.dateType);
-            }
-        }, null);
-        this.on(this.input, 'keydown', (e) => {
-            if (e.key === 'Meta') {
-                isMeta = true;
-            }
-            if (!e.key || e.key.toLowerCase() === 'v' && isMeta) {
-                // no key means native autocomplete
-                isPaste = true;
-            }
-        }, null);
+        this.on(
+            this.input,
+            'keyup',
+            (e) => {
+                if (e.key === 'Meta') {
+                    isMeta = false;
+                }
+                if (isPaste) {
+                    isPaste = false;
+                    this.setValue(this.input.value);
+                } else {
+                    onKey.call(this, e, this.dateType);
+                }
+            },
+            null,
+        );
+        this.on(
+            this.input,
+            'keydown',
+            (e) => {
+                if (e.key === 'Meta') {
+                    isMeta = true;
+                }
+                if (!e.key || (e.key.toLowerCase() === 'v' && isMeta)) {
+                    // no key means native autocomplete
+                    isPaste = true;
+                }
+            },
+            null,
+        );
         this.on(this.input, 'blur', this.onBlur.bind(this), null);
         this.on(this, 'validation', this.onValidation.bind(this), null);
     }

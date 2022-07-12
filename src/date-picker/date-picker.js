@@ -35,11 +35,11 @@ class DatePicker extends BaseComponent {
         return `
 <div class="calendar" ref="calNode">
 <div class="cal-header" ref="headerNode">
-    <button class="cal-lft" ref="lftMoNode" tabindex="0" aria-label="Previous Month"></button>
-	<button class="cal-yr-lft" ref="lftYrNode" tabindex="0" aria-label="Previous Year"></button>
+    <button class="cal-lft" ref="lftMoNode" tabindex="0" aria-label="Previous Month"><ui-icon type="angleLeft"/></button>
+	<button class="cal-yr-lft" ref="lftYrNode" tabindex="0" aria-label="Previous Year"><ui-icon type="anglesLeft"/></button>
 	<label class="cal-month" ref="monthNode"></label>	
-	<button class="cal-yr-rgt" ref="rgtYrNode" tabindex="0" aria-label="Next Year"></button>
-	<button class="cal-rgt" ref="rgtMoNode" tabindex="0"  aria-label="Next Month"></button>
+	<button class="cal-yr-rgt" ref="rgtYrNode" tabindex="0" aria-label="Next Year"><ui-icon type="anglesRight"/></button>
+	<button class="cal-rgt" ref="rgtMoNode" tabindex="0"  aria-label="Next Month"><ui-icon type="angleRight"/></button>
 </div>
 <div class="cal-container" ref="container"></div>
 <div class="cal-footer" ref="calFooter">
@@ -75,7 +75,6 @@ class DatePicker extends BaseComponent {
             }
             this.render();
         });
-        
     }
 
     onMax(value) {
@@ -89,6 +88,19 @@ class DatePicker extends BaseComponent {
             }
             this.render();
         });
+    }
+
+    setValue(valueObject) {
+        this.hasTime = !!this.timeInput;
+        const strDate = dates.format(valueObject, this.timeInput ? 'MM/dd/yyyy h:m a' : 'MM/dd/yyyy');
+        if (isValid.call(this, strDate, this.dateType)) {
+            this.valueDate = valueObject;
+            this.current = dates.copy(this.valueDate);
+            this.onDomReady(() => {
+                this.render();
+                this.setAriaLabel();
+            });
+        }
     }
 
     setDisplay(...args) {
@@ -118,11 +130,11 @@ class DatePicker extends BaseComponent {
     }
 
     setAriaLabel() {
-        const ariaLabel = this.valueDate ?
-            this.timeInput ?
-                util.toDateTimeAriaLabel(this.valueDate) :
-                util.toDateAriaLabel(this.valueDate) :
-            'not set';
+        const ariaLabel = this.valueDate
+            ? this.timeInput
+                ? util.toDateTimeAriaLabel(this.valueDate)
+                : util.toDateAriaLabel(this.valueDate)
+            : 'not set';
         this.setAttribute('aria-label', `Date Picker, current date: ${ariaLabel}`);
     }
 
@@ -146,7 +158,7 @@ class DatePicker extends BaseComponent {
         const event = {
             value: this.getFormattedValue(),
             silent,
-            date
+            date,
         };
         if (this['range-picker']) {
             event.first = this.firstRange;
@@ -162,13 +174,13 @@ class DatePicker extends BaseComponent {
             year = this.current.getFullYear();
 
         if (!this.noEvents && (month !== this.previous.month || year !== this.previous.year)) {
-            this.fire('display-change', {month: month, year: year});
+            this.fire('display-change', { month: month, year: year });
         }
 
         this.noEvents = false;
         this.previous = {
             month: month,
-            year: year
+            year: year,
         };
     }
 
@@ -182,22 +194,8 @@ class DatePicker extends BaseComponent {
         setTimeout(this.focus.bind(this), 100);
     }
 
-    setValue(valueObject) {
-        this.hasTime = !!this.timeInput;
-        const strDate = dates.format(valueObject, this.timeInput ? 'MM/dd/yyyy h:m a' : 'MM/dd/yyyy');
-        if (isValid.call(this, strDate, this.dateType)) {
-            this.valueDate = valueObject;
-            this.current = dates.copy(this.valueDate);
-            this.onDomReady(() => {
-                this.render();
-                this.setAriaLabel();
-            });
-        }
-    }
-
     onClickDay(node, silent) {
-        const
-            day = +node.textContent,
+        const day = +node.textContent,
             isFuture = node.classList.contains('future'),
             isPast = node.classList.contains('past'),
             isDisabled = node.classList.contains('disabled');
@@ -253,7 +251,8 @@ class DatePicker extends BaseComponent {
     }
 
     focusDay() {
-        const node = this.container.querySelector('div.highlighted[tabindex="0"]') ||
+        const node =
+            this.container.querySelector('div.highlighted[tabindex="0"]') ||
             this.container.querySelector('div.selected[tabindex="0"]');
         if (node) {
             node.focus();
@@ -268,7 +267,8 @@ class DatePicker extends BaseComponent {
                 node.setAttribute('tabindex', '-1');
             }
 
-            const shouldRerender = date.getMonth() !== this.current || date.getFullYear() !== this.current.getFullYear();
+            const shouldRerender =
+                date.getMonth() !== this.current || date.getFullYear() !== this.current.getFullYear();
 
             this.current = date;
             if (shouldRerender) {
@@ -321,8 +321,7 @@ class DatePicker extends BaseComponent {
     }
 
     clickSelectRange() {
-        const
-            prevFirst = !!this.firstRange,
+        const prevFirst = !!this.firstRange,
             prevSecond = !!this.secondRange,
             rangeDate = dates.copy(this.current);
 
@@ -330,7 +329,7 @@ class DatePicker extends BaseComponent {
             this.fire('select-range', {
                 first: this.firstRange,
                 second: this.secondRange,
-                current: rangeDate
+                current: rangeDate,
             });
             return;
         }
@@ -354,7 +353,7 @@ class DatePicker extends BaseComponent {
             first: this.firstRange,
             second: this.secondRange,
             prevFirst: prevFirst,
-            prevSecond: prevSecond
+            prevSecond: prevSecond,
         });
     }
 
@@ -452,7 +451,6 @@ class DatePicker extends BaseComponent {
     }
 
     render() {
-
         const focused = getFocusedDay();
         // dateNum increments, starting with the first Sunday
         // showing on the monthly calendar. This is usually the
@@ -461,9 +459,18 @@ class DatePicker extends BaseComponent {
 
         this.dayMap = {};
 
-        let
-            node = dom('div', {class: 'cal-body'}),
-            i, tx, isThisMonth, day, css, isSelected, isToday, hasSelected, defaultDateSelector, minmax, isHighlighted,
+        let node = dom('div', { class: 'cal-body' }),
+            i,
+            tx,
+            isThisMonth,
+            day,
+            css,
+            isSelected,
+            isToday,
+            hasSelected,
+            defaultDateSelector,
+            minmax,
+            isHighlighted,
             nextMonth = 0,
             isRange = this['range-picker'],
             d = this.current,
@@ -479,14 +486,13 @@ class DatePicker extends BaseComponent {
         this.monthNode.innerHTML = dates.getMonthName(d) + ' ' + d.getFullYear();
 
         for (i = 0; i < 7; i++) {
-            dom("div", {html: dates.days.abbr[i], class: 'day-of-week'}, node);
+            dom('div', { html: dates.days.abbr[i], class: 'day-of-week' }, node);
         }
 
         for (i = 0; i < 42; i++) {
-
             minmax = dates.isLess(dateObj, this.minDate) || dates.isGreater(dateObj, this.maxDate);
 
-            tx = dateNum + 1 > 0 && dateNum + 1 <= daysInMonth ? dateNum + 1 : "&nbsp;";
+            tx = dateNum + 1 > 0 && dateNum + 1 <= daysInMonth ? dateNum + 1 : '&nbsp;';
 
             isThisMonth = false;
             isSelected = false;
@@ -535,12 +541,16 @@ class DatePicker extends BaseComponent {
             }
 
             const ariaLabel = util.toDateAriaLabel(dateObj);
-            day = dom("div", {
-                html: dom('span', {html: tx, 'data-no-clickoff': true}),
-                class: css,
-                'aria-label': ariaLabel,
-                tabindex: isSelected || isHighlighted ? 0 : -1
-            }, node);
+            day = dom(
+                'div',
+                {
+                    html: dom('span', { html: tx, 'data-no-clickoff': true }),
+                    class: css,
+                    'aria-label': ariaLabel,
+                    tabindex: isSelected || isHighlighted ? 0 : -1,
+                },
+                node,
+            );
 
             dateNum++;
             dateObj.setDate(dateObj.getDate() + 1);
@@ -581,14 +591,18 @@ class DatePicker extends BaseComponent {
             return;
         }
         if (this.time) {
-            this.timeInput = dom('time-input', {
-                label: 'Time:',
-                required: true,
-                value: this.value,
-                min: this.minDate,
-                max: this.maxDate,
-                'event-name': 'time-change'
-            }, this.calFooter);
+            this.timeInput = dom(
+                'time-input',
+                {
+                    label: 'Time:',
+                    required: true,
+                    value: this.value,
+                    min: this.minDate,
+                    max: this.maxDate,
+                    'event-name': 'time-change',
+                },
+                this.calFooter,
+            );
             this.timeInput.setDate(this.current);
             this.timeInput.on('time-change', (e) => {
                 this.emitEvent(e.detail.silent);
@@ -689,7 +703,13 @@ class DatePicker extends BaseComponent {
 const today = new Date();
 
 function isControl(node, picker) {
-    return node === picker.lftMoNode || node === picker.rgtMoNode || node === picker.lftYrNode || node === picker.rgtYrNode || node === picker.footerLink;
+    return (
+        node === picker.lftMoNode ||
+        node === picker.rgtMoNode ||
+        node === picker.lftYrNode ||
+        node === picker.rgtYrNode ||
+        node === picker.footerLink
+    );
 }
 
 function getSelectedDate(date, current) {
@@ -720,5 +740,5 @@ function getFocusedDay() {
 // range-left/range-right mean that this is one side of a date-range-picker
 module.exports = BaseComponent.define('date-picker', DatePicker, {
     bools: ['range-picker', 'range-left', 'range-right', 'time'],
-    props: ['min', 'max', 'event-name']
+    props: ['min', 'max', 'event-name'],
 });

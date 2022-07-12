@@ -15,7 +15,7 @@ const map = {
     search: 'fas fa-search',
     spinner: 'fas fa-sync-alt',
     close: 'far fa-times-circle',
-    
+
     calendar: 'far fa-calendar-alt',
     calPlus: 'fas fa-calendar-plus',
     calMinus: 'fas fa-calendar-minus',
@@ -26,7 +26,9 @@ const map = {
     caretLeft: 'fas fa-caret-left',
 
     angleLeft: 'fas fa-angle-left',
+    anglesLeft: 'fas fa-angle-double-left',
     angleRight: 'fas fa-angle-right',
+    anglesRight: 'fas fa-angle-double-right',
     angleUp: 'fas fa-angle-up',
     angleDown: 'fas fa-angle-down',
 
@@ -34,8 +36,8 @@ const map = {
     sortDown: 'fas fa-sort-down',
 
     copy: 'far fa-copy',
-    'folder': 'far fa-folder',
-    'file': 'far fa-file',
+    folder: 'far fa-folder',
+    file: 'far fa-file',
     'file-alt': 'far fa-file-alt',
     'file-archive': 'far fa-file-archive',
     'file-audio': 'far far fa-file-audio',
@@ -45,8 +47,7 @@ const map = {
     'file-video': 'far far fa-file-video',
     'file-excel': 'far far fa-file-excel',
     'file-powerpoint': 'far far fa-file-powerpoint',
-    'file-word': 'far far fa-file-word'
+    'file-word': 'far far fa-file-word',
 };
-
 
 module.exports = map;
