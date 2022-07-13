@@ -271,7 +271,7 @@ suite('DatePicker', function () {
         });
 
         suite('date input', function () {
-            test.only('should pop up', function () {
+            test('should pop up', function () {
                 const node = dom(
                     'date-input',
                     { label: 'Opens with ui-popup', min: null, max: null, value: '11/20/1964' },
@@ -826,7 +826,7 @@ suite('DatePicker', function () {
                 });
             });
 
-            test('should load date range inputs', function (done) {
+            test.only('should load date range inputs', function (done) {
                 const node = dom(
                     'date-range-inputs',
                     { 'left-label': 'Start Date', 'right-label': 'End Date', value: '01/10/2017 - 02/14/2017' },
