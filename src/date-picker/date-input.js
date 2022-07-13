@@ -4,6 +4,7 @@ const dom = require('@clubajax/dom');
 const dates = require('@clubajax/dates');
 const util = require('./util');
 const onKey = require('./onKey');
+const onBackspace = require('./onBackspace');
 const isValid = require('./isValid');
 const uid = require('../lib/uid');
 require('./date-picker');
@@ -292,17 +293,23 @@ class DateInput extends BaseComponent {
     connectKeys() {
         let isMeta;
         let isPaste;
+        let beg;
+        let end;
         this.on(this.input, 'keypress', util.stopEvent, null);
         this.on(
             this.input,
             'keyup',
             (e) => {
+                e.beg = beg;
+                e.end = end;
                 if (e.key === 'Meta') {
                     isMeta = false;
                 }
                 if (isPaste) {
                     isPaste = false;
                     this.setValue(this.input.value);
+                } else if (e.key === 'Backspace') {
+                    onBackspace.call(this, e, this.dateType);
                 } else {
                     onKey.call(this, e, this.dateType);
                 }
@@ -313,6 +320,10 @@ class DateInput extends BaseComponent {
             this.input,
             'keydown',
             (e) => {
+                beg = e.target.selectionStart;
+                end = e.target.selectionEnd;
+                const k = e.key;
+
                 if (e.key === 'Meta') {
                     isMeta = true;
                 }
