@@ -31,8 +31,9 @@ class DateRangePicker extends BaseComponent {
     }
 
     domReady() {
-        this.leftCal = dom('date-picker', { 'range-left': true }, this);
-        this.rightCal = dom('date-picker', { 'range-right': true }, this);
+        const sync = !this['independent-pickers'];
+        this.leftCal = dom('date-picker', { 'range-left': true, 'no-right-nav': sync }, this);
+        this.rightCal = dom('date-picker', { 'range-right': true, 'no-left-nav': sync }, this);
         this.rangeExpands = this['range-expands'];
 
         this.connectEvents();
@@ -220,14 +221,6 @@ class DateRangePicker extends BaseComponent {
 }
 
 const DELIMITER = ' - ';
-const today = new Date();
-
-function str(d) {
-    if (!d) {
-        return null;
-    }
-    return dates.dateToStr(d);
-}
 
 function split(value) {
     if (value.indexOf(',') > -1) {
@@ -243,6 +236,6 @@ function isDateCloserToLeft(date, left, right) {
 }
 
 module.exports = BaseComponent.define('date-range-picker', DateRangePicker, {
-    bools: ['range-expands'],
+    bools: ['range-expands', 'independent-pickers'],
     props: ['value'],
 });

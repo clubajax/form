@@ -118,6 +118,27 @@ date-picker {
             background: var(--cal-hdr-hvr);
         }
     }
+    &.no-year-nav {
+        .nav.yr.prev,
+        .nav.yr.next {
+            opacity: 0;
+            pointer-events: none;
+        }
+    }
+    &.no-right-nav {
+        .nav.yr.next,
+        .nav.mo.next {
+            opacity: 0;
+            pointer-events: none;
+        }
+    }
+    &.no-left-nav {
+        .nav.yr.prev,
+        .nav.mo.prev {
+            opacity: 0;
+            pointer-events: none;
+        }
+    }
     .cal-body {
         margin-top: 3px;
         height: 100%;

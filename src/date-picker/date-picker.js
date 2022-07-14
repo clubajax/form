@@ -483,6 +483,16 @@ class DatePicker extends BaseComponent {
         this.eventName = this['event-name'] || EVENT_NAME;
         this.emitType = this.eventName === EVENT_NAME ? 'emit' : 'fire';
         this.setAttribute('tabindex', '0');
+
+        if (this['no-left-nav']) {
+            this.classList.add('no-left-nav');
+        }
+        if (this['no-right-nav']) {
+            this.classList.add('no-right-nav');
+        }
+        if (this['no-year-nav']) {
+            this.classList.add('no-year-nav');
+        }
         if (this['is-calendar']) {
             this.classList.add('calendar');
         }
@@ -795,6 +805,15 @@ function getFocusedDay() {
 
 // range-left/range-right mean that this is one side of a date-range-picker
 module.exports = BaseComponent.define('date-picker', DatePicker, {
-    bools: ['range-picker', 'range-left', 'range-right', 'time', 'is-calendar'],
+    bools: [
+        'range-picker',
+        'range-left',
+        'range-right',
+        'time',
+        'is-calendar',
+        'no-left-nav',
+        'no-right-nav',
+        'no-year-nav',
+    ],
     props: ['min', 'max', 'event-name'],
 });
