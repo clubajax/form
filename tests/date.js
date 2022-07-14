@@ -826,7 +826,7 @@ suite('DatePicker', function () {
                 });
             });
 
-            test.only('should load date range inputs', function (done) {
+            test('should load date range inputs', function (done) {
                 const node = dom(
                     'date-range-inputs',
                     { 'left-label': 'Start Date', 'right-label': 'End Date', value: '01/10/2017 - 02/14/2017' },
@@ -931,6 +931,20 @@ suite('DatePicker', function () {
                     //expect(node.value).to.equal('02/10/2017 - 03/17/2017');
                     done();
                 });
+            });
+        });
+
+        suite('calendar and events', () => {
+            test.only('should render a calendar', () => {
+                const wrap = dom('div', { class: 'picker-wrapper-abs' }, body);
+                const node = dom(
+                    'date-picker',
+                    { label: 'Calendar', 'is-calendar': true, value: '11/11/2020 02:20 am' },
+                    wrap,
+                );
+                // ready(node, function () {
+                //     done();
+                // });
             });
         });
     });

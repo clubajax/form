@@ -1,4 +1,3 @@
-/* dropdown styles */
 ui-dropdown {
     margin-bottom: 20px;
 }
@@ -6,6 +5,18 @@ ui-dropdown {
 .picker-wrapper {
     width: 300px;
     height: 350px;
+}
+.picker-wrapper-abs {
+    position: absolute;
+    top: 200px;
+    left: 300px;
+    width: 70%;
+    height: 80%;
+}
+
+.calendar-wrapper {
+    width: 500px;
+    height: 500px;
 }
 .abs-mid {
     position: absolute;

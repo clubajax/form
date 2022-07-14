@@ -62,6 +62,11 @@ class DatePicker extends BaseComponent {
             <option value="12">December</option>
         </select>`;
 
+        // do not put linebreaks or spaces between day labels
+        const dayLabels = `
+        <div>Su</div><div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div>
+        `;
+
         return `
 <div class="calendar" ref="calNode">
 <div class="cal-header" ref="headerNode">
@@ -74,6 +79,7 @@ class DatePicker extends BaseComponent {
     <button class="nav yr next" ref="rgtYrNode" tabindex="0" aria-label="Next Year"><ui-icon type="anglesRight"/></button>
 	<button class="nav mo next" ref="rgtMoNode" tabindex="0"  aria-label="Next Month"><ui-icon type="angleRight"/></button>
 </div>
+<div class="cal-day-labels">${dayLabels}</div>
 <div class="cal-container" ref="container"></div>
 <div class="cal-footer" ref="calFooter">
 	<button ref="footerLink" class="today-button" aria-label="Set Date to Today"></button>
@@ -475,6 +481,9 @@ class DatePicker extends BaseComponent {
         this.eventName = this['event-name'] || EVENT_NAME;
         this.emitType = this.eventName === EVENT_NAME ? 'emit' : 'fire';
         this.setAttribute('tabindex', '0');
+        if (this['is-calendar']) {
+            this.classList.add('calendar');
+        }
 
         if (this['range-left']) {
             this.classList.add('left-range');
@@ -532,10 +541,6 @@ class DatePicker extends BaseComponent {
 
         this.monthSelector.value = d.getMonth() + 1;
         this.yearSelector.value = d.getFullYear();
-
-        for (i = 0; i < 7; i++) {
-            dom('div', { html: dates.days.abbr[i], class: 'day-of-week' }, node);
-        }
 
         for (i = 0; i < 42; i++) {
             minmax = dates.isLess(dateObj, this.minDate) || dates.isGreater(dateObj, this.maxDate);
@@ -790,6 +795,6 @@ function getFocusedDay() {
 
 // range-left/range-right mean that this is one side of a date-range-picker
 module.exports = BaseComponent.define('date-picker', DatePicker, {
-    bools: ['range-picker', 'range-left', 'range-right', 'time'],
+    bools: ['range-picker', 'range-left', 'range-right', 'time', 'is-calendar'],
     props: ['min', 'max', 'event-name'],
 });

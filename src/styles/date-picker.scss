@@ -2,6 +2,8 @@ $width: 350px;
 $height: 350px;
 $vpad: 20px;
 $hpad: 30px;
+$header-height: 30px;
+$footer-height: 30px;
 
 date-picker {
     * {
@@ -12,16 +14,37 @@ date-picker {
     width: 100%;
     .calendar {
         border-radius: 10px;
-        display: inline-block;
+        display: inline-flex;
+        flex-direction: column;
         border: 1px solid var(--cal-brd);
         padding: $vpad $hpad;
         background: var(--cal-bg);
+        .cal-header {
+            flex: $header-height, 0, 0;
+        }
+        .cal-container {
+            flex: 1;
+            .cal-body {
+                div {
+                    // height: ;
+                    // text-align: right;
+                    // span {
+                    //     padding-right: 5px;
+                    // }
+                }
+            }
+        }
+        .cal-footer {
+            flex: $footer-height, 0, 0;
+        }
     }
-    .cal-container {
-        width: 100%;
-    }
-    .day-of-week {
-        border-bottom: 1px solid var(--inp-brd);
+    &.calendar {
+        // picker is in calendar mode
+        height: 100%;
+        .calendar {
+            display: flex;
+            height: 100%;
+        }
     }
     .cal-header {
         position: relative;
@@ -30,6 +53,20 @@ date-picker {
         flex-direction: row;
         align-items: center;
     }
+    .cal-day-labels {
+        div {
+            padding: 5px 0 10px 0;
+            text-align: center;
+            border-bottom: 1px solid var(--inp-brd);
+            display: inline-block;
+            box-sizing: border-box;
+            width: 14.285%;
+        }
+    }
+    .cal-container {
+        width: 100%;
+    }
+
     .selectors {
         flex: 1;
         display: flex;
@@ -75,7 +112,7 @@ date-picker {
         cursor: pointer;
         position: relative;
         flex: 0 0 20px;
-        height: 30px;
+        height: $header-height;
         vertical-align: top;
         &:hover {
             background: var(--cal-hdr-hvr);
@@ -93,7 +130,7 @@ date-picker {
             text-align: center;
             line-height: 2;
             background: transparent;
-            transition: background 300ms;
+            transition: background-color 300ms;
             span {
                 width: 100%;
                 height: 100%;
@@ -172,6 +209,7 @@ date-picker {
     .cal-footer {
         text-align: center;
         padding: 5px;
+        height: $footer-height;
         .today-button {
             background: none;
             border: 0;
@@ -313,12 +351,6 @@ time-input {
         padding: 6px;
         border-radius: 2px;
         font-size: 13px;
-    }
-}
-
-date-range-input {
-    input {
-        width: 50px;
     }
 }
 

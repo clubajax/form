@@ -1,7 +1,7 @@
 const BaseComponent = require('@clubajax/base-component');
-require('./date-input');
 const dates = require('@clubajax/dates');
 const dom = require('@clubajax/dom');
+require('./date-input');
 
 const DELIMITER = ' - ';
 
@@ -10,7 +10,6 @@ class DateRangeInputs extends BaseComponent {
         super();
         this.fireOwnDomready = true;
         this.mask = 'XX/XX/XXXX';
-        console.log('DateRangeInputs');
     }
     set value(value) {
         this.setValue(value);
