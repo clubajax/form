@@ -356,10 +356,13 @@ time-input {
 
 date-range-picker {
     border-radius: 4px;
-    display: inline-block;
+    display: flex;
     border: 1px solid var(inp-brd);
     padding: 3px;
     background: var(--cal-bg);
+    date-picker {
+        flex: 50%;
+    }
     &.show {
         display: inline-block;
         date-picker {

@@ -409,8 +409,10 @@ class DatePicker extends BaseComponent {
     }
 
     hoverSelectRange(e) {
-        if (this.firstRange && !this.secondRange && e.target.classList.contains('on')) {
-            this.hoverDate = e.target._date;
+        const target = e.target.closest('div');
+        const isOn = target.classList.contains('on');
+        if (this.firstRange && !this.secondRange && isOn) {
+            this.hoverDate = target._date;
             this.displayRange();
         }
     }
@@ -521,7 +523,6 @@ class DatePicker extends BaseComponent {
             css,
             isSelected,
             isToday,
-            hasSelected,
             minmax,
             isHighlighted,
             nextMonth = 0,
@@ -563,7 +564,6 @@ class DatePicker extends BaseComponent {
                 }
                 if (dateSelected === tx && !isRange) {
                     isSelected = true;
-                    hasSelected = true;
                     css += ' selected';
                 } else if (tx === highlighted) {
                     css += ' highlighted';

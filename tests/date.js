@@ -876,8 +876,8 @@ suite('DatePicker', function () {
                 expect(dom.isNode(node)).to.equal(true);
             });
 
-            test('should load a date range picker', function () {
-                const node = dom('date-range-picker', {}, body);
+            test.only('should load a date range picker', function () {
+                const node = dom('date-range-picker', { value: '02/20/2017 - 03/05/2017' }, body);
                 expect(dom.isNode(node)).to.equal(true);
             });
 
@@ -935,7 +935,7 @@ suite('DatePicker', function () {
         });
 
         suite('calendar and events', () => {
-            test.only('should render a calendar', () => {
+            test('should render a calendar', () => {
                 const wrap = dom('div', { class: 'picker-wrapper-abs' }, body);
                 const node = dom(
                     'date-picker',

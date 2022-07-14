@@ -36,11 +36,6 @@ class DateRangePicker extends BaseComponent {
         this.rangeExpands = this['range-expands'];
 
         this.connectEvents();
-        // if (this.initalValue) {
-        // 	this.setValue(this.initalValue);
-        // } else {
-        // 	this.setDisplay();
-        // }
     }
 
     setDisplay() {
@@ -56,8 +51,8 @@ class DateRangePicker extends BaseComponent {
         this.leftCal.setRange(this.firstRange, this.secondRange);
         this.rightCal.setRange(this.firstRange, this.secondRange);
         if (!noEmit && this.firstRange && this.secondRange) {
-            const beg = dates.dateToStr(this.firstRange),
-                end = dates.dateToStr(this.secondRange);
+            const beg = dates.format(this.firstRange, 'MM/dd/yyyy'),
+                end = dates.format(this.secondRange, 'MM/dd/yyyy');
 
             this.emit('change', {
                 firstRange: this.firstRange,

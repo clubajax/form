@@ -41,6 +41,7 @@ components.forEach((name) => {
         require('./' + name);
         if (name === 'date') {
             require('../src/date-picker/date-range-inputs');
+            require('../src/date-picker/date-range-picker');
         }
         console.log('COMP', name);
     }
