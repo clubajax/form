@@ -43,7 +43,11 @@ class DateRangePicker extends BaseComponent {
         const first = this.firstRange ? new Date(this.firstRange.getTime()) : new Date(),
             second = new Date(first.getTime());
 
-        second.setMonth(second.getMonth() + 1);
+        if (this['independent-pickers'] && this.secondRange) {
+            second.setMonth(this.secondRange.getMonth());
+        } else {
+            second.setMonth(second.getMonth() + 1);
+        }
         this.leftCal.setDisplay(first);
         this.rightCal.setDisplay(second);
     }
@@ -84,35 +88,38 @@ class DateRangePicker extends BaseComponent {
     }
 
     connectEvents() {
-        this.leftCal.on(
-            'display-change',
-            function (e) {
-                let m = e.detail.month,
-                    y = e.detail.year;
-                if (m + 1 > 11) {
-                    m = 0;
-                    y++;
-                } else {
-                    m++;
-                }
-                this.rightCal.setDisplay(y, m);
-            }.bind(this),
-        );
+        if (!this['independent-pickers']) {
+            this.leftCal.on(
+                'display-change',
+                function (e) {
+                    let m = e.detail.month,
+                        y = e.detail.year;
+                    if (m + 1 > 11) {
+                        m = 0;
+                        y++;
+                    } else {
+                        m++;
+                    }
+                    console.log('left', y, m);
+                    this.rightCal.setDisplay(y, m);
+                }.bind(this),
+            );
 
-        this.rightCal.on(
-            'display-change',
-            function (e) {
-                let m = e.detail.month,
-                    y = e.detail.year;
-                if (m - 1 < 0) {
-                    m = 11;
-                    y--;
-                } else {
-                    m--;
-                }
-                this.leftCal.setDisplay(y, m);
-            }.bind(this),
-        );
+            this.rightCal.on(
+                'display-change',
+                function (e) {
+                    let m = e.detail.month,
+                        y = e.detail.year;
+                    if (m - 1 < 0) {
+                        m = 11;
+                        y--;
+                    } else {
+                        m--;
+                    }
+                    this.leftCal.setDisplay(y, m);
+                }.bind(this),
+            );
+        }
 
         this.leftCal.on(
             'change',

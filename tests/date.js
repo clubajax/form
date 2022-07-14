@@ -876,8 +876,17 @@ suite('DatePicker', function () {
                 expect(dom.isNode(node)).to.equal(true);
             });
 
-            test.only('should load a date range picker', function () {
+            test('should load a date range picker - MANUAL', function () {
                 const node = dom('date-range-picker', { value: '02/20/2017 - 03/05/2017' }, body);
+                expect(dom.isNode(node)).to.equal(true);
+            });
+
+            test.only('should load a date range picker with independent pickers - MANUAL', function () {
+                const node = dom(
+                    'date-range-picker',
+                    { value: '02/20/2017 - 04/05/2017', 'independent-pickers': true },
+                    body,
+                );
                 expect(dom.isNode(node)).to.equal(true);
             });
 
