@@ -816,7 +816,7 @@ suite('DatePicker', function () {
             test.only('should load a date range input', function (done) {
                 const node = dom(
                     'date-range-input',
-                    { label: 'load date range input', value: '01/10/2017 - 02/14/2017' },
+                    { label: 'load date range input', 'independent-pickers': true, value: '01/10/2017 - 02/14/2017' },
                     body,
                 );
                 // expect(dom.isNode(node)).to.equal(true);

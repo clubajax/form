@@ -3,10 +3,6 @@ const dates = require('@clubajax/dates');
 const uid = require('../lib/uid');
 require('./date-range-picker');
 
-// DEPRECATED
-// This component allows two dates in one input field
-// very difficult to manage
-
 class DateRangeInput extends DateInput {
     constructor() {
         super();
@@ -34,12 +30,15 @@ class DateRangeInput extends DateInput {
         this.align = 'left';
     }
 
-    isValid(value) {
+    isValid(value = this.input.value) {
         const ds = (value || '').split(/\s*-\s*/);
+        console.log('isValid', value);
         return dates.isDate(ds[0]) && dates.isDate(ds[1]);
     }
 }
 
-customElements.define('date-range-input', DateRangeInput);
+customElements.define('date-range-input', DateRangeInput, {
+    bools: ['independent-pickers'],
+});
 
 module.exports = DateRangeInput;

@@ -45,7 +45,7 @@ date-picker {
         padding: $vpad $hpad;
         background: var(--cal-bg);
         .cal-header {
-            flex: $header-height, 0, 0;
+            flex: 0 0 $header-height;
         }
         .cal-container {
             flex: 1;
@@ -60,7 +60,7 @@ date-picker {
             }
         }
         .cal-footer {
-            flex: $footer-height, 0, 0;
+            flex: 0 0 $footer-height;
         }
     }
     &.calendar {
@@ -138,7 +138,8 @@ date-picker {
         position: relative;
         flex: 0 0 20px;
         height: $header-height;
-        vertical-align: top;
+        padding: 0;
+        // vertical-align: top;
         &:hover {
             background: var(--cal-hdr-hvr);
         }
