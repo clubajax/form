@@ -38,6 +38,7 @@ class DateRangeInput extends DateInput {
 }
 
 customElements.define('date-range-input', DateRangeInput, {
+    // this is not working, using attr from date-input - why?
     bools: ['independent-pickers'],
 });
 

@@ -280,7 +280,16 @@ class DateInput extends BaseComponent {
             document.body,
         );
         this.popup.noHideOnBlur = true;
-        this.picker = dom(this.pickerType, { time: this.time, tabindex: '0', 'event-name': 'date-change' }, this.popup);
+        this.picker = dom(
+            this.pickerType,
+            {
+                time: this.time,
+                tabindex: '0',
+                'event-name': 'date-change',
+                'independent-pickers': this['independent-pickers'],
+            },
+            this.popup,
+        );
 
         this.picker.onDomReady(() => {
             this.picker.on('date-change', (e) => {
@@ -366,7 +375,7 @@ class DateInput extends BaseComponent {
 }
 
 module.exports = BaseComponent.define('date-input', DateInput, {
-    bools: ['required', 'disabled', 'readonly', 'time', 'static'],
+    bools: ['required', 'disabled', 'readonly', 'time', 'static', 'independent-pickers'],
     props: ['label', 'name', 'placeholder', 'mask', 'min', 'max', 'time', 'validation', 'labelId'],
     attrs: ['value'],
 });
