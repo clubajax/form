@@ -3,6 +3,8 @@ const dates = require('@clubajax/dates');
 const dom = require('@clubajax/dom');
 require('./date-picker');
 
+const EVENT_NAME = 'change';
+
 class DateRangePicker extends BaseComponent {
     onValue(value) {
         // might need attributeChanged
@@ -31,6 +33,8 @@ class DateRangePicker extends BaseComponent {
     }
 
     domReady() {
+        this.eventName = this['event-name'] || EVENT_NAME;
+        this.emitType = this.eventName === EVENT_NAME ? 'emit' : 'fire';
         const sync = !this['independent-pickers'];
         this.leftCal = dom('date-picker', { 'range-left': true, 'no-right-nav': sync }, this);
         this.rightCal = dom('date-picker', { 'range-right': true, 'no-left-nav': sync }, this);
@@ -59,13 +63,15 @@ class DateRangePicker extends BaseComponent {
             const beg = dates.format(this.firstRange, 'MM/dd/yyyy'),
                 end = dates.format(this.secondRange, 'MM/dd/yyyy');
 
-            this.emit('change', {
+            const event = {
                 firstRange: this.firstRange,
                 secondRange: this.secondRange,
                 begin: beg,
                 end: end,
                 value: beg + DELIMITER + end,
-            });
+            };
+
+            this[this.emitType](this.eventName, event, true);
         }
     }
 
@@ -87,6 +93,14 @@ class DateRangePicker extends BaseComponent {
         }
     }
 
+    onShow() {
+        // do nothing?
+    }
+
+    onHide() {
+        // do nothing?
+    }
+
     connectEvents() {
         if (!this['independent-pickers']) {
             this.leftCal.on(
@@ -100,7 +114,6 @@ class DateRangePicker extends BaseComponent {
                     } else {
                         m++;
                     }
-                    console.log('left', y, m);
                     this.rightCal.setDisplay(y, m);
                 }.bind(this),
             );
@@ -244,5 +257,5 @@ function isDateCloserToLeft(date, left, right) {
 
 module.exports = BaseComponent.define('date-range-picker', DateRangePicker, {
     bools: ['range-expands', 'independent-pickers'],
-    props: ['value'],
+    props: ['value', 'event-name'],
 });

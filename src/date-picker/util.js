@@ -291,12 +291,32 @@ function removeCharAtPos(str, pos) {
 }
 
 function insertCharAtPos(str, char, pos) {
-    return str.substring(0, pos - 1) + char + str.substring(pos - 1);
+    const c = str.charAt(pos - 1);
+    if (char === c) {
+        // console.log('same', char, c, str);
+        return str;
+    }
+    // console.log('insert', char, `"${c}"`, pos);
+    return str.substring(0, pos - 1) + char + str.substring(pos);
 }
 
-function replaceText(str, chars, beg, end, xChars) {
-    chars = chars.padEnd(end - beg, xChars);
-    return str.substring(0, beg) + chars + str.substring(end);
+function replaceText(str, typedChar, beg, end, maskChar) {
+    // console.log('replace', str, typedChar, beg, end);
+    let s = '';
+    for (let i = 0; i < str.length; i++) {
+        const c = str.charAt(i);
+        if (i === beg) {
+            // console.log('    ', typedChar);
+            s += typedChar;
+        } else if (i < beg || i >= end || /[\/\s-]/.test(c)) {
+            // console.log('    keep', c);
+            s += c;
+        } else {
+            // console.log('    repl', c);
+            s += maskChar;
+        }
+    }
+    return s;
 }
 
 function formatDate(s, mask) {

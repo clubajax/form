@@ -813,14 +813,14 @@ suite('DatePicker', function () {
         });
 
         suite('date range inputs', function () {
-            test('should load a date range input', function (done) {
+            test.only('should load a date range input', function (done) {
                 const node = dom(
                     'date-range-input',
                     { label: 'load date range input', value: '01/10/2017 - 02/14/2017' },
                     body,
                 );
-                expect(dom.isNode(node)).to.equal(true);
-                console.log('node', node);
+                // expect(dom.isNode(node)).to.equal(true);
+                // console.log('node', node);
                 ready(node, function () {
                     done();
                 });
@@ -881,7 +881,7 @@ suite('DatePicker', function () {
                 expect(dom.isNode(node)).to.equal(true);
             });
 
-            test.only('should load a date range picker with independent pickers - MANUAL', function () {
+            test('should load a date range picker with independent pickers - MANUAL', function () {
                 const node = dom(
                     'date-range-picker',
                     { value: '02/20/2017 - 04/05/2017', 'independent-pickers': true },

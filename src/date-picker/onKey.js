@@ -1,12 +1,13 @@
 const util = require('./util');
 
+// Backspace and TODOs are handled in another file
+
 function onKey(e, type) {
     let str = this.typedValue || '';
     const beg = e.beg;
     const end = e.end;
     const k = e.key;
 
-    console.log('k', k, beg, end);
     if (k === 'Enter') {
         const valid = this.validate();
         if (valid) {
@@ -36,6 +37,7 @@ function onKey(e, type) {
         // handle paste, backspace
         if (type === 'datetime' && k === ' ' && util.charCount(value, ' ') !== 2) {
             // insert missing space
+            // console.log('space');
             this.typedValue = '';
             value = value.replace(' ', '');
             this.setValue(`${value.substring(0, 10)} ${value.substring(10, 15)} ${value.substring(15)}`, true);
@@ -43,12 +45,7 @@ function onKey(e, type) {
             util.stopEvent(e);
             return;
         } else if (value !== this.typedValue) {
-            if (k === 'Backspace') {
-                console.log('backspace!!', beg, end, value.length, value);
-                const temp = util.replaceText(this.typedValue, 'X', beg, end, 'X');
-                console.log('temp', temp);
-                this.setValue(temp, true);
-            }
+            // console.log('non-num');
             this.setValue(value, true);
         }
 
@@ -91,6 +88,7 @@ function onKey(e, type) {
 
     if (str.length !== end && beg === end) {
         // handle selection or middle-string edit
+        // console.log('edit', beg, end);
         const temp = this.typedValue.substring(0, beg) + k + this.typedValue.substring(end + 1);
         const nextCharPos = util.nextNumPos(beg + 1, temp);
         const value = this.setValue(temp, true);

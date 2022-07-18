@@ -1,3 +1,28 @@
+:root {
+    --cal-focus: blue;
+    --cal-brd: #ccc;
+    --cal-bg: #fff;
+    --cal-hov: #dadada;
+    --cal-sel: #5dbae0;
+    --cal-hdr-hvr: #d2f0ff;
+    --cal-hdr-nav: #0968d2;
+    --cal-link: #0968d2;
+    --cal-off-txt: #999;
+    --cal-today: #b1b1b1;
+    --cal-today-txt: #fff;
+    --cal-dsbl: white;
+    --cal-dsbl-txt: #999;
+    --cal-dsbl-sel: #9dc8da;
+    --cal-sel-txt: white;
+    --cal-range: #beecff;
+    --cal-range-select: #5dbae0;
+    --cal-warn-brd: #be4304;
+    --cal-warn-bk: #fffdd5;
+    --cal-error: red;
+    --cal-rad: 10px;
+    --cal-btn-rad: 4px;
+    --cal-day-rad: 3px;
+}
 $width: 350px;
 $height: 350px;
 $vpad: 20px;
@@ -13,10 +38,10 @@ date-picker {
     font-size: 13px;
     width: 100%;
     .calendar {
-        border-radius: 10px;
+        border: 1px solid var(--cal-brd);
+        border-radius: var(--cal-rad);
         display: inline-flex;
         flex-direction: column;
-        border: 1px solid var(--cal-brd);
         padding: $vpad $hpad;
         background: var(--cal-bg);
         .cal-header {
@@ -103,7 +128,7 @@ date-picker {
         line-height: 22px;
         flex: 1 1 auto;
         padding: 4px 5px;
-        border-radius: 4px;
+        border-radius: var(--cal-btn-rad);
     }
     .nav {
         border: 0;
@@ -157,7 +182,7 @@ date-picker {
                 height: 100%;
                 display: inline-block;
                 border: 1px solid transparent;
-                border-radius: 6px;
+                border-radius: var(--cal-day-rad);
             }
             &.off {
                 color: var(--cal-off-txt);
@@ -165,7 +190,7 @@ date-picker {
             &.on,
             &.off {
                 cursor: pointer;
-                border-radius: 3px;
+                border-radius: var(--cal-day-rad);
                 &:hover {
                     background: var(--cal-hov);
                 }
@@ -200,12 +225,12 @@ date-picker {
             &.range-first.on {
                 background: var(--cal-range-select);
                 color: white;
-                border-radius: 3px 0 0 3px;
+                border-radius: var(--cal-day-rad) 0 0 var(--cal-day-rad);
             }
             &.range-second.on {
                 background: var(--cal-range-select);
                 color: white;
-                border-radius: 0 3px 3px 0;
+                border-radius: 0 var(--cal-day-rad) var(--cal-day-rad) 0;
             }
             &.disabled {
                 background: var(--cal-dsbl);
@@ -376,7 +401,7 @@ time-input {
 }
 
 date-range-picker {
-    border-radius: 4px;
+    border-radius: var(--cal-rad);
     display: flex;
     border: 1px solid var(inp-brd);
     padding: 3px;
@@ -385,7 +410,6 @@ date-range-picker {
         flex: 50%;
     }
     &.show {
-        display: inline-block;
         date-picker {
             display: inline-block;
         }
@@ -404,6 +428,10 @@ date-range-inputs {
             margin-left: 5px;
         }
     }
+}
+
+date-range-input {
+    width: 320px;
 }
 
 date-time-input,
@@ -447,6 +475,17 @@ date-time-input {
     color: var(--error-txt);
 }
 
-ui-popup.ui-date-input {
+ui-popup.date-picker {
     width: $width;
+}
+
+ui-popup.date-range-picker {
+    border: 1px solid var(--cal-brd);
+    border-radius: var(--cal-rad);
+    width: 480px;
+    date-picker {
+        .calendar {
+            padding: 10px;
+        }
+    }
 }

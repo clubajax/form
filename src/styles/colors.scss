@@ -48,8 +48,7 @@
 // $tool-dk: $gray5;
 // $tool-lt: $gray4;
 
-
-// $btn-bk: $primary; 
+// $btn-bk: $primary;
 // $btn-bk-hvr: $primary-hvr;
 // $btn-bk-act: $primary-act;
 // $btn-dsbl: #ccc;
@@ -61,7 +60,7 @@
     --primary-very-light: #edf2fa;
     --disabled: #ddd;
     --focus-brd: blue;
-    // 
+    //
     // error
     --error-txt: red;
     //
@@ -71,7 +70,7 @@
     //
     // inputs
     --inp-brd: #d8d8d8;
-    --inp-placeholder: #6B7682;
+    --inp-placeholder: #6b7682;
     //
     // buttons
     --btn-brd: 1px solid #d8d8d8;
@@ -92,12 +91,12 @@
     // tooltip
     --tip-bg: white;
     --tip-txt: black;
-    --tip-brd: rgb(255,255,255);
+    --tip-brd: rgb(255, 255, 255);
     --tip-brd-rad: 3px;
     --tip-txt-size: 13px;
-    --tip-pad: 6px; 
+    --tip-pad: 6px;
     --tip-arrow-size: 16px;
-    --tip-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    --tip-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
     --tip-bg-error: rgb(226, 0, 0);
     --tip-txt-error: rgb(255, 255, 255);
     --tip-brd-error: rgb(226, 0, 0);
@@ -127,41 +126,18 @@
     --list-item-divider-pad: 5px;
     --list-button: #333;
     --list-button-hvr: #ddd;
-    
+
     //
     // checkbox
     --chk-size: 16px;
-    --chk-brd: 1px solid #B6B9BB;
-    --chk-bg: #3597D2;
-    --chk-bg-hvr: #77C2F0;
+    --chk-brd: 1px solid #b6b9bb;
+    --chk-bg: #3597d2;
+    --chk-bg-hvr: #77c2f0;
     --chk-focus-brd: #417890;
     --chk-focus-txt: #4a698d;
     --chk-hvr: #f2f2f2;
     --chk-all: #d5dee2;
 
-    //
-    // data-picker
-    --cal-focus: blue;
-    --cal-brd: #ccc;
-    --cal-bg: #fff;
-    --cal-hov: #dadada;
-    --cal-sel: #5dbae0;
-    --cal-hdr-hvr: #d2f0ff;
-    --cal-hdr-nav: #0968d2;
-    --cal-link: #0968d2;
-    --cal-off-txt: #999;
-    --cal-today: #b1b1b1;
-    --cal-today-txt: #fff;
-    --cal-dsbl: white;
-    --cal-dsbl-txt: #999;
-    --cal-dsbl-sel: #9dc8da;
-    --cal-sel-txt: white;
-    --cal-range: #beecff;
-    --cal-range-select: #5dbae0;
-    --cal-warn-brd: #be4304;
-    --cal-warn-bk: #fffdd5;
-    --cal-error: red;
-    
     // minitags
     --minitag-width: 300px;
     --tag-color: #eee;

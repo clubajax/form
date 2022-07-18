@@ -1,4 +1,3 @@
-require('./date-picker');
 const BaseComponent = require('@clubajax/base-component');
 const dom = require('@clubajax/dom');
 const dates = require('@clubajax/dates');
@@ -20,9 +19,6 @@ const FLASH_TIME = 1000;
 // create a separate DIST for calendar
 //
 // TODO:
-//      mask: select middle two numbers, delete (should show 11/XX/1111)
-//      clean up unused properties
-//      now for value (not just min & max)
 // change 'static' property name
 // mask throws errors
 
@@ -40,6 +36,7 @@ class DateInput extends BaseComponent {
         this.name;
         this.label;
         this.placeholder;
+        this.pickerType = 'date-picker';
     }
 
     attributeChanged(name, value) {
@@ -56,9 +53,9 @@ class DateInput extends BaseComponent {
         if (value === 'today') {
             value = dates.format(new Date(), 'MM/dd/yyyy');
         }
-        const isInit = !this.strDate;
-        value = dates.padded(value);
-
+        if (!this.isRangeInput) {
+            value = dates.padded(value);
+        }
         this.strDate = dates.isValid(value) ? value : '';
         this.onDomReady(() => {
             this.setValue(this.strDate, true);
@@ -268,9 +265,19 @@ class DateInput extends BaseComponent {
         }
         this.connectKeys();
 
-        this.popup = dom('ui-popup', { buttonid: this.buttonId, class: 'ui-date-input', lazy: true }, document.body);
+        this.popup = dom(
+            'ui-popup',
+            {
+                buttonid: this.buttonId,
+                'align-to': this.alignTo,
+                class: this.pickerType,
+                lazy: true,
+                align: this.align,
+            },
+            document.body,
+        );
         this.popup.noHideOnBlur = true;
-        this.picker = dom('date-picker', { time: this.time, tabindex: '0', 'event-name': 'date-change' }, this.popup);
+        this.picker = dom(this.pickerType, { time: this.time, tabindex: '0', 'event-name': 'date-change' }, this.popup);
 
         this.picker.onDomReady(() => {
             this.picker.on('date-change', (e) => {
@@ -324,6 +331,9 @@ class DateInput extends BaseComponent {
                 end = e.target.selectionEnd;
                 const k = e.key;
 
+                if (e.key === 'Backspace') {
+                    return util.stopEvent(e);
+                }
                 if (e.key === 'Meta') {
                     isMeta = true;
                 }

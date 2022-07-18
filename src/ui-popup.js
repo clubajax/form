@@ -34,6 +34,7 @@ class UiPopup extends BaseComponent {
 
     domReady() {
         this.component = this.children[0] || {};
+        this.alignTo = this['align-to'];
         this.button = dom.byId(this.buttonid);
         const h = this['max-height'];
         this.maxHeight = h === 'none' || !h ? 0 : h;
@@ -214,7 +215,7 @@ class UiPopup extends BaseComponent {
             this.classList.remove('is-mobile');
             if (this.button) {
                 // no align options for mobile (?)
-                position(this, this.button);
+                position(this, this.alignTo || this.button);
             }
             this.removeMobileButtons();
         }
@@ -234,7 +235,7 @@ class UiPopup extends BaseComponent {
         }
 
         if (!this.isMobile) {
-            const isSet = position(this, this.button, this.align, {
+            const isSet = position(this, this.alignTo || this.button, this.align, {
                 xPos: this['x-pos'] || 0,
                 yPos: this['y-pos'] || 0,
                 shift: this.shift,
@@ -285,10 +286,10 @@ class UiPopup extends BaseComponent {
         if (resize) {
             clearPosition(this);
             setTimeout(() => {
-                position(this, this.button, this.align);
+                position(this, this.alignTo || this.button, this.align);
             }, 100);
         }
-        position(this, this.button, this.align);
+        position(this, this.alignTo || this.button, this.align);
     }
 
     destroy() {
@@ -459,9 +460,8 @@ function position(popup, button, align, options) {
     }
     clearPosition(popup);
     const LOG = window.debugPopups;
-    LOG && console.log('position...');
+    LOG && console.log('\nposition...');
     const GAP = 5;
-    const MIN_BOT_SPACE = 200;
     const MAX = popup.maxHeight || Infinity;
 
     const style = {};
@@ -477,25 +477,30 @@ function position(popup, button, align, options) {
     const rightSpace = win.w - btn.x;
     const leftSpace = btn.x + btn.w;
 
+    LOG && console.log('button', btn, align, button);
     if (pop.h < 10) {
         return false;
     }
 
     // position left/right & width
     if (align === 'right' || (leftSpace > pop.w && leftSpace > rightSpace)) {
+        LOG && console.log('align left 1');
         // left-side
         style.top = btn.y + btn.h;
         style.right = win.w - (btn.x + btn.w);
-    } else if (rightSpace > pop.w) {
+    } else if (align === 'left' || rightSpace > pop.w) {
+        LOG && console.log('align right 1');
         // right-side
         style.top = btn.y + btn.h;
         style.left = btn.x;
     } else if (rightSpace > leftSpace) {
+        LOG && console.log('align right 2');
         // right-side, resize popup
         style.top = btn.y + btn.h;
         style.left = btn.x;
         style.width = rightSpace - bodyPad;
     } else {
+        LOG && console.log('align left 2');
         // left-side, resize popup
         style.top = btn.y + btn.h;
         style.right = win.w - (btn.x + btn.w);
@@ -544,7 +549,7 @@ function position(popup, button, align, options) {
     return true;
 }
 
-function onScroll(hide, popup) {
+function onScroll(hide) {
     return {
         resume: () => {
             window.addEventListener(
@@ -568,6 +573,6 @@ function onScroll(hide, popup) {
 }
 
 module.exports = BaseComponent.define('ui-popup', UiPopup, {
-    props: ['buttonid', 'label', 'align', 'use-hover', 'max-height', 'x-pos', 'y-pos'],
+    props: ['buttonid', 'align-to', 'label', 'align', 'use-hover', 'max-height', 'x-pos', 'y-pos'],
     bools: ['open', 'lazy', 'shift'],
 });
