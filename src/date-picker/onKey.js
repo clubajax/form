@@ -98,7 +98,7 @@ function onKey(e, type) {
         util.stopEvent(e);
         return;
     } else if (end !== beg) {
-        console.log('replace', beg, end, k);
+        // console.log('replace', beg, end, k);
         // selection replace
         const temp = util.replaceText(this.typedValue, k, beg, end, 'X');
         this.setValue(temp, true);

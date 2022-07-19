@@ -11,7 +11,6 @@ class DateRangePopup extends BaseComponent {
         super();
         // this.fireOwnDomready = true;
         this.mask = 'XX/XX/XXXX';
-        console.log('DateRangePopup');
     }
 
     connected() {

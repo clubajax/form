@@ -57,7 +57,6 @@ class DateInput extends BaseComponent {
             value = dates.padded(value);
         }
         this.strDate = dates.isValid(value) ? value : '';
-        console.log('set.value', this.strDate);
         this.onDomReady(() => {
             this.setValue(this.strDate, true);
         });
@@ -166,7 +165,6 @@ class DateInput extends BaseComponent {
     }
 
     isValid(value = this.input.value) {
-        console.log('isValid', value);
         return isValid.call(this, value, this.dateType);
     }
 
@@ -175,7 +173,6 @@ class DateInput extends BaseComponent {
             this.classList.remove('invalid');
             return true;
         }
-        console.log('INVALID');
         this.classList.add('invalid');
         return false;
     }
@@ -358,6 +355,14 @@ class DateInput extends BaseComponent {
         );
         this.on(this.input, 'blur', this.onBlur.bind(this), null);
         this.on(this, 'validation', this.onValidation.bind(this), null);
+
+        this.on(this.icon, 'focus', () => {
+            this.icon.classList.add('focus');
+        });
+
+        this.on(this.icon, 'blur', () => {
+            this.icon.classList.remove('focus');
+        });
     }
 
     destroy() {

@@ -92,6 +92,15 @@ suite('DatePicker', function () {
     function open(node) {
         on.emit(node.icon, 'click');
     }
+
+    function trackFocus() {
+        on(document, 'keyup', (e) => {
+            console.log('key', e.key);
+            if (e.key === 'Tab') {
+                console.log('focus:', document.activeElement);
+            }
+        });
+    }
     // FIXME:
     //  time-input blur does not close calendar
 
@@ -708,7 +717,7 @@ suite('DatePicker', function () {
         });
 
         suite('date picker', function () {
-            test('should render a picker (MANUAL)', function (done) {
+            test.only('should render a picker (MANUAL)', function (done) {
                 const wrap = dom('div', { class: 'picker-wrapper' }, body);
                 const node = dom('date-picker', { label: 'manual picker', value: '11/11/2020 02:20 am' }, wrap);
                 ready(node, function () {
@@ -813,7 +822,7 @@ suite('DatePicker', function () {
         });
 
         suite('date range inputs', function () {
-            test.only('should load a date range input', function (done) {
+            test('should load a date range input', function (done) {
                 const node = dom(
                     'date-range-input',
                     { label: 'load date range input', 'independent-pickers': true, value: '01/10/2017 - 02/14/2017' },

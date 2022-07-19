@@ -45,6 +45,7 @@ class DatePicker extends BaseComponent {
         }
         return this._yearSelectorTemplate;
     }
+
     get templateString() {
         const selector = `
         <select ref="monthSelector" class="month-selector" tabindex="0" aria-label="Select Month">
@@ -749,7 +750,7 @@ class DatePicker extends BaseComponent {
             this.emitEvent();
         });
 
-        [this.lftMoNode, this.rgtMoNode, this.lftYrNode, this.rgtYrNode].forEach((node) => {
+        [(this.lftMoNode, this.rgtMoNode, this.lftYrNode, this.rgtYrNode)].forEach((node) => {
             this.on(node, 'blur', () => {
                 this.setAriaMonthYearAlert(false);
             });
