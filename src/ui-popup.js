@@ -36,6 +36,7 @@ class UiPopup extends BaseComponent {
         this.component = this.children[0] || {};
         this.alignTo = this['align-to'];
         this.button = dom.byId(this.buttonid);
+        console.log('popup btn', this.button);
         const h = this['max-height'];
         this.maxHeight = h === 'none' || !h ? 0 : h;
 
@@ -163,6 +164,11 @@ class UiPopup extends BaseComponent {
                 );
             }
         }
+
+        console.log('connect', this.open);
+        if (this.open) {
+            this.show();
+        }
     }
 
     connectHoverEvents() {
@@ -228,6 +234,7 @@ class UiPopup extends BaseComponent {
             }
             return;
         }
+        this.fire('pre-show');
         this.children[0].disabled = false;
         this.showing = true;
         if (this.lazy) {
@@ -258,6 +265,7 @@ class UiPopup extends BaseComponent {
             this.isOpening = false;
         }, 500);
         this.fire('popup-open');
+        this.fire('post-show');
         this.connectWindowEvents(true);
     }
 

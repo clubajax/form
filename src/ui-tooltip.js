@@ -1,6 +1,6 @@
 const BaseComponent = require('@clubajax/base-component');
 const dom = require('@clubajax/dom');
-const popup = require('./ui-popup');
+require('./ui-popup');
 
 class UiTooltip extends BaseComponent {
     constructor() {
@@ -45,6 +45,9 @@ class UiTooltip extends BaseComponent {
     connect() {
         this.on('tooltip-close', () => {
             this.popup.hide();
+        });
+        this.on(this.popup, 'pre-show', () => {
+            console.log('PRESHOW');
         });
     }
 
