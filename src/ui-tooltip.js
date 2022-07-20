@@ -46,9 +46,6 @@ class UiTooltip extends BaseComponent {
         this.on('tooltip-close', () => {
             this.popup.hide();
         });
-        this.on(this.popup, 'pre-show', () => {
-            console.log('PRESHOW');
-        });
     }
 
     close() {

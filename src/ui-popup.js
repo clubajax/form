@@ -36,7 +36,6 @@ class UiPopup extends BaseComponent {
         this.component = this.children[0] || {};
         this.alignTo = this['align-to'];
         this.button = dom.byId(this.buttonid);
-        console.log('popup btn', this.button);
         const h = this['max-height'];
         this.maxHeight = h === 'none' || !h ? 0 : h;
 
@@ -92,6 +91,7 @@ class UiPopup extends BaseComponent {
                 button,
                 'click',
                 () => {
+                    console.log('click mobile');
                     if (i === 1) {
                         if (this.component.emitEvent) {
                             this.component.blockEvent = false;
@@ -136,6 +136,7 @@ class UiPopup extends BaseComponent {
                     this.button,
                     'click',
                     (e) => {
+                        console.log('click 1');
                         this.show();
                     },
                     null,
@@ -163,11 +164,6 @@ class UiPopup extends BaseComponent {
                     null,
                 );
             }
-        }
-
-        console.log('connect', this.open);
-        if (this.open) {
-            this.show();
         }
     }
 
@@ -228,6 +224,7 @@ class UiPopup extends BaseComponent {
     }
 
     show(resize) {
+        console.log('show', resize);
         if (this.showing) {
             if (resize) {
                 this.position(true);
@@ -328,7 +325,9 @@ function clearPosition(popup, tooltip) {
 }
 
 function positionTooltip(popup, button, align, options) {
+    // const LOG = button.localName === 'ui-icon'; //window.debugPopups;
     const LOG = window.debugPopups;
+    LOG && console.log('tooltip.position...');
     const tooltip = dom.query(popup, '.ui-tooltip');
     clearPosition(popup, tooltip);
     const win = {
@@ -467,8 +466,9 @@ function position(popup, button, align, options) {
         return true;
     }
     clearPosition(popup);
-    const LOG = 1; // window.debugPopups;
-    LOG && console.log('\nposition...');
+    // const LOG = button.localName === 'ui-icon'; //window.debugPopups;
+    const LOG = window.debugPopups;
+    LOG && console.log('popup.position...');
     const GAP = 5;
     const MAX = popup.maxHeight || Infinity;
 
