@@ -91,7 +91,6 @@ class UiPopup extends BaseComponent {
                 button,
                 'click',
                 () => {
-                    console.log('click mobile');
                     if (i === 1) {
                         if (this.component.emitEvent) {
                             this.component.blockEvent = false;
@@ -136,7 +135,6 @@ class UiPopup extends BaseComponent {
                     this.button,
                     'click',
                     (e) => {
-                        console.log('click 1');
                         this.show();
                     },
                     null,
@@ -224,7 +222,6 @@ class UiPopup extends BaseComponent {
     }
 
     show(resize) {
-        console.log('show', resize);
         if (this.showing) {
             if (resize) {
                 this.position(true);
