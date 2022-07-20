@@ -467,7 +467,7 @@ function position(popup, button, align, options) {
         return true;
     }
     clearPosition(popup);
-    const LOG = window.debugPopups;
+    const LOG = 1; // window.debugPopups;
     LOG && console.log('\nposition...');
     const GAP = 5;
     const MAX = popup.maxHeight || Infinity;
