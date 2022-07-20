@@ -1,7 +1,7 @@
 {
   "name": "@clubajax/form",
   "description": "Web Component Form Library",
-  "version": "0.9.95",
+  "version": "0.9.96",
   "main": "index.js",
   "module": "index.js",
   "files": [
