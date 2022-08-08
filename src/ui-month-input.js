@@ -44,7 +44,7 @@ class UiMonthInput extends BaseComponent {
     }
 
     get value() {
-        return this.input.value || this._value;
+        return this.input.value || this._value || defaultValue;
     }
 
     setValue(month = this.getMonth(), year = this.getYear()) {
@@ -59,11 +59,23 @@ class UiMonthInput extends BaseComponent {
     }
 
     getMonth() {
-        return parseInt(this._value.split('/')[0], 10);
+        return parseInt(this.value.split('/')[0], 10);
     }
 
     getYear() {
-        return parseInt(this._value.split('/')[1], 10);
+        return parseInt(this.value.split('/')[1], 10);
+    }
+
+    onDisabled(value) {
+        if (this.input) {
+            this.input.disabled = value;
+        }
+    }
+
+    onReadonly(value) {
+        if (this.input) {
+            this.input.readonly = value;
+        }
     }
 
     isValid(value = this.input.value) {
@@ -195,12 +207,17 @@ class UiMonthInput extends BaseComponent {
         });
 
         this.on(this.picker, 'picker-change', (e) => {
+            if (e.detail.month !== this.getMonth()) {
+                this.popup.hide();
+            }
             this.setValue(e.detail.month, e.detail.year);
-            this.popup.hide();
             this.emitEvent();
         });
     }
 }
+
+const d = new Date();
+const defaultValue = `${d.getMonth() + 1}/${d.getFullYear()}`;
 
 module.exports = BaseComponent.define('ui-month-input', UiMonthInput, {
     props: ['label', 'align', 'data', 'years-prev', 'years-next'],

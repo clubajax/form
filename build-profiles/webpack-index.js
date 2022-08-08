@@ -16,6 +16,8 @@ require('../src/ui-tooltip');
 require('../src/ui-drawer');
 require('../src/ui-paginator');
 require('../src/ui-form');
+require('../src/ui-month-input');
+require('../src/ui-month-picker');
 require('../src/date-picker/date-picker');
 require('../src/date-picker/date-input');
 
