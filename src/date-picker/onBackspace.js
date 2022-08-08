@@ -1,6 +1,6 @@
 const util = require('./util');
 
-// TODO
+const LOG = 0;
 
 function onBackspace(e, type) {
     function setSelection(pos) {
@@ -15,23 +15,23 @@ function onBackspace(e, type) {
     const end = e.end;
     const char = value.charAt(beg - 1);
     let sel = Math.max(0, beg - 1);
-    // console.log('onBackspace', char, beg, end, value);
+    LOG && console.log('onBackspace', char, beg, end, value);
 
     let temp;
     if (beg === end) {
-        // console.log('bk', `"${char}"`);
+        LOG && console.log('bk', `"${char}"`);
         if (beg === 0) {
             // do nothing
             return;
         }
 
         if (char == '/') {
-            // console.log('sel /', sel);
+            LOG && console.log('sel /', sel);
             setSelection(sel);
             return;
         }
         if (char === ' ' || char === '-') {
-            // console.log('set -');
+            LOG && console.log('set -');
             // Trying to delete range delimiter
             // back up to end of first date
             setSelection(10);
@@ -39,7 +39,7 @@ function onBackspace(e, type) {
         }
         temp = util.insertCharAtPos(value, 'X', beg);
     } else {
-        // console.log('repl', `"${char}"`);
+        LOG && console.log('repl', `"${char}"`);
         temp = util.replaceText(value, 'X', beg, end, 'X');
         sel += 1;
     }

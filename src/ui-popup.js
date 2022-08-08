@@ -47,7 +47,7 @@ class UiPopup extends BaseComponent {
 
         this.mq = window.matchMedia('(max-width: 415px)');
         this.mq.addEventListener('change', this.handleMediaQuery);
-        this.handleMediaQuery(this.mq);
+        // this.handleMediaQuery(this.mq);
 
         this.parent = this.parentNode;
         if (this.lazy) {
@@ -124,7 +124,6 @@ class UiPopup extends BaseComponent {
             } else {
                 this.clickoff = on.makeMultiHandle([
                     on(this, 'clickoff', (e) => {
-                        // if (!e.target.hasAttribute('data-no-clickoff') && !e.target.closest('[data-no-clickoff]')) {
                         if (!e.target.hasAttribute('data-no-clickoff') && !this.button.contains(e.target)) {
                             this.hide();
                         }
@@ -215,7 +214,11 @@ class UiPopup extends BaseComponent {
             this.classList.remove('is-mobile');
             if (this.button) {
                 // no align options for mobile (?)
-                position(this, this.alignTo || this.button);
+                position(this, this.alignTo || this.button, this.align, {
+                    xPos: this['x-pos'] || 0,
+                    yPos: this['y-pos'] || 0,
+                    shift: this.shift,
+                });
             }
             this.removeMobileButtons();
         }
@@ -288,10 +291,18 @@ class UiPopup extends BaseComponent {
         if (resize) {
             clearPosition(this);
             setTimeout(() => {
-                position(this, this.alignTo || this.button, this.align);
+                position(this, this.alignTo || this.button, this.align, {
+                    xPos: this['x-pos'] || 0,
+                    yPos: this['y-pos'] || 0,
+                    shift: this.shift,
+                });
             }, 100);
         }
-        position(this, this.alignTo || this.button, this.align);
+        position(this, this.alignTo || this.button, this.align, {
+            xPos: this['x-pos'] || 0,
+            yPos: this['y-pos'] || 0,
+            shift: this.shift,
+        });
     }
 
     destroy() {
@@ -321,10 +332,16 @@ function clearPosition(popup, tooltip) {
     });
 }
 
+function rnd(obj) {
+    Object.keys(obj).forEach((key) => {
+        obj[key] = Math.round(obj[key]);
+    });
+    return obj;
+}
 function positionTooltip(popup, button, align, options) {
-    // const LOG = button.localName === 'ui-icon'; //window.debugPopups;
+    // const LOG = button.localName === 'ui-icon';
     const LOG = window.debugPopups;
-    LOG && console.log('tooltip.position...');
+    LOG && console.log('\ntooltip.position...');
     const tooltip = dom.query(popup, '.ui-tooltip');
     clearPosition(popup, tooltip);
     const win = {
@@ -337,7 +354,20 @@ function positionTooltip(popup, button, align, options) {
     const style = {};
 
     LOG &&
-        console.log('align:', align, '\nbutton:', button, '\npopup:', popup, '\nwin', win, '\npop', pop, '\nbtn', btn);
+        console.log(
+            'align:',
+            align,
+            '\nbutton:',
+            button,
+            '\npopup:',
+            popup,
+            '\nwin',
+            win,
+            '\npop',
+            rnd(pop),
+            '\nbtn',
+            rnd(btn),
+        );
 
     function addClass(cls) {
         if (tooltip) {
@@ -452,6 +482,8 @@ function positionTooltip(popup, button, align, options) {
         }
     }
 
+    LOG && console.log('style', style);
+
     dom.style(popup, style);
 }
 
@@ -463,9 +495,9 @@ function position(popup, button, align, options) {
         return true;
     }
     clearPosition(popup);
-    // const LOG = button.localName === 'ui-icon'; //window.debugPopups;
+    // const LOG = button.localName === 'ui-icon';
     const LOG = window.debugPopups;
-    LOG && console.log('popup.position...');
+    LOG && console.log('\npopup.position...');
     const GAP = 5;
     const MAX = popup.maxHeight || Infinity;
 

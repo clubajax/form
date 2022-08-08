@@ -1,0 +1,49 @@
+@import './colors.scss';
+ui-month-picker {
+    display: block;
+    background-color: white;
+    border: var(--list-brd);
+    border-radius: var(--list-rad);
+    width: 250px;
+    padding: 10px;
+    ui-dropdown {
+        margin: 10px;
+    }
+    .month-picker-header {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        .nav {
+            background-color: transparent;
+            border: 0;
+            ui-icon {
+                color: var(--primary);
+                font-size: 16px;
+            }
+            &:hover {
+                background-color: var(--btn-bg-hvr);
+            }
+        }
+    }
+    .list {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        .list-btn {
+            flex-basis: 33%;
+            height: 30px;
+            background-color: transparent;
+            border: 0;
+            &:hover {
+                background-color: var(--btn-bg-hvr);
+            }
+            &.selected {
+                background-color: var(--btn-sel);
+            }
+        }
+    }
+}
+
+ui-month-input {
+}

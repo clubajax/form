@@ -21,6 +21,7 @@ const components = [
     'tooltip',
     'paginator',
     'date',
+    'month',
 ];
 
 const nav = document.querySelector('nav');
@@ -37,12 +38,16 @@ const current = document.location.search.replace('?', '');
 
 components.forEach((name) => {
     if (current === name) {
-        require('../src/ui-' + name);
-        require('./' + name);
-        if (name === 'date') {
+        if (name === 'month') {
+            require('../src/ui-month-input');
+            require('../src/ui-month-picker');
+        } else if (name === 'date') {
             require('../src/date-picker/date-range-input');
             require('../src/date-picker/date-range-inputs');
             require('../src/date-picker/date-range-picker');
+        } else {
+            require('../src/ui-' + name);
         }
+        require('./' + name);
     }
 });

@@ -280,6 +280,17 @@ suite('DatePicker', function () {
         });
 
         suite('date input', function () {
+            test.only('should render', function () {
+                const node = dom(
+                    'date-input',
+                    {
+                        label: 'min and max',
+                        value: '12/25/2017',
+                    },
+                    body,
+                );
+            });
+
             test('should pop up', function () {
                 const node = dom(
                     'date-input',
@@ -717,7 +728,7 @@ suite('DatePicker', function () {
         });
 
         suite('date picker', function () {
-            test.only('should render a picker (MANUAL)', function (done) {
+            test('should render a picker (MANUAL)', function (done) {
                 const wrap = dom('div', { class: 'picker-wrapper' }, body);
                 const node = dom('date-picker', { label: 'manual picker', value: '11/11/2020 02:20 am' }, wrap);
                 ready(node, function () {

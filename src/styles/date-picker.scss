@@ -321,6 +321,7 @@ date-picker[time] {
     }
 }
 
+ui-month-input,
 date-time-input,
 time-input,
 date-input,
@@ -383,6 +384,7 @@ date-range-input {
             background-color: var(--cal-warn-bk);
         }
     }
+
     date-picker,
     date-range-picker {
         display: none;
