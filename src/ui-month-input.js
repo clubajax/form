@@ -13,6 +13,7 @@ const defaultMask = 'XX/XXXX';
 class UiMonthInput extends BaseComponent {
     constructor() {
         super();
+        this.dateType = 'month';
     }
 
     get templateString() {
@@ -49,10 +50,17 @@ class UiMonthInput extends BaseComponent {
 
     setValue(month = this.getMonth(), year = this.getYear()) {
         if (typeof month === 'string') {
-            this.input.value = month;
+            // this.input.value = month;
+            this._value = month;
+            if (this._value === this.typedValue) {
+                return;
+            }
+            this.typedValue = this._value;
+            this.input.value = this._value;
             return;
         }
         this._value = `${pad(month)}/${year}`;
+
         this.typedValue = this._value;
         this.input.value = this._value;
         this.picker.value = this._value;

@@ -8,6 +8,8 @@ function onKey(e, type) {
     const end = e.end;
     const k = e.key;
 
+    LOG && console.log('typ', this.typedValue);
+
     if (k === 'Enter') {
         const valid = this.validate();
         if (valid) {
@@ -28,6 +30,7 @@ function onKey(e, type) {
     }
 
     function setSelection(pos) {
+        e.target.selectionStart = pos;
         e.target.selectionEnd = pos;
     }
 
@@ -69,6 +72,7 @@ function onKey(e, type) {
             }
 
             if (/date/.test(type)) {
+                LOG && console.log('type end', end);
                 if (end <= 2) {
                     this.setValue(util.incMonth(value, inc), true);
                 } else if (end < 5) {
@@ -93,6 +97,8 @@ function onKey(e, type) {
         this.setValue(temp, true);
         const nextChar = str.charAt(beg + 1);
 
+        LOG && console.log('test:', /[\s\/:]/.test(nextChar));
+        // skip the next character?
         setSelection(/[\s\/:]/.test(nextChar) ? beg + 2 : beg + 1);
         util.stopEvent(e);
         return;
@@ -103,6 +109,10 @@ function onKey(e, type) {
         this.setValue(temp, true);
 
         setSelection(beg + 1);
+        util.stopEvent(e);
+        return;
+    } else if (type === 'month') {
+        LOG && console.log('none of the above', type);
         util.stopEvent(e);
         return;
     }
