@@ -37,7 +37,25 @@ class UiMonthInput extends BaseComponent {
         }
     }
 
+    onMin(min) {
+        console.log('min', min);
+    }
+    onMax(max) {
+        console.log('max', max);
+    }
+
+    setMinMax() {
+        if (!this.min && !this.max) {
+            return;
+        }
+        if (invalidMinMax(this.min, this.max)) {
+            console.error('The provided `min` and `max` are invalid');
+            return;
+        }
+    }
+
     set value(value) {
+        console.log('value', value);
         this._value = isNull(value) ? defaultValue : value;
         this.onDomReady(() => {
             this.setValue();
@@ -154,6 +172,8 @@ class UiMonthInput extends BaseComponent {
     }
 
     connected() {
+        console.log('connected', this.min, this.max);
+        this.setMinMax();
         this.render();
         this.connected = () => {};
         this.rendered = true;
@@ -227,8 +247,24 @@ class UiMonthInput extends BaseComponent {
 const d = new Date();
 const defaultValue = `${d.getMonth() + 1}/${d.getFullYear()}`;
 
+function makeDate(str) {
+    const month = parseInt(str.split('/')[0], 10);
+    const year = parseInt(str.split('/')[1], 10);
+    return new Date(year, month - 1, 1);
+}
+function invalidMinMax(min, max) {
+    if (!min || !max) {
+        return false;
+    }
+    const minDate = makeDate(min);
+    const maxDate = makeDate(max);
+    console.log('minmax', minDate, maxDate);
+
+    return minDate.getTime() > maxDate.getTime();
+}
+
 module.exports = BaseComponent.define('ui-month-input', UiMonthInput, {
-    props: ['label', 'align', 'data', 'years-prev', 'years-next'],
+    props: ['label', 'align', 'data', 'min', 'max'],
     bools: ['readonly', 'disabled', 'name'],
     attrs: ['value'],
 });

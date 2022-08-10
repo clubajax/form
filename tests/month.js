@@ -53,12 +53,31 @@ suite('UiMonthPicker', function () {
     });
 
     suite('ui-month-input', function () {
-        test.only('it should render an input', function (done) {
+        test('it should render an input', function (done) {
             const node = dom(
                 'ui-month-input',
                 {
                     value: '11/2018',
                     'years-next': 10,
+                    class: 'top-middle',
+                },
+                body,
+            );
+            onDomReady(node, function () {
+                node.on('change', (e) => {
+                    console.log('change', e.value);
+                });
+                done();
+            });
+        });
+
+        test.only('it should handle min and max', function (done) {
+            const node = dom(
+                'ui-month-input',
+                {
+                    value: '11/2018',
+                    min: '09/2018',
+                    max: '03/2019',
                     class: 'top-middle',
                 },
                 body,
