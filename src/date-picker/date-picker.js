@@ -328,12 +328,12 @@ class DatePicker extends BaseComponent {
         // used by arrow keys
         date = dates.zeroTime(date);
         if (this.minDate) {
-            if (dates.is(date).less(this.minDate)) {
+            if (dates.is(date).lessThan(this.minDate)) {
                 return false;
             }
         }
         if (this.maxDate) {
-            if (dates.is(date).greater(this.maxDate)) {
+            if (dates.is(date).greaterThan(this.maxDate)) {
                 return false;
             }
         }

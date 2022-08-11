@@ -165,10 +165,10 @@ function timeIsInRange(time, min, max, date) {
 
     const d = toDateTime(time);
     // isGreater: 1st > 2nd
-    if (min && !dates.is(d).greater(toDateTime(min))) {
+    if (min && !dates.is(d).greaterThan(toDateTime(min))) {
         return false;
     }
-    if (max && !dates.is(d).less(toDateTime(max))) {
+    if (max && !dates.is(d).lessThan(toDateTime(max))) {
         return false;
     }
 

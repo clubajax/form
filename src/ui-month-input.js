@@ -38,10 +38,10 @@ class UiMonthInput extends BaseComponent {
     }
 
     onMin(min) {
-        console.log('min', min);
+        // console.log('min', min);
     }
     onMax(max) {
-        console.log('max', max);
+        // console.log('max', max);
     }
 
     setMinMax() {
@@ -55,7 +55,6 @@ class UiMonthInput extends BaseComponent {
     }
 
     set value(value) {
-        console.log('value', value);
         this._value = isNull(value) ? defaultValue : value;
         this.onDomReady(() => {
             this.setValue();
@@ -172,7 +171,6 @@ class UiMonthInput extends BaseComponent {
     }
 
     connected() {
-        console.log('connected', this.min, this.max);
         this.setMinMax();
         this.render();
         this.connected = () => {};
@@ -258,7 +256,6 @@ function invalidMinMax(min, max) {
     }
     const minDate = makeDate(min);
     const maxDate = makeDate(max);
-    console.log('minmax', minDate, maxDate);
 
     return minDate.getTime() > maxDate.getTime();
 }

@@ -38,14 +38,14 @@ function isValid(value = this.input.value, type) {
     value = dates.toDate(value);
 
     if (this.minDate) {
-        if (dates.is(value).less(this.minDate)) {
+        if (dates.is(value).lessThan(this.minDate)) {
             emitError.call(this, getMinMsg(this.min));
             return false;
         }
     }
 
     if (this.maxDate) {
-        if (dates.is(value).greater(this.maxDate)) {
+        if (dates.is(value).greaterThan(this.maxDate)) {
             emitError.call(this, getMaxMsg(this.max));
             return false;
         }
