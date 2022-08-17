@@ -50,6 +50,41 @@ suite('UiMonthPicker', function () {
                 done();
             });
         });
+
+        test('it should handle min and max', function (done) {
+            const node = dom(
+                'ui-month-picker',
+                {
+                    value: '06/2018',
+                    min: '03/2018',
+                    max: '11/2018',
+                },
+                body,
+            );
+            onDomReady(node, function () {
+                node.on('change', (e) => {
+                    console.log('change', e.value);
+                });
+                done();
+            });
+        });
+
+        test.only('it should handle min and not a max', function (done) {
+            const node = dom(
+                'ui-month-picker',
+                {
+                    value: '06/2018',
+                    min: '03/2018',
+                },
+                body,
+            );
+            onDomReady(node, function () {
+                node.on('change', (e) => {
+                    console.log('change', e.value);
+                });
+                done();
+            });
+        });
     });
 
     suite('ui-month-input', function () {
@@ -71,13 +106,30 @@ suite('UiMonthPicker', function () {
             });
         });
 
-        test.only('it should handle min and max', function (done) {
+        test('it should handle min and max', function (done) {
             const node = dom(
                 'ui-month-input',
                 {
                     value: '11/2018',
                     min: '09/2018',
                     max: '03/2019',
+                    class: 'top-middle',
+                },
+                body,
+            );
+            onDomReady(node, function () {
+                node.on('change', (e) => {
+                    console.log('change', e.value);
+                });
+                done();
+            });
+        });
+
+        test('it should handle null', function (done) {
+            const node = dom(
+                'ui-month-input',
+                {
+                    value: null,
                     class: 'top-middle',
                 },
                 body,

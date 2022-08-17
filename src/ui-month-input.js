@@ -31,17 +31,11 @@ class UiMonthInput extends BaseComponent {
 </label>`;
     }
 
-    attributeChanged(prop, value) {
-        if (prop === 'value') {
-            this.value = value;
-        }
-    }
-
     onMin(min) {
-        // console.log('min', min);
+        console.log('input.min', min);
     }
     onMax(max) {
-        // console.log('max', max);
+        console.log('input.max', max);
     }
 
     setMinMax() {
@@ -55,14 +49,19 @@ class UiMonthInput extends BaseComponent {
     }
 
     set value(value) {
-        this._value = isNull(value) ? defaultValue : value;
+        // this._value = isNull(value) ? defaultValue : value;
+        this._value = value;
         this.onDomReady(() => {
-            this.setValue();
+            if (!this._value) {
+                this.setValue(null);
+            } else {
+                this.setValue(this.getMonth(this._value), this.getYear(this._value));
+            }
         });
     }
 
     get value() {
-        return this.input.value || this._value || defaultValue;
+        return this.input.value || this._value;
     }
 
     setValue(month = this.getMonth(), year = this.getYear()) {
@@ -76,19 +75,28 @@ class UiMonthInput extends BaseComponent {
             this.input.value = this._value;
             return;
         }
-        this._value = `${pad(month)}/${year}`;
-
+        if (month) {
+            this._value = `${pad(month)}/${year}`;
+        }
         this.typedValue = this._value;
         this.input.value = this._value;
         this.picker.value = this._value;
     }
 
-    getMonth() {
-        return parseInt(this.value.split('/')[0], 10);
+    getMonth(value) {
+        const v = value || this.value;
+        if (!v) {
+            return null;
+        }
+        return parseInt(v.split('/')[0], 10);
     }
 
-    getYear() {
-        return parseInt(this.value.split('/')[1], 10);
+    getYear(value) {
+        const v = value || this.value;
+        if (!v) {
+            return null;
+        }
+        return parseInt(v.split('/')[1], 10);
     }
 
     onDisabled(value) {
@@ -156,9 +164,11 @@ class UiMonthInput extends BaseComponent {
     reset() {
         this.typedValue = '';
         const value = this.lastValue;
-        const month = parseInt(value.split('/')[0], 10);
-        const year = parseInt(value.split('/')[1], 10);
-        this.setValue(month, year);
+        if (value) {
+            const month = parseInt(value.split('/')[0], 10);
+            const year = parseInt(value.split('/')[1], 10);
+            this.setValue(month, year);
+        }
     }
 
     emitEvent() {
@@ -217,6 +227,8 @@ class UiMonthInput extends BaseComponent {
                 'event-name': 'picker-change',
                 'years-prev': this['years-prev'],
                 'years-next': this['years-next'],
+                min: this.min,
+                max: this.max,
                 value: this.value,
             },
             this.popup,
@@ -242,14 +254,12 @@ class UiMonthInput extends BaseComponent {
     }
 }
 
-const d = new Date();
-const defaultValue = `${d.getMonth() + 1}/${d.getFullYear()}`;
-
 function makeDate(str) {
     const month = parseInt(str.split('/')[0], 10);
     const year = parseInt(str.split('/')[1], 10);
     return new Date(year, month - 1, 1);
 }
+
 function invalidMinMax(min, max) {
     if (!min || !max) {
         return false;

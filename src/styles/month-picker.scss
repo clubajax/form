@@ -25,6 +25,15 @@ ui-month-picker {
             &:hover {
                 background-color: var(--btn-bg-hvr);
             }
+            &:disabled {
+                cursor: default;
+                &:hover {
+                    background-color: transparent;
+                }
+                ui-icon {
+                    color: var(--disabled);
+                }
+            }
         }
     }
     .list {
@@ -36,7 +45,10 @@ ui-month-picker {
             height: 30px;
             background-color: transparent;
             border: 0;
-            &:hover {
+            &[disabled] {
+                cursor: default;
+            }
+            &:hover:not(&[disabled]) {
                 background-color: var(--btn-bg-hvr);
             }
             &.selected {
