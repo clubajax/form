@@ -974,10 +974,10 @@
   resolved "https://registry.yarnpkg.com/@clubajax/no-dash/-/no-dash-0.7.1.tgz#aaeae4451f3a7b1b02721f51a1ed9b042bc4621e"
   integrity sha512-LgeIdUO9LjbbLly12KoYc+v9sS6X1fV0XRhw212ZqJKip8XWylLBlAF2SIYeHIvFOOgq1OAyTnCi11geMfc7ag==
 
-"@clubajax/node-file-managment@^0.1.3":
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/@clubajax/node-file-managment/-/node-file-managment-0.1.3.tgz#38fde48fa586b093bf1a444c4b29e1e6025d56c0"
-  integrity sha512-HpMtiesGnS7ZVhWgj4Uw8Z/NUjX0Hw6rONCFGcc3WuaMkyUdr50ykHJHtP+2+enG7zd/O7xlq/HxvLwIsXiHmg==
+"@clubajax/node-file-managment@^0.1.5":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@clubajax/node-file-managment/-/node-file-managment-0.1.5.tgz#28780ed9d537a88a0fdefb0310304f2a88775617"
+  integrity sha512-9Bm9BQdEpLcn03ttSDX7FBXnMy/2ZoQvbSJ++BWV6oOfhF0uiid4sXp2g4q44RL1Lz5paezuhs/BKwoUbgiDhQ==
 
 "@clubajax/on@2.2.2", "@clubajax/on@^2.2.2":
   version "2.2.2"

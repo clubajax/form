@@ -1,7 +1,7 @@
 const BaseComponent = require('@clubajax/base-component');
 const dom = require('@clubajax/dom');
 const dates = require('@clubajax/dates');
-const { isEmpty, isNull, loop } = require('@clubajax/no-dash');
+const { isNull, loop } = require('@clubajax/no-dash');
 const emitEvent = require('./lib/emitEvent');
 const { pad } = require('./date-picker/util');
 require('./ui-dropdown');

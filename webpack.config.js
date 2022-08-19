@@ -12,7 +12,6 @@ const DIST = path.resolve(ROOT, distFolder);
 
 console.log('DEV:::', DEV);
 
-
 let plugins = [
     new MiniCssExtractPlugin({
         // Options similar to the same options in webpackOptions.output
@@ -72,8 +71,6 @@ if (DEV) {
             ],
         }),
     ];
-
-    
 }
 
 module.exports = {
@@ -99,15 +96,17 @@ module.exports = {
     // eval-source-map: has wrong line numbers, fastest
     // source-map: slow, org source, external
     devtool: DEV ? 'inline-source-map' : 'source-map',
-    externals: DEV ? [] : [
-        // '@clubajax/custom-elements-polyfill',
-        '@clubajax/dom',
-        '@clubajax/on',
-        // '@clubajax/base-component',
-        '@clubajax/dates',
-        // '@clubajax/key-nav',
-        // '@clubajax/no-dash',
-    ],
+    externals: DEV
+        ? []
+        : [
+              // '@clubajax/custom-elements-polyfill',
+              // '@clubajax/dom',
+              // '@clubajax/on',
+              // '@clubajax/base-component',
+              // '@clubajax/dates',
+              // '@clubajax/key-nav',
+              // '@clubajax/no-dash',
+          ],
     module: {
         rules: [
             {
