@@ -224,6 +224,9 @@ const isGreaterThan = (d1, d2) => {
 };
 
 const getMonthYear = (value) => {
+    if (!value) {
+        return [];
+    }
     if (dates.isDate(value)) {
         const d = dates.toDate(value);
         return [d.getMonth() + 1, d.getFullYear()];

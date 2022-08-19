@@ -75,6 +75,7 @@ suite('UiMonthPicker', function () {
                 {
                     value: '06/2018',
                     min: '03/2018',
+                    max: null,
                 },
                 body,
             );
