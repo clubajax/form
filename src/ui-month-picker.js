@@ -18,18 +18,16 @@ class UiMonthPicker extends BaseComponent {
     }
 
     onMin(min) {
-        console.log('picker.min', min);
         this.minDate = getMonthYear(min);
         this.setMinMax();
     }
     onMax(max) {
-        console.log('picker.max', max);
         this.maxDate = getMonthYear(max);
         this.setMinMax();
     }
 
     set value(value) {
-        this._value = isNull(value) ? defaultValue : value;
+        this._value = !value ? defaultValue : value;
         this.setValue();
     }
 
@@ -69,8 +67,6 @@ class UiMonthPicker extends BaseComponent {
         clearTimeout(this.minMaxTimer);
         const min = this.minDate;
         const max = this.maxDate;
-        console.log('min', min);
-        console.log('max', max);
         this.minMaxTimer = setTimeout(() => {
             this.buttons.forEach((b, i) => {
                 const dt = this.buttonDates[i];

@@ -31,13 +31,6 @@ class UiMonthInput extends BaseComponent {
 </label>`;
     }
 
-    onMin(min) {
-        console.log('input.min', min);
-    }
-    onMax(max) {
-        console.log('input.max', max);
-    }
-
     setMinMax() {
         if (!this.min && !this.max) {
             return;
