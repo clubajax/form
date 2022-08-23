@@ -940,12 +940,12 @@
     "@babel/helper-validator-identifier" "^7.16.7"
     to-fast-properties "^2.0.0"
 
-"@clubajax/base-component@2.4.6":
-  version "2.4.6"
-  resolved "https://registry.yarnpkg.com/@clubajax/base-component/-/base-component-2.4.6.tgz#d08bb84ba45c061b04c78eb909749e26d25bfa57"
-  integrity sha512-JqZINw+thzUte2PRq53DOtBqhoSJTUY7hf2bJga9lHNX6c0DFqkU9tD/KqVQBULGMbFbxjMB+fjpMh20P55RSg==
+"@clubajax/base-component@2.4.8":
+  version "2.4.8"
+  resolved "https://registry.yarnpkg.com/@clubajax/base-component/-/base-component-2.4.8.tgz#7f474d5426a68996baa00d4e02b6c32e92eafa1f"
+  integrity sha512-rgbUiFOT9ENGJUCkyLfJikI52euB1DdNAz8MhPF1U4nWkXE4Lm553j3YMJc9My7kJ538BlJJE7GkmDm85xJgKQ==
   dependencies:
-    "@clubajax/on" "^2.2.2"
+    "@clubajax/on" "^2.2.x"
 
 "@clubajax/custom-elements-polyfill@^0.9.4":
   version "0.9.4"
@@ -979,7 +979,7 @@
   resolved "https://registry.yarnpkg.com/@clubajax/node-file-managment/-/node-file-managment-0.1.5.tgz#28780ed9d537a88a0fdefb0310304f2a88775617"
   integrity sha512-9Bm9BQdEpLcn03ttSDX7FBXnMy/2ZoQvbSJ++BWV6oOfhF0uiid4sXp2g4q44RL1Lz5paezuhs/BKwoUbgiDhQ==
 
-"@clubajax/on@2.2.2", "@clubajax/on@^2.2.2":
+"@clubajax/on@2.2.2", "@clubajax/on@^2.2.x":
   version "2.2.2"
   resolved "https://registry.yarnpkg.com/@clubajax/on/-/on-2.2.2.tgz#f28b5abe1e65421bbaba45495f31c78838feb3ad"
   integrity sha512-LBrDE55RfirpORs1Lus3AIS+XNvUo/3ao4sVb8lTQHFOFWlYheltApWeDE2yzEwQxLjYpgFS3gpX72IVPbaVRQ==
