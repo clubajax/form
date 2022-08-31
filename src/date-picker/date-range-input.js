@@ -1,5 +1,5 @@
+const { dates } = require('../libs');
 const DateInput = require('./date-input');
-const dates = require('@clubajax/dates');
 const uid = require('../lib/uid');
 require('./date-range-picker');
 

@@ -1,6 +1,4 @@
-const BaseComponent = require('@clubajax/base-component');
-const dom = require('@clubajax/dom');
-const on = require('@clubajax/on');
+const { BaseComponent, dom, on } = require('./libs');
 const uid = require('./lib/uid');
 require('./ui-popup');
 require('./ui-list');
@@ -130,15 +128,19 @@ class UiSearch extends BaseComponent {
 
     connectInput() {
         let timer;
-        this.input.on('keyup', (e) => {
-            clearTimeout(timer);
-            setTimeout(() => {
-                // meta handles paste
-                if (on.isAlphaNumeric(e.key) || e.key === 'Backspace' || e.key === 'Delete' || e.key === 'Meta') {
-                    this.fire('search', { value: this.input.value });
-                }
-            });
-        }, 300)
+        this.input.on(
+            'keyup',
+            (e) => {
+                clearTimeout(timer);
+                setTimeout(() => {
+                    // meta handles paste
+                    if (on.isAlphaNumeric(e.key) || e.key === 'Backspace' || e.key === 'Delete' || e.key === 'Meta') {
+                        this.fire('search', { value: this.input.value });
+                    }
+                });
+            },
+            300,
+        );
 
         this.input.on('focus', () => {
             this.classList.add('is-focused');
@@ -149,7 +151,7 @@ class UiSearch extends BaseComponent {
         });
 
         this.input.on('clear', () => {
-            this.emit('change', {value: ''});
+            this.emit('change', { value: '' });
             if (this.popup) {
                 this.popup.hide();
             }
@@ -160,7 +162,7 @@ class UiSearch extends BaseComponent {
         this.list.on('list-change', () => {
             this.isSelecting = true;
             this.setDisplay();
-            this.emit('change', {value: this.value, item: this.list.getItem(this.value)});
+            this.emit('change', { value: this.value, item: this.list.getItem(this.value) });
             setTimeout(() => {
                 this.popup.hide();
                 setTimeout(() => {
@@ -187,9 +189,9 @@ class UiSearch extends BaseComponent {
                 icon: this.getIcon(),
                 autoselect: this.autoselect,
                 disabled: this.disabled,
-                readonly: this.readonly
+                readonly: this.readonly,
             },
-            this
+            this,
         );
         this.input.on('focus', () => {
             this.classList.add('focus');
@@ -221,7 +223,7 @@ class UiSearch extends BaseComponent {
                 html: this.list,
                 lazy: true,
             },
-            document.body
+            document.body,
         );
 
         this.setPopSize();
@@ -256,7 +258,7 @@ module.exports = BaseComponent.define('ui-search', UiSearch, {
         'autofocus',
         'autoselect',
         'busy',
-        'no-border'
+        'no-border',
     ],
     attrs: ['value'],
 });

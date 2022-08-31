@@ -1,6 +1,5 @@
-const BaseComponent = require('@clubajax/base-component');
+const { BaseComponent, dom } = require('./libs');
 const UiDropdown = require('./ui-dropdown');
-const dom = require('@clubajax/dom');
 require('./ui-icon');
 
 class ActionButton extends UiDropdown {
@@ -14,8 +13,8 @@ class ActionButton extends UiDropdown {
         // handle react
         if (this.className) {
             const cls = this.className;
-            dom.attr(this, 'classname', null)
-            this.removeAttribute('classname')
+            dom.attr(this, 'classname', null);
+            this.removeAttribute('classname');
             this.className = '';
             this.button.className = cls;
         }
@@ -28,13 +27,13 @@ class ActionButton extends UiDropdown {
             return;
         }
         if (this.icon && !this['icon-after']) {
-            this.button.appendChild(dom('ui-icon', {type: this.icon}));
+            this.button.appendChild(dom('ui-icon', { type: this.icon }));
         }
         if (this.label) {
-            this.button.appendChild(dom('span', {html: this.label}));            
+            this.button.appendChild(dom('span', { html: this.label }));
         }
         if (this.icon && this['icon-after']) {
-            this.button.appendChild(dom('ui-icon', {type: this.icon}));
+            this.button.appendChild(dom('ui-icon', { type: this.icon }));
         }
         this.buttonRendered = true;
     }
@@ -42,8 +41,7 @@ class ActionButton extends UiDropdown {
     connectEvents() {
         super.connectEvents();
         this.list.on('list-change', (e) => {
-
-            const item = this.data.find(d => d.value === e.detail.value);
+            const item = this.data.find((d) => d.value === e.detail.value);
             if (item && item.callback) {
                 item.callback(item);
             }
@@ -58,5 +56,5 @@ class ActionButton extends UiDropdown {
 
 module.exports = BaseComponent.define('ui-actionbutton', ActionButton, {
     props: ['icon', 'btn-class'],
-    bools: ['icon-after']
+    bools: ['icon-after'],
 });

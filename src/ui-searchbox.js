@@ -1,6 +1,4 @@
-const BaseComponent = require('@clubajax/base-component');
-const dom = require('@clubajax/dom');
-const on = require('@clubajax/on');
+const { BaseComponent, dom, on } = require('./libs');
 require('./ui-icon');
 require('./ui-input');
 
@@ -33,7 +31,7 @@ class UiSearchBox extends BaseComponent {
         this.input.on('keyup', (e) => {
             // meta handles paste
             if (on.isAlphaNumeric(e.key) || e.key === 'Backspace' || e.key === 'Delete' || e.key === 'Meta') {
-                this.emit('search', {value: this.input.value});
+                this.emit('search', { value: this.input.value });
                 this.updateIcon();
             }
         });
@@ -66,9 +64,9 @@ class UiSearchBox extends BaseComponent {
                 icon: this.getIcon(),
                 autoselect: this.autoselect,
                 disabled: this.disabled,
-                'no-border': true
+                'no-border': true,
             },
-            this
+            this,
         );
     }
 }

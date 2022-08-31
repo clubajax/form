@@ -1,6 +1,4 @@
-const BaseComponent = require('@clubajax/base-component');
-const dom = require('@clubajax/dom');
-const on = require('@clubajax/on');
+const { BaseComponent, dom, on } = require('./libs');
 
 class UiDrawer extends BaseComponent {
     constructor() {
@@ -20,7 +18,6 @@ class UiDrawer extends BaseComponent {
     setOpen(_open) {
         const dim = this.vertical ? 'height' : 'width';
         if (!_open) {
-            
             if (!this.style[dim]) {
                 setSize(this, dim);
             }
@@ -63,7 +60,6 @@ function setSize(node, dim) {
     } else {
         dom.style(node, 'height', node.offsetHeight);
     }
-    
 }
 
 function getSize(node) {
@@ -73,23 +69,23 @@ function getSize(node) {
         const heightStyle = dom.style(node, 'height');
         dom.style(node, {
             width: '',
-            height: ''
+            height: '',
         });
         node.openWidth = node.offsetWidth;
         node.openHeight = node.offsetHeight;
         node.classList.add('animate');
         dom.style(node, {
             width: widthStyle,
-            height: heightStyle
+            height: heightStyle,
         });
     }
     return {
         width: node.openWidth,
-        height: node.openHeight
+        height: node.openHeight,
     };
 }
 
 module.exports = BaseComponent.define('ui-drawer', UiDrawer, {
     props: ['closed-size'],
-    bools:['vertical']
+    bools: ['vertical'],
 });

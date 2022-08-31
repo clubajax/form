@@ -1,5 +1,5 @@
+const { dates } = require('../libs');
 const util = require('./util');
-const dates = require('@clubajax/dates');
 
 function isValid(value = this.input.value, type) {
     if (!value && this.required) {

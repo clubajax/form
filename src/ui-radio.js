@@ -1,5 +1,4 @@
-const BaseComponent = require('@clubajax/base-component');
-const dom = require('@clubajax/dom');
+const { BaseComponent, dom } = require('./libs');
 const FormElement = require('./lib/BaseField');
 const uid = require('./lib/uid');
 
@@ -8,8 +7,8 @@ class Radio extends FormElement {
         return {
             value: this.value,
             checked: this.checked,
-            name: this.name
-        }
+            name: this.name,
+        };
     }
 
     onChecked(value) {
@@ -48,17 +47,24 @@ class Radio extends FormElement {
             }
             this.toggle();
         });
-        this.connected = () => { };
+        this.connected = () => {};
     }
 
     render() {
         const html = this.label || '';
-        const chkId = this.label ? (this.id || uid('radio')) : null;
-        const lblId = this.label ? (this.id || uid('label')) : null;
+        const chkId = this.label ? this.id || uid('radio') : null;
+        const lblId = this.label ? this.id || uid('label') : null;
 
-        this.labelNode = dom('span', { html, class: 'ui-label', 'for': chkId, id: lblId });
-        this.input = dom('div', { class: 'radio-button', id: chkId, role: 'radio', 'aria-labelledby': lblId, 'aria-checked': false, tabindex: '0' });
-        
+        this.labelNode = dom('span', { html, class: 'ui-label', for: chkId, id: lblId });
+        this.input = dom('div', {
+            class: 'radio-button',
+            id: chkId,
+            role: 'radio',
+            'aria-labelledby': lblId,
+            'aria-checked': false,
+            tabindex: '0',
+        });
+
         if (this['check-after']) {
             this.appendChild(this.labelNode);
             this.appendChild(this.input);
@@ -74,5 +80,5 @@ class Radio extends FormElement {
 module.exports = BaseComponent.define('ui-radio', Radio, {
     props: [],
     bools: ['checked', 'check-after'],
-    attrs: []
+    attrs: [],
 });

@@ -1,6 +1,4 @@
-const BaseComponent = require('@clubajax/base-component');
-const dom = require('@clubajax/dom');
-const on = require('@clubajax/on');
+const { BaseComponent, dom, on } = require('./libs');
 const paginate = require('./lib/paginate');
 const emitEvent = require('./lib/emitEvent');
 require('./ui-dropdown');
@@ -46,8 +44,8 @@ class Paginator extends BaseComponent {
         this.data = {
             start: value.value.start,
             limit: value.value.limit,
-            total: value.value.total
-        }
+            total: value.value.total,
+        };
         emitEvent(this, value);
     }
 
@@ -70,7 +68,7 @@ class Paginator extends BaseComponent {
             this.emitEvent({
                 value: {
                     ...this.data,
-                    start: ((num - 1) * this.data.limit),
+                    start: (num - 1) * this.data.limit,
                 },
             });
         }
@@ -104,13 +102,12 @@ class Paginator extends BaseComponent {
 
     setDisplayState() {
         if (!this.leftButton) {
-            return;                                                           
+            return;
         }
         const { buttonIndex } = this.pagination;
         const { start, total, limit } = this.data;
         const dropData = (this.dropData || DEFAULT_DROP_DATA).map((d) => parseInt(d.value, 10));
         const minDropValue = Math.min(...dropData);
-        
 
         // pag (10) start:0 total:1 limit:20 minDropValue:10 false
         // start: 10 total: 35 limit: 10 minDropValue: 10 true
@@ -119,9 +116,7 @@ class Paginator extends BaseComponent {
         const showButtons = total > limit;
         const showDropdown = total > limit || (limit > minDropValue && total > minDropValue);
         // console.log('pag', 'min:', minDropValue , 'start:', start, 'total:', total, 'limit:', limit, 'showDropdown:',showDropdown , 'showButtons:', showButtons);
-        
-        
-        
+
         // NOT right. Hide the dropdown when you select 100 results
         // const showDropdown = showButtons;
         const leftDisabled = buttonIndex === 0;
@@ -174,7 +169,7 @@ class Paginator extends BaseComponent {
                 'event-name': 'drop-change',
                 class: 'thin',
             },
-            this
+            this,
         );
         this.on('drop-change', this.onDropChange.bind(this), null, null);
         this.setDropdown();
@@ -192,7 +187,7 @@ class Paginator extends BaseComponent {
                 class: 'rows-label',
                 html: [this.extraStatusNode, this.statusNode],
             },
-            this
+            this,
         );
         this.setStatus();
 
@@ -202,7 +197,7 @@ class Paginator extends BaseComponent {
                 class: 'ui-button left',
                 html: dom('ui-icon', { type: 'caretLeft' }),
             },
-            this
+            this,
         );
         this.pageNumbers = dom('div', { class: 'page-numbers' }, this);
         this.renderPageNumbers();
@@ -212,7 +207,7 @@ class Paginator extends BaseComponent {
                 class: 'ui-button right',
                 html: dom('ui-icon', { type: 'caretRight' }),
             },
-            this
+            this,
         );
 
         this.connectEvents();

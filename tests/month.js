@@ -86,6 +86,23 @@ suite('UiMonthPicker', function () {
                 done();
             });
         });
+
+        test('it should handle max and not a min', function (done) {
+            const node = dom(
+                'ui-month-picker',
+                {
+                    value: '06/2018',
+                    max: '11/2018',
+                },
+                body,
+            );
+            onDomReady(node, function () {
+                node.on('change', (e) => {
+                    console.log('change', e.value);
+                });
+                done();
+            });
+        });
     });
 
     suite('ui-month-input', function () {

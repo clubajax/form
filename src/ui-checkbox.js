@@ -1,5 +1,4 @@
-const BaseComponent = require('@clubajax/base-component');
-const dom = require('@clubajax/dom');
+const { BaseComponent, dom } = require('./libs');
 const FormElement = require('./lib/BaseField');
 const uid = require('./lib/uid');
 require('./ui-icon');
@@ -96,8 +95,8 @@ class CheckBox extends FormElement {
             'aria-labelledby': lblId,
             'aria-checked': false,
         });
-        this.labelNode = dom('span', {html: html, class: 'ui-label', for: chkId, id: lblId});
-        
+        this.labelNode = dom('span', { html: html, class: 'ui-label', for: chkId, id: lblId });
+
         if (!this['check-after']) {
             this.appendChild(this.input);
             if (this.label) {
@@ -129,6 +128,6 @@ class CheckBox extends FormElement {
 
 module.exports = BaseComponent.define('ui-checkbox', CheckBox, {
     bools: ['checked', 'check-after', 'intermediate'],
-    props: ['label']
+    props: ['label'],
     // attrs: ['value']
 });

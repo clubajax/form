@@ -1,6 +1,4 @@
-const BaseComponent = require('@clubajax/base-component');
-const dom = require('@clubajax/dom');
-const dates = require('@clubajax/dates');
+const { BaseComponent, dom, dates } = require('./libs');
 const emitEvent = require('./lib/emitEvent');
 
 class UiForm extends BaseComponent {

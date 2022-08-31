@@ -1,5 +1,4 @@
-const BaseComponent = require('@clubajax/base-component');
-const dom = require('@clubajax/dom');
+const { BaseComponent, dom } = require('./libs');
 require('./ui-popup');
 
 class UiTooltip extends BaseComponent {

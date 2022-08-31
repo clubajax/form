@@ -1,8 +1,7 @@
+import { on, dom } from '../src/libs';
 import '../src/ui-arrow';
 import '../src/ui-searchbox';
 import '../src/ui-form';
-import on from '@clubajax/on';
-import dom from '@clubajax/dom';
 import '../src/styles/main.scss';
 import './test.scss';
 

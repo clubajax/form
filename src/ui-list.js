@@ -1,7 +1,4 @@
-const BaseComponent = require('@clubajax/base-component');
-const dom = require('@clubajax/dom');
-const on = require('@clubajax/on');
-const keys = require('@clubajax/key-nav');
+const { BaseComponent, dom, on, keys } = require('./libs');
 const emitEvent = require('./lib/emitEvent');
 require('./ui-icon');
 require('./ui-input');

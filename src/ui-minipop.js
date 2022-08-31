@@ -1,11 +1,9 @@
-const BaseComponent = require('@clubajax/base-component');
-const dom = require('@clubajax/dom');
-const on = require('@clubajax/on');
+const { BaseComponent, dom } = require('./libs');
 
 class UiMiniPop extends BaseComponent {
     constructor() {
         super();
-        // this.showing = true; 
+        // this.showing = true;
     }
 
     show() {
@@ -42,7 +40,7 @@ class UiMiniPop extends BaseComponent {
                 class: 'apply-container',
                 html: applyButton,
             },
-            this
+            this,
         );
         this.on(applyButton, 'click', () => {
             this.fire('done-click');
@@ -55,7 +53,6 @@ class UiMiniPop extends BaseComponent {
         dom.style(this, 'width', w);
     }
 }
-
 
 module.exports = BaseComponent.define('ui-minipop', UiMiniPop, {
     props: ['align'],

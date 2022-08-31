@@ -1,5 +1,4 @@
-const on = require('@clubajax/on');
-const dom = require('@clubajax/dom');
+const { on, dom } = require('../libs');
 
 function arrowKeys(input, popup) {
     const h1 = on(input, 'keyup', (e) => {
@@ -9,7 +8,7 @@ function arrowKeys(input, popup) {
         }
         if (e.key === 'ArrowUp') {
             e.stopImmediatePropagation();
-            const inputs = dom.queryAll(popup, 'ui-checkbox')
+            const inputs = dom.queryAll(popup, 'ui-checkbox');
             inputs[inputs.length - 1].focus();
             inputs[inputs.length - 1].scrollIntoView();
         }
@@ -20,7 +19,7 @@ function arrowKeys(input, popup) {
             e.preventDefault();
             const inputs = dom.queryAll(popup, 'ui-checkbox');
             const input = document.activeElement;
-            const index = inputs.findIndex(inp => inp === input);
+            const index = inputs.findIndex((inp) => inp === input);
             if (index + 1 >= inputs.length) {
                 inputs[0].focus();
             } else {
@@ -32,7 +31,7 @@ function arrowKeys(input, popup) {
             e.preventDefault();
             const inputs = dom.queryAll(popup, 'ui-checkbox');
             const input = document.activeElement;
-            const index = inputs.findIndex(inp => inp === input);
+            const index = inputs.findIndex((inp) => inp === input);
             if (index - 1 < 0) {
                 inputs[inputs.length - 1].focus();
             } else {

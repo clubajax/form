@@ -1,5 +1,4 @@
-const BaseComponent = require('@clubajax/base-component');
-const dom = require('@clubajax/dom');
+const { BaseComponent, dom } = require('./libs');
 const arrowKeys = require('./lib/arrowKeys');
 require('./ui-minipop');
 require('./ui-input');
@@ -79,8 +78,8 @@ class UiCheckList extends BaseComponent {
                 this.searching = true;
                 this.renderList();
             }
-            
-            this.fire('search', {value: this.input.value});
+
+            this.fire('search', { value: this.input.value });
             return;
         }
         if (!this.input.value) {
@@ -132,10 +131,10 @@ class UiCheckList extends BaseComponent {
         const inputs = dom.queryAll(this, 'ui-checkbox');
         if (value.length === data.length) {
             // check none
-            inputs.forEach(inp => inp.checked = false);
+            inputs.forEach((inp) => (inp.checked = false));
         } else {
             // check all
-            inputs.forEach(inp => inp.checked = true);
+            inputs.forEach((inp) => (inp.checked = true));
         }
         this.onChange();
     }
@@ -148,9 +147,9 @@ class UiCheckList extends BaseComponent {
     onChange() {
         this.updateValues();
         const value = this._value;
-        const items = this.data.filter(d => value.includes(d.id));
-        this.emit('change', {value, items});
-        
+        const items = this.data.filter((d) => value.includes(d.id));
+        this.emit('change', { value, items });
+
         if (this.allCheck) {
             const data = this.items;
             this.allCheck.label = this._value.length === data.length ? 'Select None' : 'Select All';
@@ -168,7 +167,7 @@ class UiCheckList extends BaseComponent {
                 placeholder: this.placeholder || 'Filter List...',
                 'event-name': 'input-change',
             },
-            this
+            this,
         );
 
         if (this.popup && this.open) {
@@ -182,11 +181,14 @@ class UiCheckList extends BaseComponent {
         dom.classList.toggle(this, 'has-data', items && items.length);
         dom.clean(this.list);
         if (this.searching) {
-            dom('div', {
-                class: 'ui-loading', html: [
-                    dom('ui-icon', {type: 'spinner'}),
-                    dom('span', {html: 'Searching...'})
-            ]}, this.list);
+            dom(
+                'div',
+                {
+                    class: 'ui-loading',
+                    html: [dom('ui-icon', { type: 'spinner' }), dom('span', { html: 'Searching...' })],
+                },
+                this.list,
+            );
         }
         if (!items) {
             return;
@@ -203,7 +205,7 @@ class UiCheckList extends BaseComponent {
                     class: ALL_NAME,
                     html: this.allCheck,
                 },
-                this.list
+                this.list,
             );
         }
         const values = this._value || [];
@@ -215,10 +217,10 @@ class UiCheckList extends BaseComponent {
                         name: item.value,
                         label: item.label,
                         'event-name': 'check-change',
-                        checked: values.includes(item.value)
+                        checked: values.includes(item.value),
                     }),
                 },
-                this.list
+                this.list,
             );
         });
     }
@@ -242,7 +244,7 @@ class UiCheckList extends BaseComponent {
             {
                 html: listWrap,
             },
-            this
+            this,
         );
 
         const clickoff = this.on('clickoff', (e) => {
@@ -256,7 +258,7 @@ class UiCheckList extends BaseComponent {
         this.popup.on('popup-close', () => {
             clickoff.pause();
         });
-        
+
         this.popup.on('done-click', () => {
             this.input.value = '';
         });

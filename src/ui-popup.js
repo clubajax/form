@@ -1,6 +1,4 @@
-const BaseComponent = require('@clubajax/base-component');
-const dom = require('@clubajax/dom');
-const on = require('@clubajax/on');
+const { BaseComponent, dom, on } = require('./libs');
 
 // detach popup from body when not showing
 // - unless keepPopupsAttached

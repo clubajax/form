@@ -1,11 +1,9 @@
-const BaseComponent = require('@clubajax/base-component');
-const dom = require('@clubajax/dom');
+const { BaseComponent, dom } = require('./libs');
 const UiDropdown = require('./ui-dropdown');
 const emitEvent = require('./lib/emitEvent');
 require('./ui-arrow');
 require('./ui-icon');
 require('./ui-minipop');
-
 
 class UiMiniTags extends UiDropdown {
     constructor() {
@@ -13,8 +11,6 @@ class UiMiniTags extends UiDropdown {
         this.popupClass = 'minitags';
         this.persistMultiple = true;
     }
-
-    
 
     removeTag(id) {
         const node = dom.query(this, `[data-id="${id}"]`);
@@ -45,7 +41,7 @@ class UiMiniTags extends UiDropdown {
                 'data-id': id,
                 html: [dom('span', { html: label }), this.readonly ? null : dom('ui-icon', { type: 'close' })],
             },
-            this.button
+            this.button,
         );
     }
 
@@ -61,16 +57,20 @@ class UiMiniTags extends UiDropdown {
         });
 
         if (!this.getDisplayIds().length) {
-            this.noDataNode = dom('span', {html: 'No tags', class: 'no-tags'}, this.button);
+            this.noDataNode = dom('span', { html: 'No tags', class: 'no-tags' }, this.button);
         }
     }
 
     renderButton() {
-        const buttonWrap = dom('div', {class: 'minitag-buttonwrap'}, this);
-        this.button = dom('button', {id: this.buttonid, class: 'ui-button minitag-button', type: 'button'}, buttonWrap);
-        
+        const buttonWrap = dom('div', { class: 'minitag-buttonwrap' }, this);
+        this.button = dom(
+            'button',
+            { id: this.buttonid, class: 'ui-button minitag-button', type: 'button' },
+            buttonWrap,
+        );
+
         if (!this.readonly) {
-            dom('ui-icon', {type: 'caretDown'}, buttonWrap);
+            dom('ui-icon', { type: 'caretDown' }, buttonWrap);
 
             this.on(this.button, 'click', (e) => {
                 if (e.target.localName === 'ui-icon') {
@@ -103,7 +103,7 @@ class UiMiniTags extends UiDropdown {
 
         const listWrap = dom('div', {
             class: 'listwrap',
-            html: this.list
+            html: this.list,
         });
 
         if (this.className) {
@@ -116,17 +116,17 @@ class UiMiniTags extends UiDropdown {
                 html: listWrap,
                 class: `${this.popupClass} open`,
             },
-            this
+            this,
         );
 
         const clickoff = this.on('clickoff', (e) => {
             this.popup.hide();
         });
-        
+
         this.popup.on('popup-open', () => {
             clickoff.resume();
         });
-        
+
         this.popup.on('popup-close', () => {
             clickoff.pause();
         });

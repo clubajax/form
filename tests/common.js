@@ -1,5 +1,5 @@
-window.dom = require('@clubajax/dom');
-window.on = require('@clubajax/on');
-require('@clubajax/base-component');
+const { on, dom } = require('../src/libs');
+window.dom = dom;
+window.on = on;
 
 mocha.allowUncaught();

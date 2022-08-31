@@ -1,4 +1,4 @@
-const dates = require('@clubajax/dates');
+const { dates } = require('../libs');
 
 function round(n, r, down) {
     return Math.ceil(n / r) * r - (down ? r : 0);

@@ -1,5 +1,4 @@
-const BaseComponent = require('@clubajax/base-component');
-
+const { BaseComponent } = require('../libs');
 class Icon extends BaseComponent {
     get templateString() {
         return `

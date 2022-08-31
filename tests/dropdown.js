@@ -170,10 +170,25 @@ suite('UiDropdown', function () {
                 node = dom(
                     'ui-dropdown',
                     { data: data, label: 'Simple drop', placeholder: 'Select', class: 'xmax-test' },
-                    body
+                    body,
                 );
                 ready(function () {
                     expect(lis.length).to.equal(4);
+                    done();
+                });
+            });
+            test.only('should handle an "all" option', function (done) {
+                data.unshift({
+                    label: 'All',
+                    value: -1,
+                });
+                node = dom(
+                    'ui-dropdown',
+                    { data: data, label: 'Simple drop', placeholder: 'Select', class: 'xmax-test' },
+                    body,
+                );
+                ready(function () {
+                    expect(lis.length).to.equal(5);
                     done();
                 });
             });
@@ -196,7 +211,7 @@ suite('UiDropdown', function () {
                 node = dom(
                     'ui-dropdown',
                     { data: data, label: 'Disabled drop', disabled: true, value: 'red', placeholder: 'Select' },
-                    body
+                    body,
                 );
                 ready(function () {
                     expect(lis.length).to.equal(4);
@@ -241,7 +256,7 @@ suite('UiDropdown', function () {
                 node = dom(
                     'ui-dropdown',
                     { data: dataQnA, label: 'Long Options', placeholder: 'Select a long option..' },
-                    body
+                    body,
                 );
                 ready(function () {
                     expect(lis.length).to.equal(5);
@@ -259,7 +274,7 @@ suite('UiDropdown', function () {
                 node = dom(
                     'ui-dropdown',
                     { data: dataLongList, label: 'Long List', placeholder: 'Pick...', class: 'top-right' },
-                    body
+                    body,
                 );
                 ready(function () {
                     expect(lis.length).to.equal(64);
@@ -276,7 +291,7 @@ suite('UiDropdown', function () {
                         class: 'top-middle',
                         xmaxheight: 200,
                     },
-                    body
+                    body,
                 );
                 ready(function () {
                     console.log('node', node);
@@ -288,7 +303,7 @@ suite('UiDropdown', function () {
                 node = dom(
                     'ui-dropdown',
                     { data: dataS, label: 'Initial Data Selection', placeholder: 'Select' },
-                    body
+                    body,
                 );
                 ready(function () {
                     expect(lis.length).to.equal(4);
@@ -299,7 +314,7 @@ suite('UiDropdown', function () {
                 node = dom(
                     'ui-dropdown',
                     { data: data, value: 'blue', label: 'Initial Parent Value', placeholder: 'Select' },
-                    body
+                    body,
                 );
                 done();
             });
@@ -463,7 +478,7 @@ suite('UiDropdown', function () {
                 node = dom(
                     'ui-dropdown',
                     { data: () => dataQnA, label: 'Lazy Long Options Middle', class: 'abs-mid' },
-                    body
+                    body,
                 );
                 done();
             });
@@ -474,7 +489,7 @@ suite('UiDropdown', function () {
                 node = dom(
                     'ui-dropdown',
                     { data: () => data, value: 'spades', label: 'Lazy Options With Value', class: '' },
-                    body
+                    body,
                 );
                 ready(() => {
                     expect(node.popup).to.equal(undefined);

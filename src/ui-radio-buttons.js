@@ -1,6 +1,4 @@
-const BaseComponent = require('@clubajax/base-component');
-const dom = require('@clubajax/dom');
-const nodash = require('@clubajax/no-dash');
+const { BaseComponent, dom, nodash } = require('./libs');
 const emitEvent = require('./lib/emitEvent');
 const FormElement = require('./lib/BaseField');
 require('./ui-checkbox');

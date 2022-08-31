@@ -1,5 +1,4 @@
-const BaseComponent = require('@clubajax/base-component');
-const dom = require('@clubajax/dom');
+const { BaseComponent, dom } = require('./libs');
 const emitEvent = require('./lib/emitEvent');
 require('./ui-icon');
 
@@ -161,7 +160,6 @@ class UiInput extends BaseComponent {
         this.setPlaceholder();
 
         this.connect();
-
     }
 
     disconnected() {

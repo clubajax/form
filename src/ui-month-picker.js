@@ -1,27 +1,28 @@
-const BaseComponent = require('@clubajax/base-component');
-const dom = require('@clubajax/dom');
-const dates = require('@clubajax/dates');
-const { isEmpty, isNull, loop } = require('@clubajax/no-dash');
+const { BaseComponent, dom, dates, nodash } = require('./libs');
 const emitEvent = require('./lib/emitEvent');
 const { pad } = require('./date-picker/util');
 require('./ui-dropdown');
+
+const { isNull, loop } = nodash;
 
 class UiMonthPicker extends BaseComponent {
     constructor() {
         super();
     }
 
-    attributeChanged(prop, value) {
-        if (prop === 'value') {
-            this.value = value;
-        }
-    }
-
     onMin(min) {
+        if (!min && !this._min) {
+            return;
+        }
+        this._min = min;
         this.minDate = getMonthYear(min);
         this.setMinMax();
     }
     onMax(max) {
+        if (!max && !this._max) {
+            return;
+        }
+        this._max = max;
         this.maxDate = getMonthYear(max);
         this.setMinMax();
     }

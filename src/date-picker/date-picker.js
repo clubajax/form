@@ -1,6 +1,4 @@
-const BaseComponent = require('@clubajax/base-component');
-const dates = require('@clubajax/dates');
-const dom = require('@clubajax/dom');
+const { BaseComponent, dom, dates } = require('../libs');
 const util = require('./util');
 const isValid = require('./isValid');
 require('./time-input');

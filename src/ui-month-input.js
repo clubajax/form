@@ -1,7 +1,9 @@
-const BaseComponent = require('@clubajax/base-component');
-const dom = require('@clubajax/dom');
+const {
+    BaseComponent,
+    dom,
+    nodash: { isEmpty, isNull },
+} = require('./libs');
 const util = require('./date-picker/util');
-const { isEmpty, isNull } = require('@clubajax/no-dash');
 const emitEvent = require('./lib/emitEvent');
 const { pad } = require('./date-picker/util');
 const connectInput = require('./date-picker/connect-input');
