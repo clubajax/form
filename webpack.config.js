@@ -4,14 +4,33 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const ProgressPlugin = require('webpack/lib/ProgressPlugin');
+const DefinePlugin = require('webpack/lib/DefinePlugin');
 
 const DEV = args.mode === 'development';
 const distFolder = DEV ? './dist' : './build';
 const ROOT = __dirname;
 const DIST = path.resolve(ROOT, distFolder);
+const isJK = process.argv.includes('-jk');
 
-console.log('DEV:::', DEV);
+console.log('\n\n\n\nDEV:::', DEV);
 
+const getExternals = () => {
+    if (isRTK) {
+        return [];
+    }
+    if (isJK) {
+        return ['@janiking-org/dom', '@janiking-org/on', '@janiking-org/base-component', '@janiking-org/dates'];
+    }
+    return [
+        // '@clubajax/custom-elements-polyfill',
+        '@clubajax/dom',
+        '@clubajax/on',
+        // '@clubajax/base-component',
+        '@clubajax/dates',
+        // '@clubajax/key-nav',
+        // '@clubajax/no-dash'
+    ];
+};
 
 let plugins = [
     new MiniCssExtractPlugin({
@@ -20,6 +39,9 @@ let plugins = [
         filename: 'form.css',
         // chunkFilename: '[id].css',
         ignoreOrder: false, // Enable to remove warnings about conflicting order
+    }),
+    new DefinePlugin({
+        IS_JK: JSON.stringify(isJK),
     }),
 ];
 
@@ -72,8 +94,6 @@ if (DEV) {
             ],
         }),
     ];
-
-    
 }
 
 module.exports = {
@@ -99,15 +119,17 @@ module.exports = {
     // eval-source-map: has wrong line numbers, fastest
     // source-map: slow, org source, external
     devtool: DEV ? 'inline-source-map' : 'source-map',
-    externals: DEV ? [] : [
-        // '@clubajax/custom-elements-polyfill',
-        '@clubajax/dom',
-        '@clubajax/on',
-        // '@clubajax/base-component',
-        '@clubajax/dates',
-        // '@clubajax/key-nav',
-        // '@clubajax/no-dash',
-    ],
+    externals: DEV
+        ? []
+        : [
+              // '@clubajax/custom-elements-polyfill',
+              '@clubajax/dom',
+              '@clubajax/on',
+              // '@clubajax/base-component',
+              '@clubajax/dates',
+              // '@clubajax/key-nav',
+              // '@clubajax/no-dash',
+          ],
     module: {
         rules: [
             {
